@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
-| Base Site URL
+| baseController Site URL
 |--------------------------------------------------------------------------
 |
 | URL to your CodeIgniter root. Typically this will be your base URL,
@@ -52,7 +52,7 @@ $config['index_page'] = 'index.php';
 |
 | WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
 */
-$config['uri_protocol']	= 'REQUEST_URI';
+$config['uri_protocol']	= 'AUTO';
 
 /*
 |--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ $config['charset'] = 'UTF-8';
 | setting this variable to TRUE (boolean).  See the user guide for details.
 |
 */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -209,11 +209,12 @@ $config['allow_get_array'] = TRUE;
 | You can enable error logging by setting a threshold over zero. The
 | threshold determines what gets logged. Threshold options are:
 |
-|	0 = Disables logging, Error logging TURNED OFF
-|	1 = Error Messages (including PHP errors)
-|	2 = Debug Messages
-|	3 = Informational Messages
-|	4 = All Messages
+|	const LOG_FATAL = 1; //致命错误，已经影响到程序的正常进行
+    const LOG_WARNING = 2; //可能存在错误，但是不影响程序的正常进行
+    const LOG_STRACE = 3; //特定日志级别,记录trace信息同时配合采样逻辑。 放在warning和notice日志等级间
+    const LOG_NOTICE = 4; //往往用于统计一次请求的整体状况
+    const LOG_TRACE = 8; //调试日志
+    const LOG_DEBUG = 16; //调试日志，线上严禁打开
 |
 | You can also pass an array with threshold levels to show individual error types
 |
@@ -223,7 +224,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 16;
 
 /*
 |--------------------------------------------------------------------------
@@ -234,7 +235,7 @@ $config['log_threshold'] = 0;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = '/home/chuanhui/logs/';
 
 /*
 |--------------------------------------------------------------------------
