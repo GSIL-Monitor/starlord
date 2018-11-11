@@ -1,7 +1,7 @@
 <?php
 spl_autoload_register(function($class){
     $map = array(
-        'BaseController' => APPPATH . "controllers/Base.php",
+        'Base' => APPPATH . "controllers/Base.php",
         'CommonDao' => APPPATH . "models/dao/commonDao.php",
         'CommonRedis' => APPPATH . "models/redis/commonRedis.php",
         'DbTansactionHanlder' => APPPATH . "models/transaction/dbTansactionHanlder.php",
