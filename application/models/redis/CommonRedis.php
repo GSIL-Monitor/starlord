@@ -65,13 +65,11 @@ class CommonRedis extends CI_Model
             $fEndTime = microtime(true);
             $fProcTime = ($fEndTime - $fStartTime) * 1000;
 
-            com_redis_success($this->aHost['host'], $this->aHost['port'], $sMethodName, $aArgumentList, $fProcTime, $aResult);
             return $aResult;
         } catch (RedisException $e) {
             $fEndTime = microtime(true);
             $fProcTime = ($fEndTime - $fStartTime) * 1000;
 
-            com_redis_failure($this->aHost['host'], $this->aHost['port'], $sMethodName, $aArgumentList, $fProcTime,Status::REDIS_EXECUTE_ERROR,Status::$message[Status::REDIS_EXECUTE_ERROR]);
 
             throw new StatusException(Status::$message[Status::REDIS_EXECUTE_ERROR], Status::REDIS_EXECUTE_ERROR, $e->getMessage());
         }

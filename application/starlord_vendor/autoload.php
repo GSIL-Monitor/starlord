@@ -1,13 +1,17 @@
 <?php
-spl_autoload_register(function($class){
+spl_autoload_register(function ($class) {
     $map = array(
         'Base' => APPPATH . "controllers/Base.php",
-        'CommonDao' => APPPATH . "models/dao/commonDao.php",
-        'CommonRedis' => APPPATH . "models/redis/commonRedis.php",
-        'DbTansactionHanlder' => APPPATH . "models/transaction/dbTansactionHanlder.php",
-        'Status' => APPPATH . "exception/status.php",
-        'StatusException' => APPPATH . "exception/statusException.php",
+        'CommonRedis' => APPPATH . "models/redis/CommonRedis.php",
+        'DbTansactionHanlder' => APPPATH . "models/transaction/DbTansactionHanlder.php",
+        'Status' => APPPATH . "exception/Status.php",
+        'StatusException' => APPPATH . "exception/StatusException.php",
+        'Curl' => APPPATH . "libraries/Curl.php",
+        'Config' => APPPATH . "libraries/Config.php",
+        'TripDriverDetail' => APPPATH . "models/object/TripDriverDetail.php",
+        'TripPassengerDetail' => APPPATH . "models/object/TripPassengerDetail.php",
     );
+
     if (isset($map[$class]) && file_exists($map[$class])) {
         include_once $map[$class];
     }

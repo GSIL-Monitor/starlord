@@ -93,6 +93,7 @@ $autoload['drivers'] = array();
 $autoload['helper'] = array(
     'sign',
     'validation',
+    'util',
 );
 
 /*

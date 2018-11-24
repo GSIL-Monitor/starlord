@@ -313,6 +313,6 @@ $application_folder = '/home/chuanhui/starlord/application';
  *
  * And away we go...
  */
-require_once(APPPATH.'PROJECT_NAME_REPLACEMENT_vendor/autoload.php');
-require_once(APPPATH.'exception/exceptionHandler.php');
+require_once(APPPATH.'starlord_vendor/autoload.php');
+require_once(APPPATH.'exception/ExceptionHandler.php');
 require_once(BASEPATH.'core/CodeIgniter.php');

@@ -3,6 +3,27 @@ class Status
 {
     const SUCCESS = 0;
 
+    //wx
+    const WX_FETCH_SESSION_FAIL = 901;
+
+    //user
+    const USER_LOGIN_CODE_INVALID = 1001;
+    const USER_LOGIN_VALID_FLAG_INVALID = 1002;
+    const USER_LOGIN_OPEN_ID_INVALID = 1003;
+    const USER_HAS_NO_TICKET = 1004;
+    const USER_TICKET_NOT_EXIST = 1005;
+    const USER_FROZEN = 1006;
+
+    //group
+    const GROUP_NOT_EXIST = 1101;
+    const GROUP_EXCLUDE_USER = 1102;
+    const GROUP_USER_INVALID = 1103;
+
+    //trip
+    const TRIP_NOT_EXIST = 1201;
+    const TRIP_HAS_NO_AUTH_TO_PUBLISH = 1202;
+
+
     //validation
     const VALIDATION_IS_NULL = 10001;
     const VALIDATION_IS_NOT_NULL = 10002;
@@ -21,6 +42,8 @@ class Status
     const DAO_UPDATE_WITHOUT_CONDITION = 11005;
     const DAO_UPDATE_FAIL = 11006;
     const DAO_HAS_NO_SHARD_KEY = 11007;
+    const DAO_INSERT_NO_FILED = 11008;
+    const DAO_DELETE_FAIL = 11009;
 
     //rpc
     const RPC_CALL_FAIL = 12001;
@@ -38,6 +61,25 @@ class Status
 
     static public $message = array(
         self::SUCCESS => '',
+        //wx
+        self::WX_FETCH_SESSION_FAIL => '获取微信session失败',
+
+        //user
+        self::USER_LOGIN_CODE_INVALID => 'login code不能为空',
+        self::USER_LOGIN_VALID_FLAG_INVALID => 'is_valid只能为0或1',
+        self::USER_LOGIN_OPEN_ID_INVALID => 'open id不能为空',
+        self::USER_HAS_NO_TICKET => '没有提交正确的ticket',
+        self::USER_TICKET_NOT_EXIST => 'ticket对应用户不存在，请先登录',
+        self::USER_FROZEN => '用户冻结不允许登录',
+
+        //group
+        self::GROUP_NOT_EXIST => '群不存在',
+        self::GROUP_EXCLUDE_USER => '用户不在群内',
+        self::GROUP_USER_INVALID => '群用户非法',
+
+        //trip
+        self::TRIP_NOT_EXIST => '行程不存在',
+        self::TRIP_HAS_NO_AUTH_TO_PUBLISH => '用户无权限发布行程',
 
         //validation
         self::VALIDATION_IS_NULL => '值为空',
@@ -57,6 +99,9 @@ class Status
         self::DAO_UPDATE_WITHOUT_CONDITION => '禁止不带条件update数据库',
         self::DAO_UPDATE_FAIL => '数据库更新失败',
         self::DAO_HAS_NO_SHARD_KEY => '没有分表key',
+        self::DAO_INSERT_NO_FILED => '没有插入任何数据',
+        self::DAO_DELETE_FAIL => '数据库删除失败',
+
 
         //rpc
         self::RPC_CALL_FAIL => 'curl异常失败',
