@@ -1,0 +1,21 @@
+<template name="car">
+  <view class='list-item'>
+    <view class='label'>
+      <text class='label-text'>车辆</text>
+    </view>
+    <view class='list-content'>
+      <view wx:if="{{car}}">
+        京QNA302 丰田 锐志 白色 轿车
+      </view>
+      <view class='placeholder' wx:if="{{!car}}">未设置车辆</view>
+    </view>
+    <view class='list-extra'>
+      <view class='list-car-division'></view>
+      <navigator url='/pages/car/car'>
+        <view class='btn-text'>
+          {{ car ? '修改' : '设置' }}
+        </view>
+      </navigator>
+    </view>
+  </view>
+</template>

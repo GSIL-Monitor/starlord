@@ -1,0 +1,31 @@
+.page {
+  padding: 0 0 12px 0;
+}
+.list-avatar {
+  height: 24px;
+  width: 24px;
+  margin-right: 12px;
+}
+.list-avatar-image {
+  height: 100%;
+  width: 100%;
+}
+.list-title {
+  color: #333;
+}
+
+.profile {
+  padding: 8px 12px;
+}
+.profile-avatar {
+  height: 44px;
+  width: 44px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.nickname {
+  font-size: 24px;
+}
+.profile-item {
+  color: #666;
+}

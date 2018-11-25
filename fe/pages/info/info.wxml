@@ -1,0 +1,49 @@
+<view class="page">
+  <view class='list'>
+    <view class='list-item'>
+      <view class='list-label'>
+        <text>头像</text>
+      </view>
+      <view class='list-content'>
+        <open-data class="avatar" type="userAvatarUrl" lang="zh_CN"></open-data>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-label'>
+        <text>昵称</text>
+      </view>
+      <view class='list-content'>
+        <open-data type="userNickName" lang="zh_CN"></open-data>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-label'>
+        <text>地区</text>
+      </view>
+      <view class='list-content'>
+        <open-data class="profile-item" type="userProvince" lang="zh_CN"></open-data>
+        <open-data class="profile-item" type="userCity" lang="zh_CN"></open-data>
+      </view>
+    </view>
+  </view>
+  <view class='list'>
+    <view class='list-item'>
+      <view class='list-label'>
+        <text>手机号</text>
+      </view>
+      <view class='list-content'>
+        <input class='text-input' name="phone" placeholder="输入手机号码" />
+      </view>
+    </view>
+    <view class='phone'>
+      <button class='btn-text' open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" plain type='primary'>
+        获取本机号码
+      </button> 
+      
+    </view>
+  </view>
+  <view class='btn-wrap'>
+      <button type="primary" formType="submit">保存</button>
+      <text class='form-info'>发布行程时自动显示的手机号码</text>
+    </view>
+</view>

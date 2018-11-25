@@ -1,0 +1,73 @@
+.section-title {
+  color: #666;
+  font-size: 30rpx;
+  margin: 6px 12px 2px 12px;
+}
+.list {
+  margin: 1px 0 0 0;
+}
+.list-extra {
+  text-align: right;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+}
+.data-item {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+.item-icon {
+  height: 14px;
+  width: 14px;
+  margin-right: 8px;
+  overflow: hidden;
+}
+.item-value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+  
+}
+.btn-delete {
+  border: none !important;
+  margin: 8px -12px 0 0 !important;
+  padding-right: 12px !important;
+  font-size: 28rpx !important;
+}
+.tag {
+  font-size: 24rpx;
+  background: #d4237a;
+  background: #1296db;
+  border-radius: 2px;
+  display: inline-block;
+  color: #fff;
+  padding: 0 4px;
+  line-height: 40rpx;
+}
+.btn-wrap {
+  background: #fff;
+  width: 100%;
+  margin: 0;
+  padding: 24px 12px;
+  box-sizing: border-box;
+}
+.btn-group {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+.btn-create {
+  flex: 1;
+  margin: 0 12px;
+}
+.info {
+  text-align: center;
+  color: #888;
+  padding: 0 24px;
+  margin-top: 12px;
+  font-size: 30rpx;
+}

@@ -1,0 +1,94 @@
+<template name="findCar">
+  <view class='list list-trip-info'>
+    <view class='list-item'>
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
+          <view class='trip-item-value trip-date'>
+            <text class='trip-date-value'>每天22:45</text>
+            <text class='trip-info'>顺路度：89%</text>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/location_start.png' />
+          <text class='trip-item-value'>北京市朝阳区这条路这个街道</text>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/location_end.png' />
+          <text class='trip-item-value'>北京市海淀区这条路这个街道</text>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/price.png' />
+          <view class='trip-item-value'>
+            价格: 120元/人，包车:400元，座位:4
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/car_gay.png' />
+          <view class='trip-item-value'>
+            京QNA302 | 丰田 | 锐志 | 白色 | 轿车
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/address.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>途径地点:</text>
+            <view style='flex:1;'>高铁站，小学，政府大厦</view>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/tag.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>标签:</text>
+            <view class='trip-tags-wrap'>
+              <view class='trip-tag'>接送到家</view>
+              <view class='trip-tag'>可捎货</view>
+              <view class='trip-tag'>可带宠物</view>
+              <view class='trip-tag'>可捎货</view>
+              <view class='trip-tag'>接送到家</view>
+              <view class='trip-tag'>可捎货</view>
+              <view class='trip-tag'>可带宠物</view>
+              <view class='trip-tag'>可捎货</view>
+            </view>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/remark.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>备注:</text>
+            <view style='flex:1;'>10年老司机开车稳，车上有亲戚介意的绕行。</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/users.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>来自拼车群:</text>
+            <view class='trip-group-wrap'>
+              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群1</navigator>
+              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群2</navigator>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-trip-avatar'>
+        <image class='list-avatar-image' src='/images/profile.png' />
+      </view>
+      <view class='list-content'>
+        minzhang | 13810576522
+      </view>
+      <view class='list-extra'>
+        <button plain size='mini' type='primary' class='list-trip-btn' bindtap='makeCall'>拨号</button>
+      </view>
+    </view>
+  </view>
+</template>

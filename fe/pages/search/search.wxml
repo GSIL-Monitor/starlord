@@ -1,0 +1,41 @@
+<import src="../../common/message.wxml"/>
+<import src="/common/tripForm.wxml"/>
+<view class='page'>
+  <view class='tab-navBar'>
+    <block wx:for="{{tabs}}" wx:key="{{index}}">
+    <view id="{{index}}" class="tab-navItem {{currentTab==index ? 'tab-active' : ''}}" hover-class='ontap' bindtap="navTabClick">{{ item }}</view>
+    </block>
+  </view>
+  <view class='tab-content' style='height: {{contentHeight}}px'>
+    <scroll-view class='tab-scroll' scroll-y="{{true}}">
+      <form catchsubmit="onSeachFindCustomer">
+        <template is="message" data="{{text: '消息消息消息消息消息消息消息消息消息'}}" />
+        <view class='list'>
+          <template is="tripForm" data='{{startLocation: startLocation, endLocation: endLocation, date: date, time: time}}' />
+          <view class='list-item'>
+            <view class='label'>
+              <text class='label-text'>只搜索我的拼车群的行程</text>
+            </view>
+            <view class='list-content'>
+              <switch bindchange="switch2Change" />
+            </view>
+          </view>
+          <view class='list-item list-tags-wrap'>
+            <view class='label'>
+              <text class='label-text'>筛选</text>
+            </view>
+            <view class='list-content list-tags'>
+              <block wx:for-items="{{tags}}" wx:key="{{item.id}}">
+                <view class='list-tag-item' hover-class='ontap'>{{item}}</view>
+              </block>
+            </view>
+          </view>
+        </view>
+        <view class='submit-wrap'>
+          <button type='primary' formType="submit">搜索顺路行程</button>
+          <view class='info'>可以搜索到所有通过【拼车群管家】发布到拼车群的行程</view>
+        </view>
+      </form>
+    </scroll-view>
+  </view>
+</view>

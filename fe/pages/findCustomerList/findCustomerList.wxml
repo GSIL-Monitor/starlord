@@ -1,0 +1,6 @@
+<import src="/common/findCar.wxml"/>
+<view class='page'>
+  <block wx:for-items="{{list}}">
+    <template is="findCar" />
+  </block>
+</view>

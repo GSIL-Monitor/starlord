@@ -1,0 +1,6 @@
+<template name="message">
+<view class="message">
+  <image class="message-icon" src="../../images/message_HL.png"></image>
+  <text class="message-text">{{ text }}</text>
+</view>
+</template>
