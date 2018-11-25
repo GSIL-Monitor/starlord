@@ -38,6 +38,7 @@ class User extends Base
             ),
             'switch' => array(
                 '9999' => ($user['is_valid'] == Config::USER_REG_IS_INVALID),                    //正常进入页面功能or展示维护公告
+                '9999_context' => "维护中，预计12：00开放使用，非常抱歉。",                    //正常进入页面功能or展示维护公告
                 'search_tag' => 0,                //搜索页是否展现标签选择
                 'search_all_group' => 1,            //搜索页展示是否跨群选项or写死文案只能群内搜索
                 'show_agreement' => $user['show_agreement'],        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否
