@@ -18,6 +18,8 @@ class Status
     const GROUP_NOT_EXIST = 1101;
     const GROUP_EXCLUDE_USER = 1102;
     const GROUP_USER_INVALID = 1103;
+    const GROUP_NO_AUTH_UPDATE_NOTICE = 1104;
+    const GROUP_HAS_NO_TRIP = 1105;
 
     //trip
     const TRIP_NOT_EXIST = 1201;
@@ -76,6 +78,8 @@ class Status
         self::GROUP_NOT_EXIST => '群不存在',
         self::GROUP_EXCLUDE_USER => '用户不在群内',
         self::GROUP_USER_INVALID => '群用户非法',
+        self::GROUP_NO_AUTH_UPDATE_NOTICE => '只有群主能修改公告',
+        self::GROUP_HAS_NO_TRIP => '群内无此行程',
 
         //trip
         self::TRIP_NOT_EXIST => '行程不存在',

@@ -47,7 +47,25 @@ class User extends Base
         );
 
         $this->_returnSuccess($config);
+    }
+
+    public function getProfile(){
 
     }
 
+    public function completeUser(){
+
+    }
+
+    public function updateUserCar(){
+
+    }
+
+    public function updateUserPhone(){
+
+    }
+
+    public function updateUserAgreement(){
+
+    }
 }

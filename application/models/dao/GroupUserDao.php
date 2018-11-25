@@ -95,4 +95,39 @@ class GroupUserDao extends CI_Model
         return $query->result_array();
     }
 
+    public function insertOne($userId, $groupId)
+    {
+        if (empty($userId) ||empty($groupId) ) {
+            throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
+        }
+
+        $currentTime = time();
+        $groupUser = array();
+        $groupUser['user_id'] = $userId;
+        $groupUser['group_id'] = $groupId;
+        $groupUser['status'] = Config::GROUP_USER_STATUS_DEFAULT;
+        $groupUser['is_del'] = Config::RECORD_EXISTS;
+        $groupUser['created_time'] = $currentTime;
+        $groupUser['modified_time'] = $currentTime;
+
+        $this->table = $this->_getShardedTable($groupId);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $questionMarks = array();
+        $bindParams = array();
+        foreach ($groupUser as $k => $v) {
+            $insertFields[] = $k;
+            $bindParams[] = $v;
+            $questionMarks[] = '?';
+        }
+        $sql = "insert into " . $this->table . " (" . implode(",", $insertFields) . ") values(" . implode(",", $questionMarks) . ")";
+        $query = $this->db->query($sql, $bindParams);
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_INSERT_FAIL], Status::DAO_INSERT_FAIL, var_export($this->db, true));
+        }
+
+        return $groupUser;
+    }
+
 }

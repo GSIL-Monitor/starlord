@@ -61,38 +61,105 @@ class GroupDao extends CI_Model
         }
     }
 
-    public function getById($id)
+    public function insertOne($groupId, $group)
     {
-        $this->table = $this->_getShardedTable($id);
-        $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where id = ?";
+        if (empty($groupId) || !is_array($group) || count($group) == 0) {
+            throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
+        }
 
-        $query = $this->db->query($sql, array($id));
+        $currentTime = time();
+        $group['created_time'] = $currentTime;
+        $group['modified_time'] = $currentTime;
+        $group['is_del'] = Config::RECORD_EXISTS;
 
-        return $query->result();
-    }
-
-    public function getAll()
-    {
-        $this->table = $this->_getShardedTable(0);
-        $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table;
-
-        $query = $this->db->query($sql, array());
-
-        return $query->result();
-    }
-
-
-    public function add($testArr)
-    {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
 
-        $insertFields = $this->fields;
-        array_shift($insertFields);
-        $sql = "insert into " . $this->table . " (" . implode(",", $insertFields) . ") values(?, ?, ?)";
-        $query = $this->db->query($sql, $testArr);
+        $questionMarks = array();
+        $bindParams = array();
+        foreach ($group as $k => $v) {
+            $insertFields[] = $k;
+            $bindParams[] = $v;
+            $questionMarks[] = '?';
+        }
+        $sql = "insert into " . $this->table . " (" . implode(",", $insertFields) . ") values(" . implode(",", $questionMarks) . ")";
+        $query = $this->db->query($sql, $bindParams);
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_INSERT_FAIL], Status::DAO_INSERT_FAIL, var_export($this->db, true));
+        }
+
+        return $group;
+    }
+
+    public function getOneByWxGid($wxGid)
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+        $sql = "select * from " . $this->table . "where wx_gid = ? and is_del = ?";
+
+        $query = $this->db->query($sql, array($wxGid, Config::RECORD_EXISTS));
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        } else if ($query->num_rows() == 0) {
+            return array();
+        } else if ($query->num_rows() == 1) {
+            return $query->row_array();
+        } else if ($query->num_rows() > 1) {
+            throw new StatusException(Status::$message[Status::DAO_MORE_THAN_ONE_RECORD], Status::DAO_MORE_THAN_ONE_RECORD, var_export($this->db, true));
+        }
+    }
+
+    public function getListByGroupIds($groupIds)
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $questionMarks = array();
+        $bindParams = array();
+        foreach ($groupIds as $k => $v) {
+            $bindParams[] = $v;
+            $questionMarks[] = '?';
+        }
+        $bindParams[] = Config::RECORD_EXISTS;
+        $sql = "select * from " . $this->table . "where group_id in (" . implode(",", $questionMarks) . ") and is_del = ? ";
+
+        $query = $this->db->query($sql, $bindParams);
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        }
+
+        return $query->result_array();
+    }
+
+    public function updateByGroupId($groupId, $group)
+    {
+        if (empty($groupId) || !is_array($group) || count($group) == 0) {
+            throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
+        }
+
+        $currentTime = time();
+        $group['modified_time'] = $currentTime;
+
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $updateFields = array();
+        $bindParams = array();
+        foreach ($group as $k => $v) {
+            $updateFields[] = $k . " = " . "?";
+            $bindParams[] = $v;
+        }
+        $bindParams[] = $groupId;
+        $bindParams[] = Config::RECORD_EXISTS;
+        $sql = "update " . $this->table . "set  " . implode(",", $updateFields) . " where group_id = ? and is_del = ?";
+
+        $query = $this->db->query($sql, $bindParams);
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
+        }
 
         return true;
     }

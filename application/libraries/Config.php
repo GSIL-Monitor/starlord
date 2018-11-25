@@ -18,6 +18,7 @@ class Config
     //IDGEN的appkey
     const ID_GEN_KEY_USER = 'user_';
     const ID_GEN_KEY_TRIP = 'trip_';
+    const ID_GEN_KEY_GROUP = 'group_';
 
     //数据库记录
     const RECORD_EXISTS = 0;
@@ -37,5 +38,12 @@ class Config
 
     //群内行程状态
     const GROUP_TRIP_STATUS_DEFAULT = 0;
+
+    //群状态
+    const GROUP_STATUS_DEFAULT = 0;
+
+    //群成员状态
+    const GROUP_USER_STATUS_DEFAULT = 0;
+
 
 }

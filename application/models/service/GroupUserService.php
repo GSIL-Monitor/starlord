@@ -42,4 +42,20 @@ class GroupUserService extends CI_Model
         }
     }
 
+    public function add($userId, $groupId)
+    {
+        $this->load->model('dao/GroupUserDao');
+        if ($userId == null || $groupId == null) {
+            throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
+        }
+
+        $ret = $this->GroupUserDao->getOneByGroupIdAndUserId($userId, $groupId);
+        if (empty($ret) || !is_array($ret) || count($ret) == 0) {
+            $this->GroupUserDao->insertOne($userId, $groupId);
+        }
+
+        return;
+    }
+
+
 }

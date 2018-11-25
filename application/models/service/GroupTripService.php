@@ -55,5 +55,29 @@ class GroupTripService extends CI_Model
         $this->GroupTripDao->insertMulti($groupTrips);
     }
 
+    public function topOneTrip($groupId, $tripId)
+    {
+        $this->load->model('dao/GroupTripDao');
+
+        $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);
+        if (empty($groupTrip)) {
+            throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
+        }
+
+        $groupTrip['top_time'] = time();
+        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+    }
+
+    public function unTopOneTrip($groupId, $tripId)
+    {
+        $this->load->model('dao/GroupTripDao');
+
+        $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);
+        if (empty($groupTrip)) {
+            throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
+        }
+        $groupTrip['top_time'] = null;
+        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+    }
 
 }
