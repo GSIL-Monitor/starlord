@@ -16,7 +16,7 @@ class User extends Base
     {
         $user = $this->_user;
         $config = array(
-            'expire' => 1800,
+            'expire' => 3600,
             'cert' => '!@#QWE!@#Dvvdfsvf',
             'docoment' => array(
                 'share_description' => '通过管家发布行程到本群，拼车更高效，点击查看详情',            //分享小卡片上的描述语句
@@ -37,35 +37,113 @@ class User extends Base
                 'contact' => '客服微信：pinchequnguanjia',        //联系客服页的内容
             ),
             'switch' => array(
-                '9999' => 0,                    //正常进入页面功能or展示维护公告
+                '9999' => ($user['is_valid'] == Config::USER_REG_IS_INVALID),                    //正常进入页面功能or展示维护公告
                 'search_tag' => 0,                //搜索页是否展现标签选择
                 'search_all_group' => 1,            //搜索页展示是否跨群选项or写死文案只能群内搜索
                 'show_agreement' => $user['show_agreement'],        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否
                 'trip_publish_to_all_group' => 0,        //如果非空，值为发布选择群上面的提示文案，如果为空发布时候不弹出选择群
             ),
-
         );
 
         $this->_returnSuccess($config);
     }
 
-    public function getProfile(){
+    public function getProfile()
+    {
+        $user = $this->_user;
+        $showUser = array();
+        $showUser["phone"] = $user["phone"];
+        $showUser["nick_name"] = $user["nick_name"];
+        $showUser["gender"] = $user["gender"];
+        $showUser["city"] = $user["city"];
+        $showUser["province"] = $user["province"];
+        $showUser["country"] = $user["country"];
+        $showUser["avatar_url"] = $user["avatar_url"];
+        $showUser["car_plate"] = $user["car_plate"];
+        $showUser["car_brand"] = $user["car_brand"];
+        $showUser["car_model"] = $user["car_model"];
+        $showUser["car_color"] = $user["car_color"];
+        $showUser["car_type"] = $user["car_type"];
+        $showUser["audit_status"] = $user["audit_status"];
+        $showUser["show_agreement"] = $user["show_agreement"];
 
+        $this->_returnSuccess($showUser);
     }
 
-    public function completeUser(){
+    public function completeUser()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $this->load->model('service/UserService');
+        $this->load->model('api/WxApi');
 
+        $rawData = $input['rawData'];
+        $signature = $input['signature'];
+        $encryptedData = $input['encryptedData'];
+        $iv = $input['iv'];
+        $sessionKey = $user['session_key'];
+
+        if ($signature != sha1($rawData . $sessionKey)) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+
+        $userInfo = $this->WxApi->decryptUserInfo($sessionKey, $encryptedData, $iv);
+
+        $user['wx_union_id'] = $userInfo['unionId'];
+        $user['nick_name'] = $userInfo['nickName'];
+        $user['gender'] = $userInfo['gender'];
+        $user['city'] = $userInfo['city'];
+        $user['province'] = $userInfo['province'];
+        $user['country'] = $userInfo['country'];
+        $user['avatar_url'] = $userInfo['avatarUrl'];
+        $user['audit_status'] = Config::USER_AUDIT_STATUS_OK;
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($ret);
     }
 
-    public function updateUserCar(){
+    public function updateUserCar()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $this->load->model('service/UserService');
 
+        $user['car_plate'] = $input['car_plate'];
+        $user['car_brand'] = $input['car_brand'];
+        $user['car_model'] = $input['car_model'];
+        $user['car_color'] = $input['car_color'];
+        $user['car_type'] = $input['car_type'];
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($ret);
     }
 
-    public function updateUserPhone(){
+    public function getPhone()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $this->load->model('service/UserService');
+        $this->load->model('api/WxApi');
 
+        $encryptedData = $input['encryptedData'];
+        $iv = $input['iv'];
+        $sessionKey = $user['session_key'];
+
+        $phoneInfo = $this->WxApi->decryptUserInfo($sessionKey, $encryptedData, $iv);
+        $user['phone'] = $phoneInfo['purePhoneNumber'];
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($user['phone']);
     }
 
-    public function updateUserAgreement(){
+    public function updateUserAgreement()
+    {
+        $user = $this->_user;
+        $this->load->model('service/UserService');
 
+        $user['show_agreement'] = Config::USER_HAS_READ;
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($ret);
     }
 }

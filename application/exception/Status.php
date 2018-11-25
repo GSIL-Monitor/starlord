@@ -5,6 +5,7 @@ class Status
 
     //wx
     const WX_FETCH_SESSION_FAIL = 901;
+    const WX_DECRYPT_ERROR = 902;
 
     //user
     const USER_LOGIN_CODE_INVALID = 1001;
@@ -13,6 +14,7 @@ class Status
     const USER_HAS_NO_TICKET = 1004;
     const USER_TICKET_NOT_EXIST = 1005;
     const USER_FROZEN = 1006;
+    const USER_NOT_EXIST = 1007;
 
     //group
     const GROUP_NOT_EXIST = 1101;
@@ -65,6 +67,7 @@ class Status
         self::SUCCESS => '',
         //wx
         self::WX_FETCH_SESSION_FAIL => '获取微信session失败',
+        self::WX_DECRYPT_ERROR => '微信解密失败',
 
         //user
         self::USER_LOGIN_CODE_INVALID => 'login code不能为空',
@@ -73,6 +76,7 @@ class Status
         self::USER_HAS_NO_TICKET => '没有提交正确的ticket',
         self::USER_TICKET_NOT_EXIST => 'ticket对应用户不存在，请先登录',
         self::USER_FROZEN => '用户冻结不允许登录',
+        self::USER_NOT_EXIST => '用户不存在',
 
         //group
         self::GROUP_NOT_EXIST => '群不存在',

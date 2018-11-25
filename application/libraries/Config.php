@@ -11,6 +11,10 @@ class Config
     const USER_AUDIT_STATUS_OK = 0;
     const USER_AUDIT_STATUS_FAIL = 1;
 
+    //用户查看安全协议
+    const USER_HAS_READ = 0;
+    const USER_HAS_NOT_READ = 1;
+
     //开始业务
     const USER_REG_IS_VALID = 0;
     const USER_REG_IS_INVALID = 1;
