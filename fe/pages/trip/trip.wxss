@@ -1,0 +1,9 @@
+.list {
+  margin: 0;
+}
+.list-item {
+  margin-bottom: 4px;
+}
+.trip-date-icon {
+  margin-top: 18rpx;
+}

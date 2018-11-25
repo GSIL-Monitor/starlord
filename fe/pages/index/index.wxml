@@ -1,0 +1,32 @@
+<!--index.wxml-->
+<import src="../../common/message.wxml"/>
+<view class='page'>
+    <text class="title">系统公告</text>
+    <template is="message" data="{{text: '消息消息消息消息消息消息消息消息消息'}}" />
+    <template is="message" data="{{text: '消息消息消息消息消息消息消息消息消息'}}" />
+    <text class="title">加入管理的拼车</text>
+    <view class="list">
+      <block wx:for-items="{{list}}" wx:key="{{item.id}}">
+        <navigator url="/pages/shareGroup/shareGroup"  id="{{item.id}}" class="list-item">
+          <image class="list-avatar" src="../../images/profile.png" />
+          <view class="list-content">
+            <text class="list-title">{{ item.title }}</text>
+            <view class="list-info">
+              <text>33人</text>
+              <view class="list-division" />
+              <text>行程:33</text>
+              <view class="list-division" />
+              <text>群主:</text>
+              <block>
+                <text class='list-warning'>群主未认领</text>
+              </block>
+              <block>
+                <image class='group-avatar' src='../../images/profile.png' />
+                <text>昵称</text>
+              </block>
+            </view>
+          </view>
+        </navigator>
+      </block>
+    </view>
+</view>

@@ -1,0 +1,41 @@
+.title {
+  color: #BEBEBE;
+  font-size: 14px;
+  display: block;
+  padding: 0 12px;
+}
+
+.list-item {
+  align-items: flex-start;
+}
+.list-avatar {
+  height: 24px;
+  width: 24px;
+  margin-right: 12px;
+}
+.list-title {
+  color: #333;
+}
+.list-info {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+.list-division {
+  height: 10px;
+  width: 1px;
+  border-left: 1px solid #BEBEBE;
+  margin: 0 8px;
+}
+.list-warning {
+  color: rgb(255, 85, 0);
+  padding-left: 4px;
+}
+.group-avatar {
+  height: 14px;
+  width: 14px;
+  margin: 0 4px 0 8px;
+}

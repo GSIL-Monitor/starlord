@@ -1,0 +1,37 @@
+<view class='page'>
+  <view class='section-title'>行程模板管理</view>
+  <view class='list'>
+    <block wx:for-items="{{templates}}" wx:key="{{item.id}}">
+      <navigator url="/pages/creareFindCustomer/creareFindCustomer"  id="{{index}}" class="list-item">
+        <view class='list-content'>
+          <view class='data-item'>
+            <image class='item-icon' src='/images/location_start.png' />
+            <text class='item-value'>北京市朝阳区这条路这个街道</text>
+          </view>
+          <view class='data-item'>
+            <image class='item-icon' src='/images/location_end.png' />
+            <text class='item-value'>北京市海淀区这条路这个街道</text>
+          </view>
+          <view class='data-item'>
+            <image class='item-icon' src='/images/price.png' />
+            <view class='item-value'>
+              价格: 120元/人，包车:400元，座位:4
+            </view>
+          </view>
+        </view>
+        <view class='list-extra'>
+          <view class='tag'>车找人</view>
+          <button type='primary' size='mini' plain class='btn-delete' catchtap='deleteTemplate'>删除模板</button>
+        </view>
+      </navigator>
+    </block>
+  </view>
+  <view class='section-title'>创建行程或模板</view>
+  <view class='btn-wrap'>
+    <view class='btn-group'>
+      <button class='btn-create' type='primary' data-page='creareFindCustomer' bindtap='goPage'>车找人</button>
+      <button class='btn-create' type='primary' data-page='creareFindCar' bindtap='goPage'>人找车</button>
+    </view>
+    <view class='info'>发布行程到你的拼车群，同群好友快速查询，其他群的拼友也可以搜到你的行程。</view>
+  </view>
+</view>
