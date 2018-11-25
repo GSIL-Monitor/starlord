@@ -1,0 +1,265 @@
+/* reset */
+page {
+  background-color: #F8F8F8;
+  height: 100%;
+  font-size: 32rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  color: #444;
+}
+checkbox, radio{
+  margin-right: 10rpx;
+}
+button{
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+form{
+  width: 100%;
+}
+input {
+  width: 100%;
+}
+
+/* page */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  /* justify-content: space-between; */
+  box-sizing: border-box;
+  font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+}
+.message {
+  /* width: 100%; */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: flex-start;
+  background: #fff;
+  margin-bottom: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.message-icon {
+  width: 24px;
+  height: 24px;
+}
+.message-text {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.list {
+  margin: 12px 0 0 0;
+}
+.list-item {
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 2rpx;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+.list-content {
+  flex: 1;
+}
+.btn-wrap {
+  text-align: center;
+  margin: 24px;
+}
+.form-info {
+  color: #666;
+  font-size: 14px;
+}
+.list-label {
+  color: #666;
+}
+.ontap {
+  opacity: 0.55;
+}
+.btn-text {
+  color: #3cc51f;
+  display: inline-block;
+  border: none !important;
+}
+.placeholder {
+  color: #999;
+}
+.list-arrow {
+  height: 24px;
+  width: 24px;
+}
+.list-extra {
+  text-align: right;
+  align-items: center;
+  display: flex;
+  margin-left: 14rpx;
+}
+
+/* list phone, car */
+.list-phone-division, .list-car-division {
+  width: 1px;
+  height: 30rpx;
+  border-left: 1px solid #999;
+  margin: 0 8px;
+}
+
+/* trip item */
+.list-trip-info {
+  margin: 1px 0 0 0;
+}
+.trip-data-item {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-content: center;
+  align-items: flex-start;
+}
+.trip-item-icon {
+  height: 14px;
+  width: 14px;
+  margin-right: 8px;
+  overflow: hidden;
+  margin-top: 10rpx;
+}
+
+.trip-item-value {
+  flex: 1;
+  font-size: 30rpx;
+  color: #666;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.list-trip-avatar {
+  height: 48rpx;
+  width: 48rpx;
+  overflow: hidden;
+  margin-right: 12px;
+}
+.list-trip-avatar image {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+.list-trip-btn {
+  margin: 0;
+}
+.trip-tags-wrap, .trip-group-wrap {
+  flex: 1;
+  margin-top: 6rpx;
+  overflow: hidden;
+}
+.trip-tag, .trip-group {
+  display: block;
+  float: left;
+  color: #fff;
+  font-size: 26rpx;
+  line-height: 32rpx;
+  height: 32rpx;
+  background: #1296db;
+  border-radius: 4rpx;
+  margin: 2rpx;
+  padding: 0 4rpx;
+}
+.trip-group-wrap {
+  margin-top: -1rpx;
+}
+.trip-group {
+  border: none;
+  color: #3cc51f;
+  line-height: 50rpx;
+  height: 50rpx;
+  padding: 0 8rpx;
+  background: none;
+  font-size: 30rpx;
+  margin: 0;
+}
+.trip-hl {
+  color: #444;
+  padding-right: 6rpx;
+}
+.trip-date-icon {
+  margin-top: 12rpx;
+}
+.trip-date {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.trip-date-value {
+  flex: 1;
+  font-size: 34rpx;
+  color: #333;
+}
+.trip-btn, trip-info {
+  border: none !important;
+  margin: 0 -12px 0 0 !important;
+  padding-right: 12px !important;
+  font-size: 28rpx !important;
+}
+.trip-info {
+  font-size: 24rpx !important;
+  color: #3cc51f;
+}
+
+/* tab */
+.tab-navBar {
+  display: flex;
+  position: absolute;
+  z-index: 500;
+  top: 0;
+  width: 100%;
+  background: #fff;
+}
+.tab-navItem {
+  position: relative;
+  display: block;
+  flex: 1;
+  padding: 10rpx 0;
+  text-align: center;
+  height: 48rpx;
+  line-height: 48rpx;
+  border-bottom: 1px solid #f0f0f0;
+}
+.tab-active {
+  border-color: #3cc51f;
+  color:  #3cc51f;
+}
+.tab-content {
+  position: absolute;
+  top: 68rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tab-swiper {
+  height: 100%;
+}
+
+.tab-swiper-item{
+  width: 100%;
+}
+.tab-scroll {
+  height: 100%;
+}
+
+/*tag*/
+.list-tags-wrap {
+  align-items: flex-start;
+}
+.list-tags {
+  text-align: justify;
+  margin-left: 40rpx;
+}
+.list-tag-item {
+  display: inline-block;
+  border: 1px solid #3cc51f;
+  color: #3cc51f;
+  border-radius: 6rpx;
+  margin: 2px 4px;
+  padding: 4rpx 10rpx;
+  font-size: 28rpx;
+}

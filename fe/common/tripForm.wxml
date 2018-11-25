@@ -1,0 +1,53 @@
+<template name="tripForm">
+  <!-- 时间 -->
+  <view class='list-item'>
+    <view class='label'>
+      <text class='label-text'>日期</text>
+    </view>
+    <view class='list-content'>
+      <picker mode="date" name="date" value='{{date}}' bindchange="bindDateChange">
+        <view class='picker-value'>
+          <text class='placeholder' wx:if="{{ !date }}">请选择日期</text>
+          <text wx:if="{{ !!date }}">{{ date }}</text>
+        </view>
+      </picker>
+    </view>
+    <image class='list-arrow' src='/images/arrow_right.png' />
+  </view>
+  <view class='list-item'>
+    <view class='label'>
+      <text class='label-text'>时间</text>
+    </view>
+    <view class='list-content'>
+      <picker mode="time" name="time" value='{{time}}' bindchange="bindTimeChange">
+        <view class='picker-value'>
+          <text class='placeholder' wx:if="{{ !time }}">请选择时间</text>
+          <text wx:if="{{ !!time }}">{{ time }}</text>
+        </view>
+      </picker>
+    </view>
+    <image class='list-arrow' src='/images/arrow_right.png' />
+  </view>
+  <!---->
+  <view class='list-item' bindtap='chooseLocation' data-location='start'>
+    <view class='label'>
+      <text class='label-text'>始发点</text>
+    </view>
+    <view class='list-content' hover-class='ontap'>
+      <view wx:if='{{!!startLocation}}'>{{ startLocation.name }}</view>
+      <view wx:if='{{!startLocation}}' class='placeholder'>选择始发点</view>
+    </view>
+    <image class='list-arrow' src='/images/arrow_right.png' />
+  </view>
+  <!---->
+  <view class='list-item' bindtap='chooseLocation' data-location='end'>
+    <view class='label'>
+      <text class='label-text'>终点</text>
+    </view>
+    <view class='list-content' hover-class='ontap'>
+      <view wx:if='{{endLocation}}'>{{ endLocation.name }}</view>
+      <view wx:if='{{!endLocation}}' class='placeholder'>选择终点</view>
+    </view>
+    <image class='list-arrow' src='/images/arrow_right.png' />
+  </view>
+</template>
