@@ -44,7 +44,8 @@ class TripDao extends CI_Model
         if (ENVIRONMENT == 'development') {
             return $this->tablePrefix . '0';
         } else {
-            return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            //return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            return $this->tablePrefix . '0';
         }
     }
 
@@ -52,7 +53,7 @@ class TripDao extends CI_Model
     {
         $this->table = $this->_getShardedTable($userId);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where user_id = ? and trip_id = ? and is_del = ?";
+        $sql = "select * from " . $this->table . " where user_id = ? and trip_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, array($userId, $tripId, Config::RECORD_EXISTS));
 
@@ -69,7 +70,8 @@ class TripDao extends CI_Model
 
     public function insertOne($userId, $trip)
     {
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $trip['created_time'] = $currentTime;
         $trip['modified_time'] = $currentTime;
         $trip['is_del'] = Config::RECORD_EXISTS;
@@ -104,7 +106,8 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $trip['modified_time'] = $currentTime;
 
         $this->table = $this->_getShardedTable($userId);
@@ -120,7 +123,7 @@ class TripDao extends CI_Model
         $bindParams[] = $tripId;
         $bindParams[] = $status;
         $bindParams[] = Config::RECORD_EXISTS;
-        $sql = "update " . $this->table . "set  " . implode(",", $updateFields) . " where user_id = ? and trip_id = ? and status = ? and is_del = ?";
+        $sql = "update " . $this->table . " set  " . implode(",", $updateFields) . " where user_id = ? and trip_id = ? and status = ? and is_del = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {
@@ -136,7 +139,8 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $trip['modified_time'] = $currentTime;
 
         $this->table = $this->_getShardedTable($userId);
@@ -145,7 +149,7 @@ class TripDao extends CI_Model
         $bindParams[] = Config::RECORD_DELETED;
         $bindParams[] = $userId;
         $bindParams[] = $tripId;
-        $sql = "update " . $this->table . "set  is_del = ? where user_id = ? and trip_id = ?";
+        $sql = "update " . $this->table . " set  is_del = ? where user_id = ? and trip_id = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {
@@ -170,7 +174,7 @@ class TripDao extends CI_Model
             $questionMarks[] = '?';
         }
 
-        $sql = "select * from " . $this->table . "where user_id = ? and is_del = ? and status in (" . implode(",", $questionMarks) . ")";
+        $sql = "select * from " . $this->table . " where user_id = ? and is_del = ? and status in (" . implode(",", $questionMarks) . ")";
 
         $query = $this->db->query($sql, $bindParams);
 

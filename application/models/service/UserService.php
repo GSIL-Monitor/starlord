@@ -51,7 +51,7 @@ class UserService extends CI_Model
         $user['wx_session_key'] = $sessionKey;
         $user['ticket'] = $ticket;
 
-        return $this->UserDao->updateByUserId($userId, $user);
+        return $this->UserDao->updateOneByUserId($userId, $user);
     }
 
     public function updateUser($user)
@@ -61,6 +61,6 @@ class UserService extends CI_Model
             throw new StatusException(Status::$message[Status::USER_NOT_EXIST], Status::USER_NOT_EXIST);
         }
 
-        return $this->UserDao->updateByUserId($user['user_id'], $user);
+        return $this->UserDao->updateOneByUserId($user['user_id'], $user);
     }
 }

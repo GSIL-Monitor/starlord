@@ -1,11 +1,13 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Curl {
+class Curl
+{
 
-    static public function get($url, $params=array()) {
+    static public function get($url, $params = array())
+    {
 
         $ci = curl_init();
-        $url = $url.'?'.http_build_query($params);
+        $url = $url . http_build_query($params);
         curl_setopt($ci, CURLOPT_URL, $url);
         curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ci, CURLOPT_TIMEOUT, 5);

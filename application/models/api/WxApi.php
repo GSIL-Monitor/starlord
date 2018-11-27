@@ -18,19 +18,14 @@ class WxApi extends CI_Model
 
         $session = json_decode($ret, true);
 
-        $openId = $session['openid'];
-        $sessionKey = $session['session_key'];
-        $errCode = $session['errcode'];
-        $errMsg = $session['errmsg'];
-
-        if ($errCode != 0) {
-            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, $errMsg);
+        if (isset($session['errcode']) && $session['errcode'] != 0) {
+            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, $session['errmsg']);
+        } else {
+            return array(
+                'open_id' => $session['openid'],
+                'session_key' => $session['session_key'],
+            );
         }
-
-        return array(
-            'open_id' => $openId,
-            'session_key' => $sessionKey,
-        );
     }
 
     public function decryptUserInfo($sessionKey, $encryptedData, $iv)

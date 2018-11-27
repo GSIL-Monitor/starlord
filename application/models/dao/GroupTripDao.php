@@ -56,7 +56,8 @@ class GroupTripDao extends CI_Model
         if (ENVIRONMENT == 'development') {
             return $this->tablePrefix . '0';
         } else {
-            return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            //return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            return $this->tablePrefix . '0';
         }
     }
 
@@ -64,7 +65,7 @@ class GroupTripDao extends CI_Model
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where group_id = ? and trip_type = ? and status = ? and is_del = ? and trip_begin_date > ?";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and status = ? and is_del = ? and trip_begin_date > ?";
 
         $query = $this->db->query($sql, array($groupId, $tripType, $status, Config::RECORD_EXISTS, $date));
 
@@ -83,7 +84,7 @@ class GroupTripDao extends CI_Model
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
 
         $insertFields = $this->fields;
         array_shift($insertFields);
@@ -116,7 +117,7 @@ class GroupTripDao extends CI_Model
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where group_id = ? and trip_id = ? and is_del = ?";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, array($groupId, $tripId, Config::RECORD_EXISTS));
 
@@ -137,7 +138,8 @@ class GroupTripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $groupTrip['modified_time'] = $currentTime;
 
         $this->table = $this->_getShardedTable(0);
@@ -152,7 +154,7 @@ class GroupTripDao extends CI_Model
         $bindParams[] = $groupId;
         $bindParams[] = $tripId;
         $bindParams[] = Config::RECORD_EXISTS;
-        $sql = "update " . $this->table . "set  " . implode(",", $updateFields) . " where group_id = ? and trip_id = ? and is_del = ?";
+        $sql = "update " . $this->table . " set  " . implode(",", $updateFields) . " where group_id = ? and trip_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {
