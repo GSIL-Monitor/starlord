@@ -147,4 +147,9 @@ class User extends Base
         $ret = $this->UserService->updateUser($user);
         $this->_returnSuccess($ret);
     }
+
+    public function updateUserPhone(){
+
+    }
+
 }

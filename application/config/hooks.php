@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$hook['post_controller_constructor'][] = array(
+$hook['pre_controller'][] = array(
     'class' => '',
     'function' => 'preController',
     'filename' => 'hookFunction.php',

@@ -67,8 +67,8 @@ define('ENVIRONMENT', 'development');
 switch (ENVIRONMENT)
 {
 	case 'development':
-		error_reporting(-1);
-		ini_set('display_errors', 1);
+		error_reporting(0);
+		ini_set('display_errors', 0);
 	break;
 
 	case 'testing':
@@ -314,4 +314,5 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once(APPPATH.'starlord_vendor/autoload.php');
+require_once(APPPATH.'exception/ExceptionHandler.php');
 require_once BASEPATH.'core/CodeIgniter.php';

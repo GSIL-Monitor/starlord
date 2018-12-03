@@ -22,7 +22,7 @@ class Base extends CI_Controller
             }
             $this->_user = $user;
         } else {
-            throw new StatusException(Status::$message[Status::USER_TICKET_NOT_EXIST], Status::USER_TICKET_NOT_EXIST);
+            throw new StatusException(Status::$message[Status::USER_HAS_NO_TICKET], Status::USER_HAS_NO_TICKET);
         }
     }
 
