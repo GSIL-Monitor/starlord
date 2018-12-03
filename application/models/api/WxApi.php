@@ -31,7 +31,7 @@ class WxApi extends CI_Model
     public function decryptUserInfo($sessionKey, $encryptedData, $iv)
     {
         if (strlen($sessionKey) != 24) {
-            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+            throw new StatusException(Status::$message[Status::USER_HAS_NO_TICKET], Status::USER_HAS_NO_TICKET);
         }
         $aesKey = base64_decode($sessionKey);
 
@@ -49,6 +49,28 @@ class WxApi extends CI_Model
         if ($data->watermark->appid != self::APPID) {
             throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
         }
+        return $data;
+    }
+
+    public function decryptGroupInfo($sessionKey, $encryptedData, $iv)
+    {
+        if (strlen($sessionKey) != 24) {
+            throw new StatusException(Status::$message[Status::USER_HAS_NO_TICKET], Status::USER_HAS_NO_TICKET);
+        }
+        $aesKey = base64_decode($sessionKey);
+
+        if (strlen($iv) != 24) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+
+        $aesIV = base64_decode($iv);
+        $aesCipher = base64_decode($encryptedData);
+        $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+        $data = json_decode($result, true);
+        if ($data == NULL) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+
         return $data;
     }
 }
