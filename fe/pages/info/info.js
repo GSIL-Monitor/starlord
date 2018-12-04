@@ -1,4 +1,5 @@
 // pages/info/info.js
+const service = require('../../utils/service');
 Page({
 
   /**
@@ -68,6 +69,6 @@ Page({
    * 获取本机手机号码
    */
   getPhoneNumber: function (e) {
-    console.error(e);
+    service.userCompleteUser(e.detail);
   },
 })

@@ -1,4 +1,5 @@
 {
+  "debug": true,
   "pages": [
     "pages/index/index",
     "pages/profile/profile",
