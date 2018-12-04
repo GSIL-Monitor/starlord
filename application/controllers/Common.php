@@ -3,13 +3,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Common
+class Common extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
 
     }
+
     public function login()
     {
         $input = $this->input->post();
@@ -21,7 +22,7 @@ class Common
             throw new StatusException(Status::$message[Status::USER_LOGIN_CODE_INVALID], Status::USER_LOGIN_CODE_INVALID);
         }
         if ($isValid != Config::USER_REG_IS_VALID && $isValid != Config::USER_REG_IS_INVALID) {
-            throw new StatusException(Status::$message[Status::USER_LOGIN_VALID_FLAG_INVALID], Status::USER_LOGIN_VALID_FLAG_INVALID);
+            $isValid = Config::USER_REG_IS_INVALID;
         }
 
         //对于除了分享页以外的用户先准许注册，此处作为群外新用户入口的开关
@@ -38,14 +39,14 @@ class Common
         //创建或者更新用户
         $this->load->model('service/UserService');
         $user = $this->UserService->getUserByOpenId($openId);
-        if(!empty($user) && is_array($user)){
-            if($user['status'] == Config::USER_STATUS_FROZEN){
+        if (!empty($user) && is_array($user)) {
+            if ($user['status'] == Config::USER_STATUS_FROZEN) {
                 throw new StatusException(Status::$message[Status::USER_FROZEN], Status::USER_FROZEN);
             }
 
             //老用户更新ticket
             $this->UserService->updateSessionKeyAndTicketByUser($user['user_id'], $sessionKey, $ticket);
-        }else{
+        } else {
             //新用户
             $this->UserService->createNewUser($sessionKey, $openId, $ticket, $isValid);
         }

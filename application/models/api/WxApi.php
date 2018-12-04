@@ -18,19 +18,59 @@ class WxApi extends CI_Model
 
         $session = json_decode($ret, true);
 
-        $openId = $session['openid'];
-        $sessionKey = $session['session_key'];
-        $errCode = $session['errcode'];
-        $errMsg = $session['errmsg'];
+        if (isset($session['errcode']) && $session['errcode'] != 0) {
+            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, $session['errmsg']);
+        } else {
+            return array(
+                'open_id' => $session['openid'],
+                'session_key' => $session['session_key'],
+            );
+        }
+    }
 
-        if($errCode != 0){
-            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, $errMsg);
+    public function decryptUserInfo($sessionKey, $encryptedData, $iv)
+    {
+        if (strlen($sessionKey) != 24) {
+            throw new StatusException(Status::$message[Status::USER_HAS_NO_TICKET], Status::USER_HAS_NO_TICKET);
+        }
+        $aesKey = base64_decode($sessionKey);
+
+        if (strlen($iv) != 24) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
         }
 
-        return array(
-            'open_id' => $openId,
-            'session_key' => $sessionKey,
-        );
+        $aesIV = base64_decode($iv);
+        $aesCipher = base64_decode($encryptedData);
+        $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+        $data = json_decode($result, true);
+        if ($data == NULL) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+        if ($data->watermark->appid != self::APPID) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+        return $data;
+    }
 
+    public function decryptGroupInfo($sessionKey, $encryptedData, $iv)
+    {
+        if (strlen($sessionKey) != 24) {
+            throw new StatusException(Status::$message[Status::USER_HAS_NO_TICKET], Status::USER_HAS_NO_TICKET);
+        }
+        $aesKey = base64_decode($sessionKey);
+
+        if (strlen($iv) != 24) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+
+        $aesIV = base64_decode($iv);
+        $aesCipher = base64_decode($encryptedData);
+        $result = openssl_decrypt($aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+        $data = json_decode($result, true);
+        if ($data == NULL) {
+            throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
+        }
+
+        return $data;
     }
 }

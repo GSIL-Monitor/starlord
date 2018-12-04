@@ -55,7 +55,8 @@ class GroupUserDao extends CI_Model
             if (self::TABLE_NUM == 1) {
                 return $this->tablePrefix . "0";
             }
-            return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            //return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            return $this->tablePrefix . '0';
         }
     }
 
@@ -63,7 +64,7 @@ class GroupUserDao extends CI_Model
     {
         $this->table = $this->_getShardedTable($userId);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where user_id = ? and group_id = ? and is_del = ?";
+        $sql = "select * from " . $this->table . " where user_id = ? and group_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, array($userId, $groupId, Config::RECORD_EXISTS));
 
@@ -84,7 +85,7 @@ class GroupUserDao extends CI_Model
     {
         $this->table = $this->_getShardedTable($userId);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where user_id = ? and is_del = ?";
+        $sql = "select * from " . $this->table . " where user_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, array($userId, Config::RECORD_EXISTS));
 
@@ -101,7 +102,8 @@ class GroupUserDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $groupUser = array();
         $groupUser['user_id'] = $userId;
         $groupUser['group_id'] = $groupId;

@@ -52,9 +52,10 @@ class GroupUserService extends CI_Model
         $ret = $this->GroupUserDao->getOneByGroupIdAndUserId($userId, $groupId);
         if (empty($ret) || !is_array($ret) || count($ret) == 0) {
             $this->GroupUserDao->insertOne($userId, $groupId);
+            return true;
         }
 
-        return;
+        return false;
     }
 
 

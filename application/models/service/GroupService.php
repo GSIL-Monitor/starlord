@@ -40,6 +40,7 @@ class GroupService extends CI_Model
     public function createNewGroup($wxGid)
     {
         $this->load->model('dao/GroupDao');
+        $this->load->model('redis/IdGenRedis');
 
         $group = array();
         $group['group_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_GROUP);
@@ -67,6 +68,14 @@ class GroupService extends CI_Model
         $group = $groups[0];
         $group['notice'] = $notice;
 
-        return $this->GroupDao->updateByGroupId($group);
+        return $this->GroupDao->updateByGroupId($group['group_id'], $group);
+    }
+
+    public function increaseMember($groupId, $group)
+    {
+        $this->load->model('dao/GroupDao');
+        $group['member_num'] = $group['member_num'] + 1;
+
+        return $this->GroupDao->updateByGroupId($groupId, $group);
     }
 }

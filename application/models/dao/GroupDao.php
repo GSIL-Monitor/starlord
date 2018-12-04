@@ -49,6 +49,7 @@ class GroupDao extends CI_Model
 
     protected function _getShardedTable($shardKey)
     {
+
         $this->db = $this->getConn($this->dbConfName);
 
         if (!isset($shardKey)) {
@@ -57,7 +58,8 @@ class GroupDao extends CI_Model
         if (ENVIRONMENT == 'development') {
             return $this->tablePrefix . '0';
         } else {
-            return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            //return $this->tablePrefix . (string)($shardKey % self::TABLE_NUM);
+            return $this->tablePrefix . '0';
         }
     }
 
@@ -67,7 +69,8 @@ class GroupDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $group['created_time'] = $currentTime;
         $group['modified_time'] = $currentTime;
         $group['is_del'] = Config::RECORD_EXISTS;
@@ -96,7 +99,7 @@ class GroupDao extends CI_Model
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . "where wx_gid = ? and is_del = ?";
+        $sql = "select * from " . $this->table . " where wx_gid = ? and is_del = ?";
 
         $query = $this->db->query($sql, array($wxGid, Config::RECORD_EXISTS));
 
@@ -123,7 +126,7 @@ class GroupDao extends CI_Model
             $questionMarks[] = '?';
         }
         $bindParams[] = Config::RECORD_EXISTS;
-        $sql = "select * from " . $this->table . "where group_id in (" . implode(",", $questionMarks) . ") and is_del = ? ";
+        $sql = "select * from " . $this->table . " where group_id in (" . implode(",", $questionMarks) . ") and is_del = ? ";
 
         $query = $this->db->query($sql, $bindParams);
 
@@ -140,7 +143,8 @@ class GroupDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = time();
+        $currentTime = date("Y-M-d H:m:s", time());
+
         $group['modified_time'] = $currentTime;
 
         $this->table = $this->_getShardedTable(0);
@@ -154,7 +158,7 @@ class GroupDao extends CI_Model
         }
         $bindParams[] = $groupId;
         $bindParams[] = Config::RECORD_EXISTS;
-        $sql = "update " . $this->table . "set  " . implode(",", $updateFields) . " where group_id = ? and is_del = ?";
+        $sql = "update " . $this->table . " set  " . implode(",", $updateFields) . " where group_id = ? and is_del = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {

@@ -51,6 +51,16 @@ class UserService extends CI_Model
         $user['wx_session_key'] = $sessionKey;
         $user['ticket'] = $ticket;
 
-        return $this->UserDao->updateByUserId($userId, $user);
+        return $this->UserDao->updateOneByUserId($userId, $user);
+    }
+
+    public function updateUser($user)
+    {
+        $this->load->model('dao/UserDao');
+        if (empty($user) || empty($user['user_id'])) {
+            throw new StatusException(Status::$message[Status::USER_NOT_EXIST], Status::USER_NOT_EXIST);
+        }
+
+        return $this->UserDao->updateOneByUserId($user['user_id'], $user);
     }
 }
