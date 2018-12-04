@@ -36,7 +36,7 @@
       </view>
     </view>
     <view class='phone'>
-      <button class='btn-text' open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" plain type='primary'>
+      <button class='btn-text' open-type="getUserInfo" bindgetuserinfo="getPhoneNumber" plain type='primary'>
         获取本机号码
       </button> 
       
