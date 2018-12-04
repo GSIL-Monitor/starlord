@@ -42,7 +42,10 @@ Page({
       }
     ]
   },
-  onLoad: function () {
+  onLoad: function (r) {
+    wx.showShareMenu({
+      withShareTicket: true
+    });
   },
   onPullDownRefresh: function () {
     setTimeout(wx.stopPullDownRefresh, 2000);
