@@ -161,7 +161,10 @@ class Test extends Base
         if (!empty($groupIds)) {
             //同步到grouptrip表
             $this->load->model('service/GroupTripService');
+            $this->load->model('service/GroupService');
             $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_DRIVER);
+            $this->GroupService->increaseTripInGroups($groupIds);
+
         }
 
         $this->_returnSuccess($newTrip);
@@ -190,6 +193,8 @@ class Test extends Base
             //同步到grouptrip表
             $this->load->model('service/GroupTripService');
             $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_PASSENGER);
+            $this->GroupService->increaseTripInGroups($groupIds);
+
         }
 
         $this->_returnSuccess($newTrip);

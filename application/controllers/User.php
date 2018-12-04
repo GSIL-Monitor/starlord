@@ -82,7 +82,7 @@ class User extends Base
         $signature = $input['signature'];
         $encryptedData = $input['encryptedData'];
         $iv = $input['iv'];
-        $sessionKey = $user['session_key'];
+        $sessionKey = $user['wx_session_key'];
 
         if ($signature != sha1($rawData . $sessionKey)) {
             throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);

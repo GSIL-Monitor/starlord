@@ -22,7 +22,7 @@ class Group extends Base
         $this->load->model('api/WxApi');
         $encryptedData = $input['encryptedData'];
         $iv = $input['iv'];
-        $sessionKey = $user['session_key'];
+        $sessionKey = $user['wx_session_key'];
         $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
         $wxGid = $groupInfo['openGId'];
 
