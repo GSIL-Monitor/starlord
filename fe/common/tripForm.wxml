@@ -5,10 +5,10 @@
       <text class='label-text'>日期</text>
     </view>
     <view class='list-content'>
-      <picker mode="date" name="date" value='{{date}}' bindchange="bindDateChange">
+      <picker mode="date" name="begin_date" value='{{begin_date}}' bindchange="bindDateChange">
         <view class='picker-value'>
-          <text class='placeholder' wx:if="{{ !date }}">请选择日期</text>
-          <text wx:if="{{ !!date }}">{{ date }}</text>
+          <text class='placeholder' wx:if="{{ !begin_date }}">请选择日期</text>
+          <text wx:if="{{ !!begin_date }}">{{ begin_date }}</text>
         </view>
       </picker>
     </view>
@@ -19,10 +19,10 @@
       <text class='label-text'>时间</text>
     </view>
     <view class='list-content'>
-      <picker mode="time" name="time" value='{{time}}' bindchange="bindTimeChange">
+      <picker mode="time" name="begin_time" value='{{begin_time}}' bindchange="bindTimeChange">
         <view class='picker-value'>
-          <text class='placeholder' wx:if="{{ !time }}">请选择时间</text>
-          <text wx:if="{{ !!time }}">{{ time }}</text>
+          <text class='placeholder' wx:if="{{ !begin_time }}">请选择时间</text>
+          <text wx:if="{{ !!begin_time }}">{{ begin_time }}</text>
         </view>
       </picker>
     </view>

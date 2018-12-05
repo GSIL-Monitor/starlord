@@ -113,12 +113,14 @@ const getAndUploadGroup = (shareTicket) => {
 }
 
 /** 上传用户信息 */
-const userCompleteUser = (detail) => {
+const userCompleteUser = (detail, app, page, success) => {
+  success = success || (() => {});
   if (detail.errMsg != 'getUserInfo:ok') {
     wx.showToast({
       title: '无法获取用户信息',
       icon: 'none'
     });
+    success(false);
   } else {
     const data = {
       rawData: detail.rawData,
@@ -126,8 +128,32 @@ const userCompleteUser = (detail) => {
       signature: detail.signature,
       encryptedData: detail.encryptedData
     };
-    request('user/completeUser', data);
+    app.globalData.is_login = true;
+    page.setData({
+      is_login: true
+    });
+    request('user/completeUser', data, success);
   }
+}
+
+/**
+ * 车找人发布、保存
+ */
+const driverPublish = (data, success) => {
+  request('trip/driverPublish', data, success);
+}
+const driverSave = (data, success) => {
+  request('trip/driverSave', data, success);
+}
+
+/**
+ * 人找车发布、保存
+ */
+const passengerPublish = (data, success) => {
+  request('trip/passengerPublish', data, success);
+}
+const passengerSave = (data, success) => {
+  request('trip/passengerSave', data, success);
 }
 
 module.exports = {
@@ -135,5 +161,9 @@ module.exports = {
   login,
   userConfig,
   getAndUploadGroup,
-  userCompleteUser
+  userCompleteUser,
+  driverPublish,
+  driverSave,
+  passengerPublish,
+  passengerSave,
 }

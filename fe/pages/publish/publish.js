@@ -69,7 +69,7 @@ Page({
   goPage: function (e) {
     var page = e.currentTarget.dataset.page;
     wx.navigateTo({
-      url: '/pages/' + page + '/' + page,
+      url: `/pages/${page}/${page}`,
     })
   },
   deleteTemplate: function (e) {

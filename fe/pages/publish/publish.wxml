@@ -2,7 +2,7 @@
   <view class='section-title'>行程模板管理</view>
   <view class='list'>
     <block wx:for-items="{{templates}}" wx:key="{{item.id}}">
-      <navigator url="/pages/creareFindCustomer/creareFindCustomer"  id="{{index}}" class="list-item">
+      <navigator url="/pages/creareFindCustomer/creareFindCustomer?trip_id=12"  id="{{index}}" class="list-item">
         <view class='list-content'>
           <view class='data-item'>
             <image class='item-icon' src='/images/location_start.png' />
@@ -29,8 +29,8 @@
   <view class='section-title'>创建行程或模板</view>
   <view class='btn-wrap'>
     <view class='btn-group'>
-      <button class='btn-create' type='primary' data-page='creareFindCustomer' bindtap='goPage'>车找人</button>
-      <button class='btn-create' type='primary' data-page='creareFindCar' bindtap='goPage'>人找车</button>
+      <button class='btn-create' type='primary' data-page='driverPublish' bindtap='goPage'>车找人</button>
+      <button class='btn-create' type='primary' data-page='passengerPublish' bindtap='goPage'>人找车</button>
     </view>
     <view class='info'>发布行程到你的拼车群，同群好友快速查询，其他群的拼友也可以搜到你的行程。</view>
   </view>

@@ -1,18 +1,24 @@
 // pages/profile/profile.js
+const service = require('../../utils/service');
+const app = getApp();
+let self;
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    is_login: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    self = this;
+    this.setData({
+      is_login: app.globalData.is_login
+    });
   },
 
   /**
@@ -26,7 +32,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
@@ -62,5 +67,12 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+
+  /**
+   * 微信授权获取个人信息
+   */
+  getUserInfo: (e) => {
+    service.userCompleteUser(e.detail, app, self);
+  },
 })

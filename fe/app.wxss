@@ -75,6 +75,10 @@ input {
 }
 .list-label {
   color: #666;
+  white-space: nowrap;
+}
+.label-text {
+  white-space: nowrap;
 }
 .ontap {
   opacity: 0.55;
@@ -83,6 +87,12 @@ input {
   color: #3cc51f;
   display: inline-block;
   border: none !important;
+}
+textarea.text-input {
+  width: auto;
+  text-align: left;
+  padding-left: 12px;
+  box-sizing: border-box;
 }
 .placeholder {
   color: #999;

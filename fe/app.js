@@ -10,5 +10,6 @@ App({
     }
   },
   globalData: {
+    is_login: false
   }
 })

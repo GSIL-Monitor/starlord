@@ -1,4 +1,4 @@
-// pages/creareFindCustomer/creareFindCustomer.js
+// pages/passengerPublishInfo/passengerPublishInfo.js
 Page({
 
   /**
