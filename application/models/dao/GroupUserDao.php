@@ -102,7 +102,7 @@ class GroupUserDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $groupUser = array();
         $groupUser['user_id'] = $userId;

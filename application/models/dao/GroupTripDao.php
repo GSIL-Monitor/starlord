@@ -84,7 +84,7 @@ class GroupTripDao extends CI_Model
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $insertFields = $this->fields;
         array_shift($insertFields);
@@ -93,6 +93,7 @@ class GroupTripDao extends CI_Model
         $insertValues = array();
 
         foreach ($groupTrips as $v) {
+            $questionMarks = array();
             $v['created_time'] = $currentTime;
             $v['modified_time'] = $currentTime;
             $v['is_del'] = Config::RECORD_EXISTS;
@@ -103,7 +104,7 @@ class GroupTripDao extends CI_Model
             $insertValues[] = "(" . implode(",", $questionMarks) . ")";
         }
 
-        $sql = "insert into " . $this->table . " (" . implode(",", $insertFields) . ") values(" . implode(",", $insertValues) . ")";
+        $sql = "insert into " . $this->table . " (" . implode(",", $insertFields) . ") values " . implode(",", $insertValues);
         $query = $this->db->query($sql, $bindParams);
 
         if (!$query) {
@@ -132,13 +133,13 @@ class GroupTripDao extends CI_Model
         }
     }
 
-    public function updateByTripIdAndStatus($groupId, $tripId, $groupTrip)
+    public function updateByTripId($groupId, $tripId, $groupTrip)
     {
         if (empty($groupId) || empty($tripId) || !is_array($groupTrip) || count($groupTrip) == 0) {
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $groupTrip['modified_time'] = $currentTime;
 
@@ -161,6 +162,31 @@ class GroupTripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
+    }
+
+
+    public function deleteByTripId($tripId)
+    {
+        if (empty($tripId)) {
+            throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
+        }
+
+        $currentTime = date("Y-M-d H:i:s", time());
+
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $sql = "update " . $this->table . " set  is_del = ? , modified_time = ?  where trip_id = ? ";
+        $bindParams[] = Config::RECORD_DELETED;
+        $bindParams[] = $currentTime;
+        $bindParams[] = $tripId;
+
+        $query = $this->db->query($sql, $bindParams);
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
+        }
+
+        return $this->db->affected_rows();
     }
 }

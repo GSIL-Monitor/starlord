@@ -10,6 +10,7 @@ spl_autoload_register(function ($class) {
         'Config' => APPPATH . "libraries/Config.php",
         'TripDriverDetail' => APPPATH . "models/object/TripDriverDetail.php",
         'TripPassengerDetail' => APPPATH . "models/object/TripPassengerDetail.php",
+        'TripDao' => APPPATH . "models/dao/TripDao.php",
     );
 
     if (isset($map[$class]) && file_exists($map[$class])) {

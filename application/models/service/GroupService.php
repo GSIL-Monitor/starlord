@@ -83,13 +83,29 @@ class GroupService extends CI_Model
     {
         $groups = $this->getByGroupIds($groupIds);
         $updateGroups = array();
-        foreach ($groups as $group){
+        foreach ($groups as $group) {
             $group['trip_num'] = $group['trip_num'] + 1;
             $updateGroups[] = $group;
+            $this->GroupDao->updateByGroupId($group['group_id'], $group);
         }
 
-        return $this->GroupDao->updateByGroupId($updateGroups);
+        return;
+    }
 
+    public function decreaseTripInGroups($groupIds)
+    {
+        $groups = $this->getByGroupIds($groupIds);
+        $updateGroups = array();
+        foreach ($groups as $group) {
+            $group['trip_num'] = $group['trip_num'] - 1;
+            if($group['trip_num'] < 0){
+                $group['trip_num'] = 0;
+            }
+            $updateGroups[] = $group;
+            $this->GroupDao->updateByGroupId($group['group_id'], $group);
+        }
+
+        return;
     }
 
 }

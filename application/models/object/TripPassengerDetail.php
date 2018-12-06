@@ -5,7 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class TripPassengerDetail
 {
-    public $userInfo;
     public $beginDate;
     public $beginTime;
     public $startLocationName;
@@ -28,25 +27,48 @@ class TripPassengerDetail
 
     public function __construct($input)
     {
-        $this->userInfo = $input["user_info"];
-        $this->beginDate = $input["beginDate"];
-        $this->beginTime = $input["beginTime"];
-        $this->startLocationName = $input["startLocationName"];
-        $this->startLocationAddress = $input["startLocationAddress"];
-        $this->startLocationPoint = $input["startLocationPoint"];
-        $this->endLocationName = $input["endLocationName"];
-        $this->endLocationAddress = $input["endLocationAddress"];
-        $this->endLocationPoint = $input["endLocationPoint"];
-        $this->priceEveryone = $input["priceEveryone"];
-        $this->peopleNum = $input["peopleNum"];
-        $this->passengerNoSmoke = $input["passengerNoSmoke"];
-        $this->passengerLastMile = $input["passengerLastMile"];
-        $this->passengerGoods = $input["passengerGoods"];
-        $this->passengerCanDrive = $input["passengerCanDrive"];
-        $this->passengerChat = $input["passengerChat"];
-        $this->passengerLuggage = $input["passengerLuggage"];
-        $this->passengerPet = $input["passengerPet"];
-        $this->passengerNoCarsickness = $input["passengerNoCarsickness"];
+        $this->beginDate = $input["begin_date"];
+        $this->beginTime = $input["begin_time"];
+        $this->startLocationName = $input["start_location_name"];
+        $this->startLocationAddress = $input["start_location_address"];
+        $this->startLocationPoint = $input["start_location_point"];
+        $this->endLocationName = $input["end_location_name"];
+        $this->endLocationAddress = $input["end_location_address"];
+        $this->endLocationPoint = $input["end_location_point"];
+        $this->priceEveryone = $input["price_everyone"];
+        $this->peopleNum = $input["people_num"];
+        $this->passengerNoSmoke = $input["passenger_no_smoke"];
+        $this->passengerLastMile = $input["passenger_last_mile"];
+        $this->passengerGoods = $input["passenger_goods"];
+        $this->passengerCanDrive = $input["passenger_can_drive"];
+        $this->passengerChat = $input["passenger_chat"];
+        $this->passengerLuggage = $input["passenger_luggage"];
+        $this->passengerPet = $input["passenger_pet"];
+        $this->passengerNoCarsickness = $input["passenger_no_carsickness"];
         $this->tips = $input["tips"];
+    }
+
+    public function getTripArray(){
+        return array(
+            "begin_date" => $this->beginDate,
+            "begin_time" => $this->beginTime,
+            "start_location_name" => $this->startLocationName,
+            "start_location_address" => $this->startLocationAddress,
+            "start_location_point" => $this->startLocationPoint,
+            "end_location_name" => $this->endLocationName,
+            "end_location_address" => $this->endLocationAddress,
+            "end_location_point" => $this->endLocationPoint,
+            "price_everyone" => $this->priceEveryone,
+            "people_num" => $this->peopleNum,
+            "passenger_no_smoke" => $this->passengerNoSmoke,
+            "passenger_last_mile" => $this->passengerLastMile,
+            "passenger_goods" => $this->passengerGoods,
+            "passenger_can_drive" => $this->passengerCanDrive,
+            "passenger_chat" => $this->passengerChat,
+            "passenger_luggage" => $this->passengerLuggage,
+            "passenger_pet" => $this->passengerPet,
+            "passenger_no_carsickness" => $this->passengerNoCarsickness,
+            "tips" => $this->tips,
+        );
     }
 }

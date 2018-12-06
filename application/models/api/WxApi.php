@@ -46,7 +46,7 @@ class WxApi extends CI_Model
         if ($data == NULL) {
             throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
         }
-        if ($data->watermark->appid != self::APPID) {
+        if ($data['watermark']['appid'] != self::APPID) {
             throw new StatusException(Status::$message[Status::WX_DECRYPT_ERROR], Status::WX_DECRYPT_ERROR);
         }
         return $data;

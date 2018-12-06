@@ -55,6 +55,13 @@ class GroupTripService extends CI_Model
         $this->GroupTripDao->insertMulti($groupTrips);
     }
 
+    public function deleteTripsFromGroup($tripId)
+    {
+        $this->load->model('dao/GroupTripDao');
+        return $this->GroupTripDao->deleteByTripId($tripId);
+    }
+
+
     public function topOneTrip($groupId, $tripId)
     {
         $this->load->model('dao/GroupTripDao');
@@ -65,7 +72,7 @@ class GroupTripService extends CI_Model
         }
 
         $groupTrip['top_time'] = time();
-        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+        return $this->GroupTripDao->updateByTripId($groupId, $tripId, $groupTrip);
     }
 
     public function unTopOneTrip($groupId, $tripId)
@@ -77,7 +84,7 @@ class GroupTripService extends CI_Model
             throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
         }
         $groupTrip['top_time'] = null;
-        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+        return $this->GroupTripDao->updateByTripId($groupId, $tripId, $groupTrip);
     }
 
 }

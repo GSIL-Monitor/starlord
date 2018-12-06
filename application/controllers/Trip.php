@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Test extends Base
+class Trip extends Base
 {
 
     public function __construct()
@@ -78,19 +78,23 @@ class Test extends Base
     //获取行程详情
     public function driverGetDetailByTripId()
     {
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER));
+        $input = $this->input->post();
+        $userId = $input['user_id'];
+        $tripId = $input['trip_id'];
+        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER), $userId, $tripId);
     }
 
     public function passengerGetDetailByTripId()
     {
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER));
+        $input = $this->input->post();
+        $userId = $input['user_id'];
+        $tripId = $input['trip_id'];
+        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER), $userId, $tripId);
     }
 
     private function _getDetailByTripId($tripType, $userId, $tripId)
     {
-        $input = $this->input->post();
-        $userId = $input['user_id'];
-        $tripId = $input['trip_id'];
+
         if ($tripId == null) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
@@ -117,7 +121,7 @@ class Test extends Base
         $tripDriverDetail = new TripDriverDetail($input);
 
         $this->load->model('service/TripDriverService');
-        $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail);
+        $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail->getTripArray());
 
         $this->_returnSuccess($ret);
     }
@@ -132,7 +136,7 @@ class Test extends Base
         $tripPassengerDetail = new TripPassengerDetail($input);
 
         $this->load->model('service/TripPassengerService');
-        $ret = $this->TripPassengerService->saveTripTemplate($tripId, $userId, $tripPassengerDetail);
+        $ret = $this->TripPassengerService->saveTripTemplate($tripId, $userId, $tripPassengerDetail->getTripArray());
 
         $this->_returnSuccess($ret);
     }
@@ -148,12 +152,12 @@ class Test extends Base
 
         $this->load->model('service/TripDriverService');
 
-        if($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL){
+        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
 
         //发布到trip表
-        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail, $this->_user);
+        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
@@ -164,7 +168,6 @@ class Test extends Base
             $this->load->model('service/GroupService');
             $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_DRIVER);
             $this->GroupService->increaseTripInGroups($groupIds);
-
         }
 
         $this->_returnSuccess($newTrip);
@@ -180,11 +183,11 @@ class Test extends Base
 
         $this->load->model('service/TripPassengerService');
 
-        if($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL){
+        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
         //发布到trip表
-        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail, $this->_user);
+        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user);
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
@@ -192,6 +195,7 @@ class Test extends Base
         if (!empty($groupIds)) {
             //同步到grouptrip表
             $this->load->model('service/GroupTripService');
+            $this->load->model('service/GroupService');
             $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_PASSENGER);
             $this->GroupService->increaseTripInGroups($groupIds);
 
@@ -212,7 +216,7 @@ class Test extends Base
         $tripDriverDetail = new TripDriverDetail($input);
 
         $this->load->model('service/TripDriverService');
-        $ret = $this->TripDriverService->updateTrip($tripId, $userId, $tripDriverDetail);
+        $ret = $this->TripDriverService->updateTrip($tripId, $userId, $tripDriverDetail->getTripArray());
 
         $this->_returnSuccess($ret);
     }
@@ -228,7 +232,7 @@ class Test extends Base
 
         $this->load->model('service/TripPassengerService');
 
-        $ret = $this->TripPassengerService->updateTrip($tripId, $userId, $tripPassengerDetail);
+        $ret = $this->TripPassengerService->updateTrip($tripId, $userId, $tripPassengerDetail->getTripArray());
 
         $this->_returnSuccess($ret);
     }
@@ -243,9 +247,25 @@ class Test extends Base
         $tripId = $input['trip_id'];
 
         $this->load->model('service/TripDriverService');
-        $ret = $this->TripDriverService->deleteTrip($userId, $tripId);
+        $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
+        //鉴权不过，无法删除
+        if (empty($trip)) {
+            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
+        }
 
-        $this->_returnSuccess($ret);
+        $this->TripDriverService->deleteTrip($userId, $tripId);
+
+        //获取用户所在群的id
+        $this->load->model('service/GroupUserService');
+        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        if (!empty($groupIds)) {
+            $this->load->model('service/GroupTripService');
+            $this->load->model('service/GroupService');
+            $this->GroupTripService->deleteTripsFromGroup($tripId);
+            $this->GroupService->decreaseTripInGroups($groupIds);
+        }
+
+        $this->_returnSuccess(null);
     }
 
     public function passengerDeleteMy()
@@ -256,9 +276,25 @@ class Test extends Base
         $tripId = $input['trip_id'];
 
         $this->load->model('service/TripPassengerService');
-        $ret = $this->TripPassengerService->deleteTrip($userId, $tripId);
+        $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
+        //鉴权不过，无法删除
+        if (empty($trip)) {
+            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
+        }
 
-        $this->_returnSuccess($ret);
+        $this->TripPassengerService->deleteTrip($userId, $tripId);
+
+        //获取用户所在群的id
+        $this->load->model('service/GroupUserService');
+        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        if (!empty($groupIds)) {
+            $this->load->model('service/GroupTripService');
+            $this->load->model('service/GroupService');
+            $this->GroupTripService->deleteTripsFromGroup($tripId);
+            $this->GroupService->decreaseTripInGroups($groupIds);
+        }
+
+        $this->_returnSuccess(null);
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

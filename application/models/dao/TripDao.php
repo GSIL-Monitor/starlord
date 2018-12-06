@@ -70,7 +70,7 @@ class TripDao extends CI_Model
 
     public function insertOne($userId, $trip)
     {
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $trip['created_time'] = $currentTime;
         $trip['modified_time'] = $currentTime;
@@ -106,7 +106,7 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $trip['modified_time'] = $currentTime;
 
@@ -130,16 +130,16 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
     }
 
     public function deleteOne($userId, $tripId)
     {
-        if (empty($userId) || empty($trip)) {
+        if (empty($userId) || empty($tripId)) {
             throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $trip['modified_time'] = $currentTime;
 
@@ -156,7 +156,7 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
     }
 
     public function getListByUserIdAndStatusArr($userId, $statusArr)

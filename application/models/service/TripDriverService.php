@@ -7,7 +7,6 @@ class TripDriverService extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
     }
 
     public function getTripByTripId($userId, $tripId)
@@ -55,7 +54,10 @@ class TripDriverService extends CI_Model
             $this->TripDriverDao->insertOne($userId, $trip);
         } else {
             //更新旧模板
-            $this->TripDriverDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_DRAFT, $trip);
+            $rows = $this->TripDriverDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_DRAFT, $trip);
+            if ($rows == 0) {
+                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+            }
         }
 
         return true;
@@ -100,12 +102,7 @@ class TripDriverService extends CI_Model
     public function deleteTrip($userId, $tripId)
     {
         $this->load->model('dao/TripDriverDao');
-
-        $trip = array();
-        $trip['user_id'] = $userId;
-        $trip['trip_id'] = $tripId;
-
-        $ret = $this->TripDriverDao->deleteOne($userId, $trip);
+        $ret = $this->TripDriverDao->deleteOne($userId, $tripId);
 
         return $ret;
     }

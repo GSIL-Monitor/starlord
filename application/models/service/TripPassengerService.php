@@ -53,7 +53,10 @@ class TripPassengerService extends CI_Model
             $this->TripPassengerDao->insertOne($userId, $trip);
         } else {
             //更新旧模板
-            $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_DRAFT, $trip);
+            $rows = $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_DRAFT, $trip);
+            if($rows == 0){
+                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+            }
         }
 
         return true;
@@ -95,12 +98,7 @@ class TripPassengerService extends CI_Model
     public function deleteTrip($userId, $tripId)
     {
         $this->load->model('dao/TripPassengerDao');
-
-        $trip = array();
-        $trip['user_id'] = $userId;
-        $trip['trip_id'] = $tripId;
-
-        $ret = $this->TripPassengerDao->deleteOne($userId, $trip);
+        $ret = $this->TripPassengerDao->deleteOne($userId, $tripId);
 
         return $ret;
     }
