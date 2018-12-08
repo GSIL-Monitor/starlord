@@ -20,18 +20,21 @@ class TripDriverService extends CI_Model
         return $trip;
     }
 
-    public function updateDriverTrip($tripId, $userId, $tripDriverDetail)
+    public function updateTrip($tripId, $userId, $tripDriverDetail)
     {
         if ($tripId == null || userId == null) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
 
-        $trip = $tripDriverDetail;
-
         $this->load->model('dao/TripDriverDao');
+        $trip = $this->TripDriverDao->getOneByTripId($userId, $tripId);
+
+        if($trip['status'] != Config::TRIP_STATUS_NORMAL){
+            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
+        }
 
         //只有正常状态的行程才允许编辑
-        $this->TripDriverDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $trip);
+        $this->TripDriverDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $tripDriverDetail);
 
         return true;
     }

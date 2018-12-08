@@ -206,7 +206,7 @@ class Trip extends Base
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //更新我的行程
-    public function driverUpdatMy()
+    public function driverUpdateMy()
     {
         $input = $this->input->post();
         $user = $this->_user;
@@ -366,11 +366,21 @@ class Trip extends Base
         $tripId = $input['trip_id'];
         $tripType = $input['trip_type'];
 
-        $ret = null;
+
         if ($tripType == Config::TRIP_TYPE_DRIVER) {
+            $this->load->model('service/TripDriverService');
+            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
+            if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
+                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+            }
             $ret = $this->TripDriverService->deleteTrip($userId, $tripId);
         }
         if ($tripType == Config::TRIP_TYPE_PASSENGER) {
+            $this->load->model('service/TripPassengerService');
+            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
+            if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
+                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+            }
             $ret = $this->TripPassengerService->deleteTrip($userId, $tripId);
         }
 

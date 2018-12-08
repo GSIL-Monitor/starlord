@@ -27,12 +27,15 @@ class TripPassengerService extends CI_Model
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
 
-        $trip = $tripPassengerDetail;
-
         $this->load->model('dao/TripPassengerDao');
 
+        $trip = $this->TripPassengerDao->getOneByTripId($userId, $tripId);
+        if($trip['status'] != Config::TRIP_STATUS_NORMAL){
+            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
+        }
+
         //只有正常状态的行程才允许编辑
-        $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $trip);
+        $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $tripPassengerDetail);
 
         return true;
     }

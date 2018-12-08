@@ -52,7 +52,8 @@ class TripDriverDetail
         $this->tips = $input["tips"];
     }
 
-    public function getTripArray(){
+    public function getTripArray()
+    {
         return array(
             "begin_date" => $this->beginDate,
             "begin_time" => $this->beginTime,
@@ -77,6 +78,7 @@ class TripDriverDetail
             "tips" => $this->tips,
         );
     }
+
 }
 
 
