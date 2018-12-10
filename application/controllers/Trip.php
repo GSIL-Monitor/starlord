@@ -43,8 +43,8 @@ class Trip extends Base
             }
         }
 
-        array_multisort($topTripsSortKeys, SORT_DESC, SORT_NUMERIC, $topTrips);
-        array_multisort($restTripsSortKeys, SORT_DESC, SORT_NUMERIC, $restTrips);
+        array_multisort($topTripsSortKeys, SORT_DESC, SORT_REGULAR, $topTrips);
+        array_multisort($restTripsSortKeys, SORT_DESC, SORT_REGULAR, $restTrips);
 
         return array_merge($topTrips, $restTrips);
     }
@@ -67,7 +67,7 @@ class Trip extends Base
         //确保群内有该用户
         $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
 
-        //获取当前date之后的，status为正常的trips
+        //获取当前date之后的trips
         $trips = $this->GroupTripService->getCurrentTripIdsByGroupIdAndTripType($groupId, $tripType);
 
         //格式化群内行程,按照createdtime排序，toptime置顶
@@ -81,7 +81,8 @@ class Trip extends Base
         $input = $this->input->post();
         $userId = $input['user_id'];
         $tripId = $input['trip_id'];
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER), $userId, $tripId);
+
+        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER, $userId, $tripId));
     }
 
     public function passengerGetDetailByTripId()
@@ -89,7 +90,8 @@ class Trip extends Base
         $input = $this->input->post();
         $userId = $input['user_id'];
         $tripId = $input['trip_id'];
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER), $userId, $tripId);
+
+        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER, $userId, $tripId));
     }
 
     private function _getDetailByTripId($tripType, $userId, $tripId)
@@ -100,14 +102,28 @@ class Trip extends Base
         }
 
         //无需鉴权，所有用户都能看行程详情，因为分享页需要
+        $trip = null;
         if ($tripType == Config::TRIP_TYPE_DRIVER) {
             $this->load->model('service/TripDriverService');
-            return $this->TripDriverService->getTripByTripId($userId, $tripId);
+            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
 
         } else {
             $this->load->model('service/TripPassengerService');
-            return $this->TripPassengerService->getTripByTripId($userId, $tripId);
+            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
         }
+
+        if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
+            throw new StatusException(Status::$message[Status::TRIP_IS_NOT_NORMAL], Status::TRIP_IS_NOT_NORMAL);
+        }
+
+        $currentDate = date('Y-m-d');
+        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+            $trip['is_expired'] = true;
+        } else {
+            $trip['is_expired'] = false;
+        }
+
+        return $trip;
     }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //保存行程到模板
@@ -308,9 +324,21 @@ class Trip extends Base
 
         $trips = $this->TripDriverService->getMyTripList($userId);
 
-        $this->_returnSuccess($this->_sortTripsByCreatedTime($trips));
-    }
+        $currentDate = date('Y-m-d');
+        $resTrips = array();
+        if(!empty($trips)){
+            foreach ($trips as $trip){
+                if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+                    $trip['is_expired'] = true;
+                } else {
+                    $trip['is_expired'] = false;
+                }
+                $resTrips[] = $trip;
+            }
+        }
 
+        $this->_returnSuccess($this->_sortTripsByCreatedTime($resTrips));
+    }
 
     public function passengerGetMyList()
     {
@@ -321,7 +349,20 @@ class Trip extends Base
 
         $trips = $this->TripPassengerService->getMyTripList($userId);
 
-        $this->_returnSuccess($this->_sortTripsByCreatedTime($trips));
+        $currentDate = date('Y-m-d');
+        $resTrips = array();
+        if(!empty($trips)){
+            foreach ($trips as $trip){
+                if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+                    $trip['is_expired'] = true;
+                } else {
+                    $trip['is_expired'] = false;
+                }
+                $resTrips[] = $trip;
+             }
+        }
+
+        $this->_returnSuccess($this->_sortTripsByCreatedTime($resTrips));
     }
 
     private function _sortTripsByCreatedTime($trips)
@@ -336,7 +377,7 @@ class Trip extends Base
             $sortKeys[] = $trip['created_time'];
         }
 
-        array_multisort($sortKeys, SORT_DESC, SORT_NUMERIC, $trips);
+        array_multisort($sortKeys, SORT_DESC, SORT_REGULAR, $trips);
         return $trips;
     }
 

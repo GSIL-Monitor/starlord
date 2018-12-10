@@ -61,13 +61,13 @@ class GroupTripDao extends CI_Model
         }
     }
 
-    public function getListByGroupIdAndDateAndStatus($groupId, $date, $tripType, $status)
+    public function getListByGroupIdAndDate($groupId, $date, $tripType)
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and status = ? and is_del = ? and trip_begin_date > ?";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and is_del = ? and trip_begin_date > ?";
 
-        $query = $this->db->query($sql, array($groupId, $tripType, $status, Config::RECORD_EXISTS, $date));
+        $query = $this->db->query($sql, array($groupId, $tripType, Config::RECORD_EXISTS, $date));
 
         if (!$query) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));

@@ -30,7 +30,7 @@ class TripPassengerService extends CI_Model
         $this->load->model('dao/TripPassengerDao');
 
         $trip = $this->TripPassengerDao->getOneByTripId($userId, $tripId);
-        if($trip['status'] != Config::TRIP_STATUS_NORMAL){
+        if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
 
@@ -57,7 +57,7 @@ class TripPassengerService extends CI_Model
         } else {
             //更新旧模板
             $rows = $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_DRAFT, $trip);
-            if($rows == 0){
+            if ($rows == 0) {
                 throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
             }
         }
@@ -110,19 +110,21 @@ class TripPassengerService extends CI_Model
     {
         $this->load->model('dao/TripPassengerDao');
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
-
+        if (empty($trips)) {
+            return array();
+        }
         return $trips;
     }
 
     public function getMyTemplateList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
-        $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_CANCEL));
+        $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_DRAFT));
         $tripsWithType = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                $tripWithType = $trip;
-                $tripWithType['trip_type'] = Config::TRIP_TYPE_PASSENGER;
+                $trip['trip_type'] = Config::TRIP_TYPE_PASSENGER;
+                $tripsWithType[] = $trip;
             }
         }
 

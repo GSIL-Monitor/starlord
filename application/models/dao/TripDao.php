@@ -164,6 +164,8 @@ class TripDao extends CI_Model
         if (empty($userId) || empty($statusArr) || !is_array($statusArr)) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
         }
+        $this->table = $this->_getShardedTable($userId);
+        $this->db = $this->getConn($this->dbConfName);
 
         $questionMarks = array();
         $bindParams = array();

@@ -27,6 +27,7 @@ class Status
     const TRIP_NOT_EXIST = 1201;
     const TRIP_HAS_NO_AUTH_TO_PUBLISH = 1202;
     const TRIP_IS_NOT_TEMPLATE = 1203;
+    const TRIP_IS_NOT_NORMAL = 1204;
 
 
     //validation
@@ -90,6 +91,7 @@ class Status
         self::TRIP_NOT_EXIST => '行程不存在',
         self::TRIP_HAS_NO_AUTH_TO_PUBLISH => '用户无权限发布行程',
         self::TRIP_IS_NOT_TEMPLATE => '行程不是模板无法编辑',
+        self::TRIP_IS_NOT_NORMAL => '行程不是常规行程',
 
         //validation
         self::VALIDATION_IS_NULL => '值为空',

@@ -114,7 +114,9 @@ class TripDriverService extends CI_Model
     {
         $this->load->model('dao/TripDriverDao');
         $trips = $this->TripDriverDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
-
+        if(empty($trips)){
+            return array();
+        }
         return $trips;
     }
 
@@ -125,8 +127,8 @@ class TripDriverService extends CI_Model
         $tripsWithType = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                $tripWithType = $trip;
-                $tripWithType['trip_type'] = Config::TRIP_TYPE_DRIVER;
+                $trip['trip_type'] = Config::TRIP_TYPE_DRIVER;
+                $tripsWithType[] = $trip;
             }
         }
 

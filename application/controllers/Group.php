@@ -93,6 +93,7 @@ class Group extends Base
         $this->load->model('service/GroupService');
         $groups = $this->GroupService->getByGroupIds($groupIds);
 
+
         $this->_returnSuccess($groups);
     }
 
@@ -119,8 +120,7 @@ class Group extends Base
     }
 
 
-    public
-    function unTopOneTrip()
+    public function unTopOneTrip()
     {
         $input = $this->input->post();
         $user = $this->_user;

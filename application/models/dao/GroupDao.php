@@ -12,6 +12,8 @@ class GroupDao extends CI_Model
         "member_num",
         "trip_num",
         "owner_user_id",
+        "owner_avatar_url",
+        "owner_nick_name",
         "owner_wx_id",
         "notice",
         "status",
