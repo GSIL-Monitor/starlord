@@ -77,7 +77,6 @@ class Group extends Base
 
     public function getListByUserId()
     {
-        $input = $this->input->post();
         $user = $this->_user;
         $userId = $user['user_id'];
 
@@ -141,4 +140,30 @@ class Group extends Base
         $this->_returnSuccess($ret);
     }
 
+    public function exitGroup()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $userId = $user['user_id'];
+        $groupId = $input['group_id'];
+        $this->load->model('service/GroupUserService');
+
+        //确保群内有该用户
+        $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
+
+        //先检查是否为群主，群主无法退群
+        $this->load->model('service/GroupService');
+        $groups = $this->GroupService->getByGroupIds(array($groupId));
+        $group = $groups[0];
+        if ($group['owner_user_id'] == $userId) {
+            throw new StatusException(Status::$message[Status::GROUP_OWNER_CAN_NOT_EXIT], Status::GROUP_OWNER_CAN_NOT_EXIT);
+        }
+
+        $ret = $this->GroupUserService->delete($userId,$groupId);
+        if ($ret) {
+            //需要把group的member_num减少1
+            $this->GroupService->decreaseMember($group['group_id'], $group);
+        }
+        $this->_returnSuccess($ret);
+    }
 }

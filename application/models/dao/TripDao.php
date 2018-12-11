@@ -141,15 +141,14 @@ class TripDao extends CI_Model
 
         $currentTime = date("Y-M-d H:i:s", time());
 
-        $trip['modified_time'] = $currentTime;
-
         $this->table = $this->_getShardedTable($userId);
         $this->db = $this->getConn($this->dbConfName);
 
         $bindParams[] = Config::RECORD_DELETED;
+        $bindParams[] = $currentTime;
         $bindParams[] = $userId;
         $bindParams[] = $tripId;
-        $sql = "update " . $this->table . " set  is_del = ? where user_id = ? and trip_id = ?";
+        $sql = "update " . $this->table . " set  is_del = ? , modified_time = ?  where user_id = ? and trip_id = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {

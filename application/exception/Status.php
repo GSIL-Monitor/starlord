@@ -22,6 +22,7 @@ class Status
     const GROUP_USER_INVALID = 1103;
     const GROUP_NO_AUTH_UPDATE_NOTICE = 1104;
     const GROUP_HAS_NO_TRIP = 1105;
+    const GROUP_OWNER_CAN_NOT_EXIT = 1106;
 
     //trip
     const TRIP_NOT_EXIST = 1201;
@@ -86,6 +87,7 @@ class Status
         self::GROUP_USER_INVALID => '群用户非法',
         self::GROUP_NO_AUTH_UPDATE_NOTICE => '只有群主能修改公告',
         self::GROUP_HAS_NO_TRIP => '群内无此行程',
+        self::GROUP_OWNER_CAN_NOT_EXIT => '群主无法退群',
 
         //trip
         self::TRIP_NOT_EXIST => '行程不存在',

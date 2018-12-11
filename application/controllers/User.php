@@ -133,7 +133,7 @@ class User extends Base
         $phoneInfo = $this->WxApi->decryptUserInfo($sessionKey, $encryptedData, $iv);
         $user['phone'] = $phoneInfo['purePhoneNumber'];
 
-        $ret = $this->UserService->updateUser($user);
+        $this->UserService->updateUser($user);
         $this->_returnSuccess($user['phone']);
     }
 
@@ -148,7 +148,16 @@ class User extends Base
         $this->_returnSuccess($ret);
     }
 
-    public function updateUserPhone(){
+    public function updateUserPhone()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $this->load->model('service/UserService');
+
+        $user['phone'] = $input['phone'];
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($ret);
 
     }
 
