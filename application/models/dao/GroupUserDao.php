@@ -98,11 +98,11 @@ class GroupUserDao extends CI_Model
 
     public function insertOne($userId, $groupId)
     {
-        if (empty($userId) ||empty($groupId) ) {
+        if (empty($userId) || empty($groupId)) {
             throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $groupUser = array();
         $groupUser['user_id'] = $userId;
@@ -132,4 +132,28 @@ class GroupUserDao extends CI_Model
         return $groupUser;
     }
 
+    public function deleteOne($userId, $groupId)
+    {
+        if (empty($userId) || empty($groupId)) {
+            throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
+        }
+
+        $currentTime = date("Y-M-d H:i:s", time());
+
+        $this->table = $this->_getShardedTable($userId);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $bindParams[] = Config::RECORD_DELETED;
+        $bindParams[] = $currentTime;
+        $bindParams[] = $userId;
+        $bindParams[] = $groupId;
+        $sql = "update " . $this->table . " set  is_del = ? , modified_time = ?  where user_id = ? and group_id = ?";
+
+        $query = $this->db->query($sql, $bindParams);
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
+        }
+
+        return $this->db->affected_rows();
+    }
 }

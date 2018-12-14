@@ -70,7 +70,7 @@ class TripDao extends CI_Model
 
     public function insertOne($userId, $trip)
     {
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $trip['created_time'] = $currentTime;
         $trip['modified_time'] = $currentTime;
@@ -106,7 +106,7 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $trip['modified_time'] = $currentTime;
 
@@ -130,33 +130,32 @@ class TripDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
     }
 
     public function deleteOne($userId, $tripId)
     {
-        if (empty($userId) || empty($trip)) {
+        if (empty($userId) || empty($tripId)) {
             throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
-
-        $trip['modified_time'] = $currentTime;
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $this->table = $this->_getShardedTable($userId);
         $this->db = $this->getConn($this->dbConfName);
 
         $bindParams[] = Config::RECORD_DELETED;
+        $bindParams[] = $currentTime;
         $bindParams[] = $userId;
         $bindParams[] = $tripId;
-        $sql = "update " . $this->table . " set  is_del = ? where user_id = ? and trip_id = ?";
+        $sql = "update " . $this->table . " set  is_del = ? , modified_time = ?  where user_id = ? and trip_id = ?";
 
         $query = $this->db->query($sql, $bindParams);
         if (!$query) {
             throw new StatusException(Status::$message[Status::DAO_DELETE_FAIL], Status::DAO_DELETE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
     }
 
     public function getListByUserIdAndStatusArr($userId, $statusArr)
@@ -164,6 +163,8 @@ class TripDao extends CI_Model
         if (empty($userId) || empty($statusArr) || !is_array($statusArr)) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
         }
+        $this->table = $this->_getShardedTable($userId);
+        $this->db = $this->getConn($this->dbConfName);
 
         $questionMarks = array();
         $bindParams = array();

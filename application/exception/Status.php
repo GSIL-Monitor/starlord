@@ -22,10 +22,13 @@ class Status
     const GROUP_USER_INVALID = 1103;
     const GROUP_NO_AUTH_UPDATE_NOTICE = 1104;
     const GROUP_HAS_NO_TRIP = 1105;
+    const GROUP_OWNER_CAN_NOT_EXIT = 1106;
 
     //trip
     const TRIP_NOT_EXIST = 1201;
     const TRIP_HAS_NO_AUTH_TO_PUBLISH = 1202;
+    const TRIP_IS_NOT_TEMPLATE = 1203;
+    const TRIP_IS_NOT_NORMAL = 1204;
 
 
     //validation
@@ -84,10 +87,13 @@ class Status
         self::GROUP_USER_INVALID => '群用户非法',
         self::GROUP_NO_AUTH_UPDATE_NOTICE => '只有群主能修改公告',
         self::GROUP_HAS_NO_TRIP => '群内无此行程',
+        self::GROUP_OWNER_CAN_NOT_EXIT => '群主无法退群',
 
         //trip
         self::TRIP_NOT_EXIST => '行程不存在',
         self::TRIP_HAS_NO_AUTH_TO_PUBLISH => '用户无权限发布行程',
+        self::TRIP_IS_NOT_TEMPLATE => '行程不是模板无法编辑',
+        self::TRIP_IS_NOT_NORMAL => '行程不是常规行程',
 
         //validation
         self::VALIDATION_IS_NULL => '值为空',

@@ -79,17 +79,45 @@ class GroupService extends CI_Model
         return $this->GroupDao->updateByGroupId($groupId, $group);
     }
 
+
+    public function decreaseMember($groupId, $group)
+    {
+        $this->load->model('dao/GroupDao');
+        $group['member_num'] = $group['member_num'] - 1;
+        if ($group['member_num'] < 0) {
+            $group['member_num'] = 0;
+        }
+
+        return $this->GroupDao->updateByGroupId($groupId, $group);
+    }
+
     public function increaseTripInGroups($groupIds)
     {
         $groups = $this->getByGroupIds($groupIds);
         $updateGroups = array();
-        foreach ($groups as $group){
+        foreach ($groups as $group) {
             $group['trip_num'] = $group['trip_num'] + 1;
             $updateGroups[] = $group;
+            $this->GroupDao->updateByGroupId($group['group_id'], $group);
         }
 
-        return $this->GroupDao->updateByGroupId($updateGroups);
+        return;
+    }
 
+    public function decreaseTripInGroups($groupIds)
+    {
+        $groups = $this->getByGroupIds($groupIds);
+        $updateGroups = array();
+        foreach ($groups as $group) {
+            $group['trip_num'] = $group['trip_num'] - 1;
+            if ($group['trip_num'] < 0) {
+                $group['trip_num'] = 0;
+            }
+            $updateGroups[] = $group;
+            $this->GroupDao->updateByGroupId($group['group_id'], $group);
+        }
+
+        return;
     }
 
 }

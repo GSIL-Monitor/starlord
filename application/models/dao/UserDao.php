@@ -118,7 +118,7 @@ class UserDao extends CI_Model
 
     public function insertOne($user)
     {
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $user['created_time'] = $currentTime;
         $user['modified_time'] = $currentTime;
@@ -154,7 +154,7 @@ class UserDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        $currentTime = date("Y-M-d H:m:s", time());
+        $currentTime = date("Y-M-d H:i:s", time());
 
         $user['modified_time'] = $currentTime;
 
@@ -175,6 +175,6 @@ class UserDao extends CI_Model
             throw new StatusException(Status::$message[Status::DAO_UPDATE_FAIL], Status::DAO_UPDATE_FAIL, var_export($this->db, true));
         }
 
-        return true;
+        return $this->db->affected_rows();
     }
 }

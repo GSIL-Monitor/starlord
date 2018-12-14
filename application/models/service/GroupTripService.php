@@ -16,14 +16,14 @@ class GroupTripService extends CI_Model
         $currentDate = date('Y-m-d');
         $this->load->model('dao/GroupTripDao');
 
-        $groupTrips = $this->GroupTripDao->getListByGroupIdAndDateAndStatus($groupId, $currentDate, $tripType, Config::TRIP_STATUS_NORMAL);
+        $groupTrips = $this->GroupTripDao->getListByGroupIdAndDate($groupId, $currentDate, $tripType);
 
         $ret = array();
 
         //从group的trip extend info中解压出行程快照，快照在发布和更新行程的时候写入
         if (is_array($groupTrips) && count($groupTrips) > 0) {
             foreach ($groupTrips as $groupTrip) {
-                $trip = json_decode($groupTrip['extend_json_info']);
+                $trip = json_decode($groupTrip['extend_json_info'], true);
                 $trip['top_time'] = $groupTrip['top_time'];
                 $ret[] = $trip;
             }
@@ -55,8 +55,17 @@ class GroupTripService extends CI_Model
         $this->GroupTripDao->insertMulti($groupTrips);
     }
 
+    public function deleteTripsFromGroup($tripId)
+    {
+        $this->load->model('dao/GroupTripDao');
+        return $this->GroupTripDao->deleteByTripId($tripId);
+    }
+
+
     public function topOneTrip($groupId, $tripId)
     {
+        $currentTime = date("Y-M-d H:i:s", time());
+
         $this->load->model('dao/GroupTripDao');
 
         $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);
@@ -64,8 +73,8 @@ class GroupTripService extends CI_Model
             throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
         }
 
-        $groupTrip['top_time'] = time();
-        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+        $groupTrip['top_time'] = $currentTime;
+        return $this->GroupTripDao->updateByTripId($groupId, $tripId, $groupTrip);
     }
 
     public function unTopOneTrip($groupId, $tripId)
@@ -77,7 +86,7 @@ class GroupTripService extends CI_Model
             throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
         }
         $groupTrip['top_time'] = null;
-        return $this->GroupTripDao->updateByTripIdAndStatus($groupId, $tripId, $groupTrip);
+        return $this->GroupTripDao->updateByTripId($groupId, $tripId, $groupTrip);
     }
 
 }

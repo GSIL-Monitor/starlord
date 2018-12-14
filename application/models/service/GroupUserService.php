@@ -58,5 +58,13 @@ class GroupUserService extends CI_Model
         return false;
     }
 
+    public function delete($userId, $groupId)
+    {
+        $this->load->model('dao/GroupUserDao');
+        if ($userId == null || $groupId == null) {
+            throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
+        }
 
+        return $this->GroupUserDao->deleteOne($userId, $groupId);
+    }
 }
