@@ -39,7 +39,7 @@
           </view>
           <view class='list-content list-tags'>
             <block wx:for-items="{{tags}}" wx:key="{{item.value}}">
-              <view class='list-tag-item' hover-class='ontap'>{{item.label}}</view>
+              <view bindtap='toggleTag' data-name='{{ item.value }}' class='list-tag-item {{ selected_tags[item.value] ? "list-tag-item-active" : "" }}' hover-class='ontap'>{{item.label}}</view>
             </block>
           </view>
         </view>
@@ -55,8 +55,8 @@
         <!---->
       </view>
       <view class='submit-wrap'>
-        <button type='primary' class='submit-btn' formType="submit" data-type='save' plain >保存到模板</button>
-        <button type='primary' class='submit-btn' formType="submit" data-type='publish'>发布</button>
+        <button type='primary' class='submit-btn' formType="submit" data-type='save' loading='{{loading_submit}}' plain >保存到模板</button>
+        <button type='primary' class='submit-btn' formType="submit" data-type='publish' loading='{{loading_submit}}'>发布</button>
       </view>
     </form>
   </block>

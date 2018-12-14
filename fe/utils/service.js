@@ -88,13 +88,33 @@ const login = (loginCb) => {
   })
 }
 
+/** 获取用户profile */
+const getProfile = (app, myCallback) => {
+  const callback = (success, data) => {
+    if (success) {
+      app.globalData.profile = data;
+    }
+    if (myCallback) {
+      myCallback(success, data);
+    }
+  }
+  request('user/getProfile', null, callback);
+}
+
 /** 用户配置信息 */
 const userConfig = (app) => {
+  getProfile(app);
   // !TODO从本地获取config判断expire信息
   const callback = (success, data) => {
     if (!success) return;
     wx.setStorageSync(config.storage_userconfig, data);
     app.globalData.userConfig = data;
+
+    // 刷新当前页面
+    const pages = getCurrentPages();
+    if (pages.length > 0) {
+      pages[pages.length - 1].onShow();
+    }
   }
   request('user/config', {}, callback);
 }
@@ -136,6 +156,25 @@ const userCompleteUser = (detail, app, page, success) => {
   }
 }
 
+/** 更改车辆信息 */
+const updateUserCar = (data, success) => {
+  request('user/updateUserCar', data, success);
+}
+
+/** 获取发布模板 */
+const getTemplateList = (callback) => {
+  request('trip/getTemplateList', null, callback);
+}
+/** 删除发布模板 */
+const deleteTemplate = (data,callback) => {
+  request('trip/deleteTemplate', data, callback);
+}
+
+/** 获取群列表(包含群详情) */
+const getGroupListByUserId = (callback) => {
+  request('group/getListByUserId', null, callback);
+}
+
 /**
  * 车找人发布、保存
  */
@@ -144,6 +183,10 @@ const driverPublish = (data, success) => {
 }
 const driverSave = (data, success) => {
   request('trip/driverSave', data, success);
+}
+/** 我的车找人行程 */
+const driverGetMyList = (success) => {
+  request('trip/driverGetMyList', null, success);
 }
 
 /**
@@ -155,15 +198,26 @@ const passengerPublish = (data, success) => {
 const passengerSave = (data, success) => {
   request('trip/passengerSave', data, success);
 }
+/** 我的人找车行程 */
+const passengerGetMyList = (success) => {
+  request('trip/passengerGetMyList', null, success);
+}
 
 module.exports = {
   request,
   login,
+  getProfile,
+  updateUserCar,
   userConfig,
   getAndUploadGroup,
   userCompleteUser,
+  getTemplateList,
+  deleteTemplate,
+  getGroupListByUserId,
   driverPublish,
   driverSave,
+  driverGetMyList,
   passengerPublish,
   passengerSave,
+  passengerGetMyList
 }

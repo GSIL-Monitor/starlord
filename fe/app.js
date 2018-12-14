@@ -10,6 +10,8 @@ App({
     }
   },
   globalData: {
-    is_login: false
+    is_login: false,
+    profile: null,
+    userConfig: null,
   }
 })

@@ -1,4 +1,7 @@
 // pages/trip/trip.js
+const service = require('../../utils/service');
+const app = getApp();
+let self;
 Page({
 
   /**
@@ -8,64 +11,25 @@ Page({
     tabs: ['车找人', '人找车'],
     currentTab: 0,
     contentHeight: 0,
-    data: [
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      },
-      {
-        date: '每天22:15',
-        start: '北京市朝阳区这条路这个街道',
-        end: '北京市海淀区这条路这个街道',
-        price: '128元/人',
-      }
-    ]
+    loading_passenger: false,
+    loading_driver: false,
+    driverTrips: [],
+    passengerTrips: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this;
+    self = this;
     wx.getSystemInfo({
       success: function (res) {
-        that.setData({
+        self.setData({
           contentHeight: res.windowHeight - res.windowWidth / 750 * 68
         });
       }
     });
+    self.loadData();
   },
 
   /**
@@ -117,15 +81,51 @@ Page({
 
   },
 
+  passengerGetMyList: () => {
+    if (self.data.loading_passenger) return;
+    self.setData({ loading_passenger: true });
+    service.passengerGetMyList((success, data) => {
+      self.setData({ loading_passenger: false });
+      if (success) {
+        self.setData({
+          passengerTrips: data
+        });
+      }
+    });
+  },
+  driverGetMyList: () => {
+    if (self.data.loading_driver) return;
+    self.setData({ loading_driver: true });
+    service.driverGetMyList((success, data) => {
+      self.setData({ loading_driver: false });
+      if (success) {
+        self.setData({
+          driverTrips: data
+        });
+      }
+    });
+  },
+
+  loadData: () => {
+    const { currentTab } = self.data;
+    if (currentTab == 0) {
+      self.driverGetMyList();
+    } else {
+      self.passengerGetMyList();
+    }
+  },
+
   bindTabChange: function (e) {
     var current = e.detail.current;
     this.setData({
       currentTab: current
     });
+    this.loadData();
   },
   navTabClick: function (e) {
     this.setData({
       currentTab: e.currentTarget.id
     });
+    this.loadData();
   },
 })

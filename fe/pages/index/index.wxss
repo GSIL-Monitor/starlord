@@ -2,9 +2,11 @@
   color: #BEBEBE;
   font-size: 14px;
   display: block;
-  padding: 0 12px;
+  padding: 4px 12px;
 }
-
+.list {
+  margin: 0;
+}
 .list-item {
   align-items: flex-start;
 }

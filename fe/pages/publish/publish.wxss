@@ -1,23 +1,27 @@
 .section-title {
   color: #666;
   font-size: 30rpx;
-  margin: 6px 12px 2px 12px;
+  margin: 6px 12px 4px 12px;
 }
 .list {
   margin: 1px 0 0 0;
 }
-.list-extra {
-  text-align: right;
-  align-items: flex-end;
-  display: flex;
-  flex-direction: column;
+.empty-message {
+  display: block;
+  text-align: center;
+  padding: 20px 0;
+  background: #fff;
+}
+.list-item {
+  display: block;
 }
 .data-item {
-  display: flex;
   width: 100%;
-  flex-direction: row;
   align-content: center;
   align-items: center;
+  display: flex;
+  flex-direction: row;
+  line-height: 20px;
 }
 .item-icon {
   height: 14px;
@@ -29,23 +33,14 @@
   flex: 1;
   font-size: 28rpx;
   color: #666;
-  
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.btn-delete {
-  border: none !important;
-  margin: 8px -12px 0 0 !important;
-  padding-right: 12px !important;
-  font-size: 28rpx !important;
-}
-.tag {
-  font-size: 24rpx;
-  background: #d4237a;
-  background: #1296db;
-  border-radius: 2px;
-  display: inline-block;
-  color: #fff;
-  padding: 0 4px;
-  line-height: 40rpx;
+.item-value-hl {
+  font-size: 32rpx;
+  color: #444;
+  font-weight: 400;
 }
 .btn-wrap {
   background: #fff;
@@ -65,9 +60,9 @@
   margin: 0 12px;
 }
 .info {
+  display: block;
   text-align: center;
   color: #888;
-  padding: 0 24px;
-  margin-top: 12px;
+  margin-top: 30px;
   font-size: 30rpx;
 }

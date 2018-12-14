@@ -1,20 +1,22 @@
 // pages/publish/publish.js
+const service = require('../../utils/service');
+const app = getApp();
+let self;
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    templates: [
-      {}, {}, {}
-    ]
+    loading_data: false,
+    templates: []
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    self = this;
   },
 
   /**
@@ -28,7 +30,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.fetchTemplateData();
   },
 
   /**
@@ -49,7 +51,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.fetchTemplateData();
   },
 
   /**
@@ -66,12 +68,49 @@ Page({
 
   },
 
+  fetchTemplateData: () => {
+    self.setData({
+      loading_data: true
+    });
+    service.getTemplateList((success, data) => {
+      self.setData({
+        loading_data: false,
+        templates: data || []
+      });
+      wx.stopPullDownRefresh();
+    });
+  },
+
   goPage: function (e) {
-    var page = e.currentTarget.dataset.page;
+    const { page, tripid } = e.currentTarget.dataset;
+    let url = `/pages/${page}/${page}`;
+    if (tripid) {
+      url = `${url}?trip_id=${tripid}`
+    }
     wx.navigateTo({
-      url: `/pages/${page}/${page}`,
+      url
     })
   },
-  deleteTemplate: function (e) {
-  },
+
+  onDeleteTemplate: function (e) {
+    const { tripid, triptype } = e.currentTarget.dataset;
+    wx.showModal({
+      title: '删除模板',
+      content: '您确定删除该模板吗？',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({mask: true});
+          service.deleteTemplate({
+            trip_id: tripid,
+            trip_type: triptype
+          }, (success, data) => {
+            wx.hideLoading();
+            if (success) {
+              self.fetchTemplateData();
+            }
+          });
+        }
+      }
+    })
+  }
 })

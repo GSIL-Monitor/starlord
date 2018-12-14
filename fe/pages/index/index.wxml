@@ -1,9 +1,10 @@
 <!--index.wxml-->
 <import src="../../common/message.wxml"/>
 <view class='page'>
-    <text class="title">系统公告</text>
-    <template is="message" data="{{text: '消息消息消息消息消息消息消息消息消息'}}" />
-    <template is="message" data="{{text: '消息消息消息消息消息消息消息消息消息'}}" />
+    <block wx:if="{{ notice_list.length > 0 }}">
+      <text class="title">系统公告</text>
+      <template is="message" data="{{list: notice_list }}" />
+    </block>
     <text class="title">加入管理的拼车</text>
     <view class="list">
       <block wx:for-items="{{list}}" wx:key="{{item.id}}">

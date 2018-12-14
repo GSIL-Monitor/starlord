@@ -1,4 +1,5 @@
 const service = require('../../utils/service');
+const config = require('../../utils/config');
 const app = getApp();
 let self;
 Page({
@@ -8,21 +9,15 @@ Page({
    */
   data: {
     is_login: false,
-    tags: [
-      { value: 'passenger_no_smoke', label: '不抽烟' },
-      { value: 'passenger_last_mile', label: '要求接送到家' },
-      { value: 'passenger_goods', label: '纯捎货' },
-      { value: 'passenger_can_drive', label: '愿意换开车' }, 
-      { value: 'passenger_chat', label: '健谈' },
-      { value: 'passenger_luggage', label: '有大件行李' },
-      { value: 'passenger_pet', label: '有宠物' },
-      { value: 'passenger_no_carsickness', label: '不晕车' },
-    ],
+    tags: config.driver_tags,
+    selected_tags: {},
     trip_id: null,
     begin_date: null,
     begin_time: null,
     startLocation: null,
     endLocation: null,
+    loading_data: false,
+    loading_submit: false
   },
 
   /**
@@ -35,6 +30,8 @@ Page({
       is_login: app.globalData.is_login,
       trip_id: options.trip_id || null
     });
+
+    
   },
 
   /**
@@ -113,6 +110,15 @@ Page({
       begin_time: e.detail.value
     });
   },
+  
+  toggleTag: (e) => {
+    const { name } = e.currentTarget.dataset;
+    let selected_tags = self.data.selected_tags || {};
+    selected_tags[name] = selected_tags[name] ? false : true;
+    self.setData({
+      selected_tags,
+    });
+  },
 
   /**
    * 微信授权获取个人信息
@@ -125,8 +131,8 @@ Page({
     const { detail } = e;
     const { value, target } = detail;
     const submitType = target.dataset.type;
-    console.error(submitType);
-    const { trip_id, begin_date, begin_time, startLocation, endLocation } = self.data;
+    const { trip_id, begin_date, begin_time, startLocation, endLocation, tags, selected_tags, loading_submit } = self.data;
+    if (loading_submit) return;
     if (!begin_date) {
       wx.showToast({
         icon: 'none', title: '日期不能为空',
@@ -144,9 +150,9 @@ Page({
         icon: 'none', title: '请选择终点',
       });
     } else {
-      const params = {
-        trip_id: trip_id,
-        begin_date, begin_time,
+      let params = {
+        begin_date, begin_date,
+        begin_time: begin_time,
         start_location_name: startLocation.name,
         start_location_address: startLocation.address,
         start_location_point: `(${startLocation.latitude},${startLocation.latitude})`,
@@ -158,6 +164,14 @@ Page({
         people_num: value.people_num,
         tips: value.tips,
       };
+      if (trip_id) {
+        params.trip_id = trip_id;
+      }
+      tags.map(tag => {
+        if (selected_tags[tag.value]) {
+          params[tag.value] = 1;
+        }
+      });
       const callback = (success, tripInfo) => {
         if (success) {
           wx.showToast({
@@ -172,9 +186,16 @@ Page({
               delta: 1
             });
           }
+        } else {
+          self.setData({
+            loading_submit: false
+          });
         }
       }
 
+      self.setData({
+        loading_submit: true
+      });
       if (submitType == 'publish') {
         service.passengerPublish(params, callback);
       } else {

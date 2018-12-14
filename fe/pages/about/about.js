@@ -1,11 +1,12 @@
 // pages/about/about.js
+const app = getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    info: null
   },
 
   /**
@@ -26,7 +27,12 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    const { userConfig } = app.globalData;
+    if (userConfig && userConfig.docoment) {
+      this.setData({
+        info: userConfig.docoment.faq
+      });
+    }
   },
 
   /**

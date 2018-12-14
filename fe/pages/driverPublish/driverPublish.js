@@ -1,4 +1,5 @@
 const service = require('../../utils/service');
+const config = require('../../utils/config');
 const app = getApp();
 let self;
 Page({
@@ -8,21 +9,15 @@ Page({
    */
   data: {
     is_login: false,
-    tags: [
-      { value: 'driver_no_smoke', label: '无烟车' },
-      { value: 'driver_last_mile', label: '接送到家' },
-      { value: 'driver_goods', label: '可捎货' },
-      { value: 'driver_need_drive', label: '会开车优先' },
-      { value: 'driver_chat', label: '健谈优先' },
-      { value: 'driver_highway', label: '全程高速' },
-      { value: 'driver_pet', label: '可带宠物' },
-      { value: 'driver_cooler', label: '空调开放' },
-    ],
+    tags: config.driver_tags,
+    selected_tags: {},
     trip_id: null,
     begin_date: null,
     begin_time: null,
     startLocation: null,
     endLocation: null,
+    loading_data: false,
+    loading_submit: false
   },
 
   /**
@@ -35,6 +30,10 @@ Page({
       is_login: app.globalData.is_login,
       trip_id: options.trip_id || null
     });
+    console.error(options);
+    if (options.trip_id) {
+      service.driverGetDetailByTripId({ trip_id: options.trip_id });
+    }
   },
 
   /**
@@ -104,13 +103,22 @@ Page({
     })
   },
   bindDateChange: function (e) {
-    this.setData({
+    self.setData({
       begin_date: e.detail.value
     });
   },
   bindTimeChange: function (e) {
-    this.setData({
+    self.setData({
       begin_time: e.detail.value
+    });
+  },
+
+  toggleTag: (e) => {
+    const { name } = e.currentTarget.dataset;
+    let selected_tags = self.data.selected_tags || {};
+    selected_tags[name] = selected_tags[name] ? false : true;
+    self.setData({
+      selected_tags,
     });
   },
 
@@ -125,8 +133,8 @@ Page({
     const { detail } = e;
     const { value, target } = detail;
     const submitType = target.dataset.type;
-    console.error(submitType);
-    const { trip_id, begin_date, begin_time, startLocation, endLocation } = self.data;
+    const { trip_id, begin_date, begin_time, startLocation, endLocation, tags, selected_tags, loading_submit } = self.data;
+    if (loading_submit) return;
     if (!begin_date) {
       wx.showToast({
         icon: 'none', title: '日期不能为空',
@@ -144,9 +152,9 @@ Page({
         icon: 'none', title: '请选择终点',
       });
     } else {
-      const params = {
-        trip_id: trip_id,
-        begin_date, begin_time,
+      let params = {
+        begin_date, begin_date,
+        begin_time: begin_time,
         start_location_name: startLocation.name,
         start_location_address: startLocation.address,
         start_location_point: `(${startLocation.latitude},${startLocation.latitude})`,
@@ -154,11 +162,19 @@ Page({
         end_location_address: endLocation.address,
         end_location_point: `(${endLocation.latitude},${endLocation.latitude})`,
         route: value.route,
-        price_everyone: value.price_everyone,
+        price_everyone: value.price_everyone || null,
         price_total: value.price_total,
         seat_num: value.seat_num,
         tips: value.tips,
       };
+      if (trip_id) {
+        params.trip_id = trip_id;
+      }
+      tags.map(tag => {
+        if (selected_tags[tag.value]) {
+          params[tag.value] = 1;
+        }
+      });
       const callback = (success, tripInfo) => {
         if (success) {
           wx.showToast({
@@ -166,16 +182,23 @@ Page({
           });
           if (submitType == 'publish') {
             wx.navigateTo({
-              url: `/pages/creareFindCarInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}`,
+              url: `/pages/driverPublishInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}`,
             });
           } else {
             wx.navigateBack({
               delta: 1
             });
           }
+        } else {
+          self.setData({
+            loading_submit: false
+          });
         }
       }
 
+      self.setData({
+        loading_submit: true
+      });
       if (submitType == 'publish') {
         service.driverPublish(params, callback);
       } else {

@@ -1,3 +1,5 @@
+<import src="/common/pageLoading.wxml"/>
+<import src="/common/emptyPage.wxml"/>
 <view class='page'>
   <view class='tab-navBar'>
     <block wx:for="{{tabs}}" wx:key="{{index}}">
@@ -8,29 +10,31 @@
     <swiper current="{{currentTab}}" duration="300" bindchange="bindTabChange" class='tab-swiper'>
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
+          <template is="pageLoading" data="{{loading:loading_driver}}" />
+          <template is="emptyPage" data="{{ show: !loading_driver && driverTrips.length == 0 }}" />
           <view class='list'>
-            <block wx:for-items="{{data}}" wx:key="{{item.id}}">
-              <navigator url="/pages/shareGroup/shareGroup"  id="{{item.id}}" class="list-item">
+            <block wx:for-items="{{driverTrips}}" wx:key="{{item.id}}">
+              <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}" id="{{item.id}}" class="list-item">
                 <view class='list-content'>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
-                      <view class='trip-date-value'>{{item.date}}</view>
+                      <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
                       <button type='primary' size='mini' plain class='trip-btn'>取消行程</button>
                     </view>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.start}}</text>
+                    <text class='trip-item-value'>{{item.start_location_address}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_end.png' />
-                    <text class='trip-item-value'>{{item.end}}</text>
+                    <text class='trip-item-value'>{{item.end_location_address}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      价格: 120元/人，包车:400元，座位:4
+                      价格: {{ item.price_everyone }}元/人，包车:{{item.price_total}}元，座位:{{item.seat_num}}
                     </view>
                   </view>
                 </view>
@@ -41,29 +45,31 @@
       </swiper-item>
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
+          <template is="pageLoading" data="{{loading:loading_passenger}}" />
+          <template is="emptyPage" data="{{ show: !loading_passenger && passengerTrips.length == 0 }}" />
           <view class='list'>
-            <block wx:for-items="{{data}}" wx:key="{{item.id}}">
-              <navigator url="/pages/shareGroup/shareGroup"  id="{{item.id}}" class="list-item">
+            <block wx:for-items="{{passengerTrips}}" wx:key="{{item.id}}">
+              <navigator url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}"  id="{{item.id}}" class="list-item">
                 <view class='list-content'>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
-                      <view class='trip-date-value'>{{item.date}}</view>
-                      <button type='primary' size='mini' plain class='btn'>取消行程</button>
+                      <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
+                      <button type='primary' size='mini' plain class='trip-btn'>取消行程</button>
                     </view>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.start}}</text>
+                    <text class='trip-item-value'>{{item.start_location_address}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.end}}</text>
+                    <text class='trip-item-value'>{{item.end_location_address}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      价格: 120元/人，包车:400元，座位:4
+                      愿付: {{ item.price_everyone }}元/人，人数: {{ item.people_num }}
                     </view>
                   </view>
                 </view>

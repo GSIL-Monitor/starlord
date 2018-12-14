@@ -7,3 +7,10 @@
 .trip-date-icon {
   margin-top: 18rpx;
 }
+.trip-date {
+  margin-bottom: 4px;
+}
+.trip-date-value {
+  font-weight: 500;
+  font-size: 36rpx;
+}
