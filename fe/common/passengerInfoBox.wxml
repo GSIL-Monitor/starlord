@@ -1,32 +1,26 @@
-<template name="findCar">
+<template name="passengerInfoBox">
   <view class='list list-trip-info'>
     <view class='list-item'>
       <view class='list-content'>
         <view class='trip-data-item'>
           <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
           <view class='trip-item-value trip-date'>
-            <text class='trip-date-value'>每天22:45</text>
-            <text class='trip-info'>顺路度：89%</text>
+            <text class='trip-date-value'>{{ detail.begin_date }} {{ detail.begin_time }}</text>
+            <text class='trip-info' wx:if="{{false}}">顺路度：89%</text>
           </view>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/location_start.png' />
-          <text class='trip-item-value'>北京市朝阳区这条路这个街道</text>
+          <text class='trip-item-value'>{{ detail.start_location_name }}</text>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/location_end.png' />
-          <text class='trip-item-value'>北京市海淀区这条路这个街道</text>
+          <text class='trip-item-value'>{{ detail.end_location_name }}</text>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/price.png' />
           <view class='trip-item-value'>
-            价格: 120元/人，包车:400元，座位:4
-          </view>
-        </view>
-        <view class='trip-data-item'>
-          <image class='trip-item-icon' src='/images/car_gay.png' />
-          <view class='trip-item-value'>
-            京QNA302 | 丰田 | 锐志 | 白色 | 轿车
+            愿付: {{ detail.price_everyone }}元/人，人数: {{ detail.people_num }}
           </view>
         </view>
       </view>
@@ -34,25 +28,15 @@
     <view class='list-item'>
       <view class='list-content'>
         <view class='trip-data-item'>
-          <image class='trip-item-icon' src='/images/address.png' />
-          <view class='trip-item-value'>
-            <text class='trip-hl'>途径地点:</text>
-            <view style='flex:1;'>高铁站，小学，政府大厦</view>
-          </view>
-        </view>
-        <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/tag.png' />
           <view class='trip-item-value'>
             <text class='trip-hl'>标签:</text>
-            <view class='trip-tags-wrap'>
-              <view class='trip-tag'>接送到家</view>
-              <view class='trip-tag'>可捎货</view>
-              <view class='trip-tag'>可带宠物</view>
-              <view class='trip-tag'>可捎货</view>
-              <view class='trip-tag'>接送到家</view>
-              <view class='trip-tag'>可捎货</view>
-              <view class='trip-tag'>可带宠物</view>
-              <view class='trip-tag'>可捎货</view>
+            <view class='trip-tags-wrap' wx:if="{{detail.tags && detail.tags.length > 0}}">
+              <block wx:for-items="{{detail.tags}}" wx:key="{{item}}">
+                <view class='trip-tag'>{{ item }}</view>
+              </block>
+            </view>
+            <view class='trip-tags-wrap' wx:if="{{!detail.tags || detail.tags.length == 0}}">
             </view>
           </view>
         </view>
@@ -60,12 +44,12 @@
           <image class='trip-item-icon' src='/images/remark.png' />
           <view class='trip-item-value'>
             <text class='trip-hl'>备注:</text>
-            <view style='flex:1;'>10年老司机开车稳，车上有亲戚介意的绕行。</view>
+            <view style='flex:1;'>{{ detail.tips }}</view>
           </view>
         </view>
       </view>
     </view>
-    <view class='list-item'>
+    <view class='list-item' wx:if="{{false}}">
       <view class='list-content'>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/users.png' />
@@ -81,13 +65,14 @@
     </view>
     <view class='list-item'>
       <view class='list-trip-avatar'>
-        <image class='list-avatar-image' src='/images/profile.png' />
+        <image class='list-avatar-image' src='{{ detail.user_info.avatar_url }}' wx:if="{{detail.user_info && detail.user_info.avatar_url}}" />
+        <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!detail.user_info || !detail.user_info.avatar_url}}" />
       </view>
-      <view class='list-content'>
-        minzhang | 13810576522
+      <view class='list-content' wx:if="{{ detail.user_info && detail.user_info.nick_name }}">
+        {{ detail.user_info.nick_name }} | {{ detail.user_info.phone }}
       </view>
       <view class='list-extra'>
-        <button plain size='mini' type='primary' class='list-trip-btn' bindtap='makeCall'>拨号</button>
+        <button plain size='mini' type='primary' class='list-trip-btn' bindtap='makeCall' data-phone='{{ detail.user_info.phone }}' wx:if="{{ detail.user_info && detail.user_info.phone }}">拨号</button>
       </view>
     </view>
   </view>

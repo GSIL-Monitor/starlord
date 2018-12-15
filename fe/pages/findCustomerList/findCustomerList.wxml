@@ -1,6 +1,6 @@
-<import src="/common/findCar.wxml"/>
+<import src="/common/driverInfoBox.wxml"/>
 <view class='page'>
   <block wx:for-items="{{list}}">
-    <template is="findCar" />
+    <template is="driverInfoBox" />
   </block>
 </view>

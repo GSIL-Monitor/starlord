@@ -10,14 +10,13 @@ Page({
   data: {
     is_login: false,
     tags: config.driver_tags,
-    selected_tags: {},
     trip_id: null,
-    begin_date: null,
-    begin_time: null,
-    startLocation: null,
-    endLocation: null,
+    user_id: null,
+    form_data: {},
     loading_data: false,
-    loading_submit: false
+    loading_submit: false,
+    loading_profile: false,
+    profile: app.globalData.profile || {},
   },
 
   /**
@@ -28,12 +27,10 @@ Page({
     options = options || {};
     this.setData({
       is_login: app.globalData.is_login,
-      trip_id: options.trip_id || null
+      trip_id: options.trip_id || null,
+      user_id: options.user_id || null,
     });
-    console.error(options);
-    if (options.trip_id) {
-      service.driverGetDetailByTripId({ trip_id: options.trip_id });
-    }
+    this.loadData();
   },
 
   /**
@@ -47,7 +44,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
@@ -85,18 +81,52 @@ Page({
 
   },
 
+  loadData: () => {
+    const { trip_id, user_id } = self.data;
+    if (trip_id && user_id) {
+      self.setData({
+        loading_data: true
+      });
+      service.driverGetDetailByTripId({ trip_id, user_id }, (success, data) => {
+        self.setData({
+          loading_data: false,
+          form_data: data || {}
+        });
+      });
+    }
+
+    self.setData({
+      loading_profile: true
+    });
+    service.getProfile(app, (success, data) => {
+      self.setData({
+        loading_profile: false,
+        profile: data || {}
+      });
+    });
+  },
+
   chooseLocation: function (e) {
     var locationType = e.currentTarget.dataset.location;
-    var that = this;
     wx.chooseLocation({
       success: function (res) {
         if (locationType == 'start') {
-          that.setData({
-            startLocation: res
+          self.setData({
+            form_data: {
+              ...self.data.form_data,
+              start_location_address: res.address,
+              start_location_name: res.name,
+              start_location_point: `(${res.latitude},${res.latitude})`,
+            }
           });
         } else {
-          that.setData({
-            endLocation: res
+          self.setData({
+            form_data: {
+              ...self.data.form_data,
+              end_location_address: res.address,
+              end_location_name: res.name,
+              end_location_point: `(${res.latitude},${res.latitude})`,
+            }
           });
         }
       },
@@ -104,21 +134,36 @@ Page({
   },
   bindDateChange: function (e) {
     self.setData({
-      begin_date: e.detail.value
+      form_data: {
+        ...self.data.form_data,
+        begin_date: e.detail.value
+      }
     });
   },
   bindTimeChange: function (e) {
     self.setData({
-      begin_time: e.detail.value
+      form_data: {
+        ...self.data.form_data,
+        begin_time: e.detail.value
+      }
+    });
+  },
+  bindinput(e) {
+    const { name } = e.currentTarget.dataset;
+    self.setData({
+      form_data: {
+        ...self.data.form_data,
+        [name]: e.detail.value,
+      }
     });
   },
 
   toggleTag: (e) => {
     const { name } = e.currentTarget.dataset;
-    let selected_tags = self.data.selected_tags || {};
-    selected_tags[name] = selected_tags[name] ? false : true;
+    let form_data = self.data.form_data || {};
+    form_data[name] = form_data[name] ? 0 : 1;
     self.setData({
-      selected_tags,
+      form_data,
     });
   },
 
@@ -131,50 +176,49 @@ Page({
 
   formSubmit: function (e) {
     const { detail } = e;
-    const { value, target } = detail;
+    const { target } = detail;
     const submitType = target.dataset.type;
-    const { trip_id, begin_date, begin_time, startLocation, endLocation, tags, selected_tags, loading_submit } = self.data;
+    const { form_data, trip_id, tags, loading_submit }  = self.data;
     if (loading_submit) return;
-    if (!begin_date) {
+    if (!form_data.begin_date) {
       wx.showToast({
         icon: 'none', title: '日期不能为空',
       });
-    } else if (!begin_time) {
+    } else if (!form_data.begin_time) {
       wx.showToast({
         icon: 'none', title: '时间不能为空',
       });
-    } else if (!startLocation) {
+    } else if (!form_data.start_location_name) {
       wx.showToast({
         icon: 'none', title: '请选择始发点',
       });
-    } else if (!endLocation) {
+    } else if (!form_data.end_location_name) {
       wx.showToast({
         icon: 'none', title: '请选择终点',
       });
     } else {
       let params = {
-        begin_date, begin_date,
-        begin_time: begin_time,
-        start_location_name: startLocation.name,
-        start_location_address: startLocation.address,
-        start_location_point: `(${startLocation.latitude},${startLocation.latitude})`,
-        end_location_name: endLocation.name,
-        end_location_address: endLocation.address,
-        end_location_point: `(${endLocation.latitude},${endLocation.latitude})`,
-        route: value.route,
-        price_everyone: value.price_everyone || null,
-        price_total: value.price_total,
-        seat_num: value.seat_num,
-        tips: value.tips,
+        begin_date: form_data.begin_date,
+        begin_time: form_data.begin_time,
+        start_location_name: form_data.start_location_name,
+        start_location_address: form_data.start_location_address,
+        start_location_point: form_data.start_location_point,
+        end_location_name: form_data.end_location_name,
+        end_location_address: form_data.end_location_address,
+        end_location_point: form_data.end_location_point,
+        route: form_data.route,
+        price_everyone: form_data.price_everyone || null,
+        price_total: form_data.price_total,
+        seat_num: form_data.seat_num,
+        tips: form_data.tips,
       };
       if (trip_id) {
         params.trip_id = trip_id;
       }
       tags.map(tag => {
-        if (selected_tags[tag.value]) {
-          params[tag.value] = 1;
-        }
+        params[tag.value] = (form_data[tag.value] == 1) ? 1 : 0;
       });
+
       const callback = (success, tripInfo) => {
         if (success) {
           wx.showToast({
@@ -182,7 +226,7 @@ Page({
           });
           if (submitType == 'publish') {
             wx.navigateTo({
-              url: `/pages/driverPublishInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}`,
+              url: `/pages/driverPublishInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}&user_id=${tripInfo.user_id}&user_id=${tripInfo.user_id}`,
             });
           } else {
             wx.navigateBack({

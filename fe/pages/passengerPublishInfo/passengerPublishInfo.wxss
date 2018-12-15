@@ -1,1 +1,8 @@
-/* pages/passengerPublishInfo/passengerPublishInfo.wxss */
+.submit-wrap{
+  margin: 24px;
+  text-align: center;
+}
+.info {
+  color: #888;
+  font-size: 32rpx;
+}

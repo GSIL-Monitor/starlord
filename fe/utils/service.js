@@ -156,6 +156,11 @@ const userCompleteUser = (detail, app, page, success) => {
   }
 }
 
+/** 更改手机号码 */
+const updateUserPhone = (data, success) => {
+  request('user/updateUserPhone', data, success);
+}
+
 /** 更改车辆信息 */
 const updateUserCar = (data, success) => {
   request('user/updateUserCar', data, success);
@@ -184,6 +189,9 @@ const driverPublish = (data, success) => {
 const driverSave = (data, success) => {
   request('trip/driverSave', data, success);
 }
+const driverGetDetailByTripId = (data, success) => {
+  request('trip/driverGetDetailByTripId', data, success);
+}
 /** 我的车找人行程 */
 const driverGetMyList = (success) => {
   request('trip/driverGetMyList', null, success);
@@ -198,6 +206,9 @@ const passengerPublish = (data, success) => {
 const passengerSave = (data, success) => {
   request('trip/passengerSave', data, success);
 }
+const passengerGetDetailByTripId = (data, success) => {
+  request('trip/passengerGetDetailByTripId', data, success);
+}
 /** 我的人找车行程 */
 const passengerGetMyList = (success) => {
   request('trip/passengerGetMyList', null, success);
@@ -211,13 +222,16 @@ module.exports = {
   userConfig,
   getAndUploadGroup,
   userCompleteUser,
+  updateUserPhone,
   getTemplateList,
   deleteTemplate,
   getGroupListByUserId,
   driverPublish,
   driverSave,
+  driverGetDetailByTripId,
   driverGetMyList,
   passengerPublish,
   passengerSave,
+  passengerGetDetailByTripId,
   passengerGetMyList
 }

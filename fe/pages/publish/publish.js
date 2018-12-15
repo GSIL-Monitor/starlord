@@ -82,10 +82,10 @@ Page({
   },
 
   goPage: function (e) {
-    const { page, tripid } = e.currentTarget.dataset;
+    const { page, tripid, userid } = e.currentTarget.dataset;
     let url = `/pages/${page}/${page}`;
-    if (tripid) {
-      url = `${url}?trip_id=${tripid}`
+    if (tripid && userid) {
+      url = `${url}?trip_id=${tripid}&user_id=${userid}`
     }
     wx.navigateTo({
       url

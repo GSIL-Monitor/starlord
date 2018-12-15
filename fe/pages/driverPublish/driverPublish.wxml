@@ -7,10 +7,10 @@
     <form catchsubmit="formSubmit">
       <view class='section-title'>基本信息（必填）</view>
       <view class='list'>
-        <template is="tripForm" data='{{startLocation: startLocation, endLocation: endLocation, begin_date: begin_date, begin_time: begin_time}}' />
+        <template is="tripForm" data='{{ data: form_data }}' />
         <!---->
-        <template is="phone" data="{{phone:null}}" />
-        <template is="car" data="{{car:2}}" />
+        <template is="phone" data="{{phone:profile.phone}}" />
+        <template is="car" data="{{info: profile}}" />
       </view>
       <view class='section-title'>其它信息（选填）</view>
       <view class='list'>
@@ -20,7 +20,7 @@
             <text class='label-text'>途径地点</text>
           </view>
           <view class='list-content'>
-            <input class='text-input' name="route" placeholder="请输入途径地点，用逗号隔开" />
+            <input class='text-input' bindinput="bindinput" data-name='route' value='{{ form_data.route }}' placeholder="请输入途径地点，用逗号隔开" />
           </view>
         </view>
         <!---->
@@ -29,9 +29,9 @@
             <text class='label-text'>价格</text>
           </view>
           <view class='list-content price-wrap'>
-            <input class='price-input' name="price_everyone" />
+            <input class='price-input' bindinput="bindinput" data-name='price_everyone' value='{{ form_data.price_everyone }}' />
             <text class='price-label'>元/人，包车</text>
-            <input class='price-input' name="price_total" />
+            <input class='price-input' bindinput="bindinput" data-name='price_total' value='{{ form_data.price_total }}' />
             <text class='price-label'>元</text>
           </view>
         </view>
@@ -41,7 +41,7 @@
             <text class='label-text'>座位数</text>
           </view>
           <view class='list-content'>
-            <input class='text-input' name="seat_num" placeholder="输入可乘坐座位数量" />
+            <input class='text-input' bindinput="bindinput" data-name='seat_num' value='{{ form_data.seat_num }}' placeholder="输入可乘坐座位数量" />
           </view>
           <view class='list-extra'>个</view>
         </view>
@@ -52,7 +52,7 @@
           </view>
           <view class='list-content list-tags'>
             <block wx:for-items="{{tags}}" wx:key="{{item.value}}">
-              <view bindtap='toggleTag' data-name='{{ item.value }}' class='list-tag-item {{ selected_tags[item.value] ? "list-tag-item-active" : "" }}' hover-class='ontap'>{{item.label}}</view>
+              <view bindtap='toggleTag' data-name='{{ item.value }}' class='list-tag-item {{ form_data[item.value] == 1 ? "list-tag-item-active" : "" }}' hover-class='ontap'>{{item.label}}</view>
             </block>
           </view>
         </view>
@@ -62,7 +62,7 @@
             <text class='label-text'>备注</text>
           </view>
           <view class='list-content'>
-            <textarea class='text-input' name="tips" auto-height placeholder="输入备注" />
+            <textarea class='text-input' bindinput="bindinput" data-name='tips' value='{{ form_data.tips }}' auto-height placeholder="输入备注" />
           </view>
         </view>
         <!---->
