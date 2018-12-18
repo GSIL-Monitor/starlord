@@ -65,7 +65,7 @@ class TripPassengerService extends CI_Model
         return true;
     }
 
-    public function createNewTrip($userId, $tripPassengerDetail, $user)
+    public function createNewTrip($userId, $tripPassengerDetail, $user, $summeryGroups)
     {
         $this->load->model('dao/TripPassengerDao');
         $this->load->model('redis/IdGenRedis');
@@ -95,10 +95,13 @@ class TripPassengerService extends CI_Model
         );
         $newTrip = $this->TripPassengerDao->insertOne($userId, $trip);
 
+        $trip['group_info'] = json_encode($summeryGroups);
+
         return $newTrip;
     }
 
-    public function deleteTrip($userId, $tripId)
+    public
+    function deleteTrip($userId, $tripId)
     {
         $this->load->model('dao/TripPassengerDao');
         $ret = $this->TripPassengerDao->deleteOne($userId, $tripId);
@@ -106,7 +109,8 @@ class TripPassengerService extends CI_Model
         return $ret;
     }
 
-    public function getMyTripList($userId)
+    public
+    function getMyTripList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
@@ -116,7 +120,8 @@ class TripPassengerService extends CI_Model
         return $trips;
     }
 
-    public function getMyTemplateList($userId)
+    public
+    function getMyTemplateList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_DRAFT));

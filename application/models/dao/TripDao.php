@@ -187,4 +187,38 @@ class TripDao extends CI_Model
         return $query->result_array();
     }
 
+    public function search($beginDate, $beginTime, $targetStart, $targetEnd)
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $startTime = null;
+        $endTime = null;
+
+        if (strtotime($beginTime) >= strtotime("18:00:00")) {
+            $startTime = date('H:i:s', strtotime($beginTime . " - 6 hours"));
+            $endTime = "23:59:59";
+        } else if (strtotime($beginTime) < strtotime("06:00:00")) {
+            $startTime = "00:00:00";
+            $endTime = date('H:i:s', strtotime($beginTime . " + 6 hours"));
+        } else {
+            $startTime = date('H:i:s', strtotime($beginTime . " - 6 hours"));
+            $endTime = date('H:i:s', strtotime($beginTime . " + 6 hours"));
+        }
+
+        $sqlStart = "select * , start_location_point <-> end_location_point total_distance, (start_location_point <-> point ?) + (end_location_point <-> point ?) sum_distance from " . $this->table . " where status = ? and is_del = ? and begin_date >= ? and begin_time > ? and begin_time < ? order by  start_location_point <-> point ? limit ?";
+        $queryStart = $this->db->query($sqlStart, array($targetStart, $targetEnd, Config::TRIP_STATUS_NORMAL, Config::RECORD_EXISTS, $beginDate, $startTime, $endTime, $targetStart, 100));
+        if (!$queryStart) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        }
+
+        $sqlEnd = "select * , start_location_point <-> end_location_point total_distance, (start_location_point <-> point ?) + (end_location_point <-> point ?) sum_distance from " . $this->table . " where status = ? and is_del = ? and begin_date >= ? and begin_time > ? and begin_time < ? order by  end_location_point <-> point ? limit ?";
+        $queryEnd = $this->db->query($sqlEnd, array($targetStart, $targetEnd, Config::TRIP_STATUS_NORMAL, Config::RECORD_EXISTS, $beginDate, $startTime, $endTime, $targetEnd, 100));
+        if (!$queryEnd) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        }
+
+        return array_merge($queryStart->result_array(), $queryEnd->result_array());
+    }
+
 }

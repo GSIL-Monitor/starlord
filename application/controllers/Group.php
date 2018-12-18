@@ -36,7 +36,7 @@ class Group extends Base
 
         //把人加到群里
         $this->load->model('service/GroupUserService');
-        $ret = $this->GroupUserService->add($userId, $group['group_id']);
+        $ret = $this->GroupUserService->add($userId, $group['group_id'], $wxGid);
         if ($ret) {
             //用户是第一次加入群，需要把group的member_num加1
             $this->GroupService->increaseMember($group['group_id'], $group);
@@ -82,7 +82,13 @@ class Group extends Base
 
         //获取群列表
         $this->load->model('service/GroupUserService');
-        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        $groups = $this->GroupUserService->getGroupsByUserId($userId);
+        $groupIds = array();
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $groupIds[] = $group['group_id'];
+            }
+        }
 
         if (empty($groupIds)) {
             $this->_returnSuccess(array());
@@ -90,10 +96,10 @@ class Group extends Base
 
         //获取列表内群详情
         $this->load->model('service/GroupService');
-        $groups = $this->GroupService->getByGroupIds($groupIds);
+        $groupDetails = $this->GroupService->getByGroupIds($groupIds);
 
 
-        $this->_returnSuccess($groups);
+        $this->_returnSuccess($groupDetails);
     }
 
 
@@ -159,7 +165,7 @@ class Group extends Base
             throw new StatusException(Status::$message[Status::GROUP_OWNER_CAN_NOT_EXIT], Status::GROUP_OWNER_CAN_NOT_EXIT);
         }
 
-        $ret = $this->GroupUserService->delete($userId,$groupId);
+        $ret = $this->GroupUserService->delete($userId, $groupId);
         if ($ret) {
             //需要把group的member_num减少1
             $this->GroupService->decreaseMember($group['group_id'], $group);

@@ -112,10 +112,6 @@ class Trip extends Base
             $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
         }
 
-        if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
-            throw new StatusException(Status::$message[Status::TRIP_IS_NOT_NORMAL], Status::TRIP_IS_NOT_NORMAL);
-        }
-
         $currentDate = date('Y-m-d');
         if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
             $trip['is_expired'] = true;
@@ -172,12 +168,21 @@ class Trip extends Base
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
 
-        //发布到trip表
-        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
-        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        $groups = $this->GroupUserService->getGroupsByUserId($userId);
+        $groupIds = array();
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $groupIds[] = $group['group_id'];
+            }
+        }
+
+        //发布到trip表
+        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user, $groups);
+
+
         if (!empty($groupIds)) {
             //同步到grouptrip表
             $this->load->model('service/GroupTripService');
@@ -203,11 +208,17 @@ class Trip extends Base
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
         //发布到trip表
-        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user);
+        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user, $groups);
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
-        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        $groups = $this->GroupUserService->getGroupsByUserId($userId);
+        $groupIds = array();
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $groupIds[] = $group['group_id'];
+            }
+        }
         if (!empty($groupIds)) {
             //同步到grouptrip表
             $this->load->model('service/GroupTripService');
@@ -273,7 +284,13 @@ class Trip extends Base
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
-        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        $groups = $this->GroupUserService->getGroupsByUserId($userId);
+        $groupIds = array();
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $groupIds[] = $group['group_id'];
+            }
+        }
         if (!empty($groupIds)) {
             $this->load->model('service/GroupTripService');
             $this->load->model('service/GroupService');
@@ -302,7 +319,13 @@ class Trip extends Base
 
         //获取用户所在群的id
         $this->load->model('service/GroupUserService');
-        $groupIds = $this->GroupUserService->getGroupIdsByUserId($userId);
+        $groups = $this->GroupUserService->getGroupsByUserId($userId);
+        $groupIds = array();
+        if (!empty($groups)) {
+            foreach ($groups as $group) {
+                $groupIds[] = $group['group_id'];
+            }
+        }
         if (!empty($groupIds)) {
             $this->load->model('service/GroupTripService');
             $this->load->model('service/GroupService');
@@ -326,8 +349,8 @@ class Trip extends Base
 
         $currentDate = date('Y-m-d');
         $resTrips = array();
-        if(!empty($trips)){
-            foreach ($trips as $trip){
+        if (!empty($trips)) {
+            foreach ($trips as $trip) {
                 if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
                     $trip['is_expired'] = true;
                 } else {
@@ -351,15 +374,15 @@ class Trip extends Base
 
         $currentDate = date('Y-m-d');
         $resTrips = array();
-        if(!empty($trips)){
-            foreach ($trips as $trip){
+        if (!empty($trips)) {
+            foreach ($trips as $trip) {
                 if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
                     $trip['is_expired'] = true;
                 } else {
                     $trip['is_expired'] = false;
                 }
                 $resTrips[] = $trip;
-             }
+            }
         }
 
         $this->_returnSuccess($this->_sortTripsByCreatedTime($resTrips));

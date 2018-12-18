@@ -29,7 +29,7 @@ class TripDriverService extends CI_Model
         $this->load->model('dao/TripDriverDao');
         $trip = $this->TripDriverDao->getOneByTripId($userId, $tripId);
 
-        if($trip['status'] != Config::TRIP_STATUS_NORMAL){
+        if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
 
@@ -66,7 +66,7 @@ class TripDriverService extends CI_Model
         return true;
     }
 
-    public function createNewTrip($userId, $tripDriverDetail, $user)
+    public function createNewTrip($userId, $tripDriverDetail, $user, $summeryGroups)
     {
         $this->load->model('dao/TripDriverDao');
         $this->load->model('redis/IdGenRedis');
@@ -96,6 +96,8 @@ class TripDriverService extends CI_Model
             )
         );
 
+        $trip['group_info'] = json_encode($summeryGroups);
+
         $newTrip = $this->TripDriverDao->insertOne($userId, $trip);
 
         return $newTrip;
@@ -114,7 +116,7 @@ class TripDriverService extends CI_Model
     {
         $this->load->model('dao/TripDriverDao');
         $trips = $this->TripDriverDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
-        if(empty($trips)){
+        if (empty($trips)) {
             return array();
         }
         return $trips;

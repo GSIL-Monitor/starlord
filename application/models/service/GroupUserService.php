@@ -23,7 +23,7 @@ class GroupUserService extends CI_Model
         return;
     }
 
-    public function getGroupIdsByUserId($userId)
+    public function getGroupsByUserId($userId)
     {
         $this->load->model('dao/GroupUserDao');
         if ($userId == null) {
@@ -34,15 +34,15 @@ class GroupUserService extends CI_Model
         if (empty($ret)) {
             return array();
         } else {
-            $groupIds = array();
+            $groups = array();
             foreach ($ret as $v) {
-                $groupIds[] = $v['group_id'];
+                $groups[] = array('group_id' => $v['group_id'], 'wx_gid' => $v['wx_gid']);
             }
-            return $groupIds;
+            return $groups;
         }
     }
 
-    public function add($userId, $groupId)
+    public function add($userId, $groupId, $wxGid)
     {
         $this->load->model('dao/GroupUserDao');
         if ($userId == null || $groupId == null) {
@@ -51,7 +51,7 @@ class GroupUserService extends CI_Model
 
         $ret = $this->GroupUserDao->getOneByGroupIdAndUserId($userId, $groupId);
         if (empty($ret) || !is_array($ret) || count($ret) == 0) {
-            $this->GroupUserDao->insertOne($userId, $groupId);
+            $this->GroupUserDao->insertOne($userId, $groupId, $wxGid);
             return true;
         }
 

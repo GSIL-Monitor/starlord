@@ -96,7 +96,7 @@ class GroupUserDao extends CI_Model
         return $query->result_array();
     }
 
-    public function insertOne($userId, $groupId)
+    public function insertOne($userId, $groupId, $wxGid)
     {
         if (empty($userId) || empty($groupId)) {
             throw new StatusException(Status::$message[Status::DAO_INSERT_NO_FILED], Status::DAO_INSERT_NO_FILED, var_export($this->db, true));
@@ -107,6 +107,7 @@ class GroupUserDao extends CI_Model
         $groupUser = array();
         $groupUser['user_id'] = $userId;
         $groupUser['group_id'] = $groupId;
+        $groupUser['wx_gid'] = $wxGid;
         $groupUser['status'] = Config::GROUP_USER_STATUS_DEFAULT;
         $groupUser['is_del'] = Config::RECORD_EXISTS;
         $groupUser['created_time'] = $currentTime;

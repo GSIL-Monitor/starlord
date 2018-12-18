@@ -49,5 +49,9 @@ class Config
     //群成员状态
     const GROUP_USER_STATUS_DEFAULT = 0;
 
+    //搜索范围标记
+    const SEARCH_ALL = 0;
+    const SEARCH_ONLY_IN_MY_GROUP = 1;
+
 
 }

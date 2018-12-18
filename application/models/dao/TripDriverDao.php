@@ -11,6 +11,7 @@ class TripDriverDao extends TripDao
             "trip_id",
             "user_id",
             "user_info",
+            "group_info",
             "begin_date",
             "begin_time",
             "start_location_name",

@@ -119,24 +119,6 @@ class User extends Base
         $this->_returnSuccess($ret);
     }
 
-    public function getPhone()
-    {
-        $input = $this->input->post();
-        $user = $this->_user;
-        $this->load->model('service/UserService');
-        $this->load->model('api/WxApi');
-
-        $encryptedData = $input['encryptedData'];
-        $iv = $input['iv'];
-        $sessionKey = $user['session_key'];
-
-        $phoneInfo = $this->WxApi->decryptUserInfo($sessionKey, $encryptedData, $iv);
-        $user['phone'] = $phoneInfo['purePhoneNumber'];
-
-        $this->UserService->updateUser($user);
-        $this->_returnSuccess($user['phone']);
-    }
-
     public function updateUserAgreement()
     {
         $user = $this->_user;
