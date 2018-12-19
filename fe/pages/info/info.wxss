@@ -13,3 +13,10 @@
   text-align: right;
   margin-top: -12px;
 }
+.auth-wrap {
+  margin: 24px;
+  text-align: center;
+}
+.auth-message {
+  padding: 12px 0;
+}

@@ -1,0 +1,99 @@
+<template name="driverInfoBox">
+  <view class='list list-trip-info'>
+    <view class='list-item'>
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
+          <view class='trip-item-value trip-date'>
+            <text class='trip-date-value'>{{ detail.begin_date }} {{ detail.begin_time }}</text>
+            <text class='trip-info' wx:if="{{false}}">顺路度：89%</text>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/location_start.png' />
+          <text class='trip-item-value'>{{ detail.start_location_name }}</text>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/location_end.png' />
+          <text class='trip-item-value'>{{ detail.end_location_name }}</text>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/price.png' />
+          <view class='trip-item-value'>
+            价格: {{ detail.price_everyone }}元/人，包车:{{ detail.price_total }}元，座位: {{ detail.seat_num }}
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/car_gay.png' />
+          <view class='trip-item-value' wx:if="{{detail.user_info && detail.user_info.car_plate}}">
+            {{ detail.user_info.car_plate }} |
+            {{ detail.user_info.car_brand }} |
+            {{ detail.user_info.car_model }} |
+            {{ detail.user_info.car_color }} |
+            {{ detail.user_info.car_type }}
+          </view>
+          <view class='trip-item-value' wx:if="{{!detail.user_info || !detail.user_info.car_plate}}">
+            暂无车辆信息
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/address.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>途径地点:</text>
+            <view style='flex:1;'>{{ detail.route || '无' }}</view>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/tag.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>标签:</text>
+            <view class='trip-tags-wrap' wx:if="{{detail.tags && detail.tags.length > 0}}">
+              <block wx:for-items="{{detail.tags}}" wx:key="{{item}}">
+                <view class='trip-tag'>{{ item }}</view>
+              </block>
+            </view>
+            <view class='trip-tags-wrap' wx:if="{{!detail.tags || detail.tags.length == 0}}">
+            </view>
+          </view>
+        </view>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/remark.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>备注:</text>
+            <view style='flex:1;'>{{ detail.tips }}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item' wx:if="{{false}}">
+      <view class='list-content'>
+        <view class='trip-data-item'>
+          <image class='trip-item-icon' src='/images/users.png' />
+          <view class='trip-item-value'>
+            <text class='trip-hl'>来自拼车群:</text>
+            <view class='trip-group-wrap'>
+              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群1</navigator>
+              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群2</navigator>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='list-item'>
+      <view class='list-trip-avatar'>
+        <image class='list-avatar-image' src='{{ detail.user_info.avatar_url }}' wx:if="{{detail.user_info && detail.user_info.avatar_url}}" />
+        <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!detail.user_info || !detail.user_info.avatar_url}}" />
+      </view>
+      <view class='list-content' wx:if="{{ detail.user_info && detail.user_info.nick_name }}">
+        {{ detail.user_info.nick_name }} | {{ detail.user_info.phone }}
+      </view>
+      <view class='list-extra'>
+        <button plain size='mini' type='primary' class='list-trip-btn' bindtap='makeCall' data-phone='{{ detail.user_info.phone }}' wx:if="{{ detail.user_info && detail.user_info.phone }}">拨号</button>
+      </view>
+    </view>
+  </view>
+</template>

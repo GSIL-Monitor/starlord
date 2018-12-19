@@ -42,12 +42,14 @@ input {
   box-sizing: border-box;
 }
 .message-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 22px;
+  margin-top: -3px;
 }
 .message-text {
   flex: 1;
-  font-size: 28rpx;
+  font-size: 13px;
+  line-height: 18px;
 }
 
 .list {
@@ -75,6 +77,10 @@ input {
 }
 .list-label {
   color: #666;
+  white-space: nowrap;
+}
+.label-text {
+  white-space: nowrap;
 }
 .ontap {
   opacity: 0.55;
@@ -83,6 +89,12 @@ input {
   color: #3cc51f;
   display: inline-block;
   border: none !important;
+}
+textarea.text-input {
+  width: auto;
+  text-align: left;
+  padding-left: 12px;
+  box-sizing: border-box;
 }
 .placeholder {
   color: #999;
@@ -191,7 +203,7 @@ input {
 }
 .trip-date-value {
   flex: 1;
-  font-size: 34rpx;
+  font-size: 36rpx;
   color: #333;
 }
 .trip-btn, trip-info {
@@ -260,6 +272,37 @@ input {
   color: #3cc51f;
   border-radius: 6rpx;
   margin: 2px 4px;
-  padding: 4rpx 10rpx;
+  /* height: 30px; */
+  line-height: 24px;
+  padding: 0 10rpx;
   font-size: 28rpx;
+}
+.list-tag-item-active {
+  background: #3cc51f;
+  color: #fff;
+}
+
+/** page loading */
+.page-loading-text {
+  text-align: center;
+  display: block;
+  margin: 12px 0;
+  color: #666;
+}
+
+/** 空数据页面 */
+.empty-page {
+  text-align: center;
+  padding: 24px 24px;
+}
+.empty-page-icon {
+  height: 24px;
+  width: 24px;
+  display: block;
+  margin: 0 auto;
+}
+.empty-page-text {
+  display: block;
+  color: #666;
+  margin-top: 12px;
 }

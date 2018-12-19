@@ -11,10 +11,11 @@
     "pages/car/car",
     "pages/info/info",
     "pages/trip/trip",
-    "pages/creareFindCustomer/creareFindCustomer",
-    "pages/creareFindCar/creareFindCar",
-    "pages/creareFindCarInfo/creareFindCarInfo",
-    "pages/findCustomerList/findCustomerList"
+    "pages/driverPublish/driverPublish",
+    "pages/driverPublishInfo/driverPublishInfo",
+    "pages/findCustomerList/findCustomerList",
+    "pages/passengerPublish/passengerPublish",
+    "pages/passengerPublishInfo/passengerPublishInfo"
   ],
   "window": {
     "backgroundTextStyle": "dark",

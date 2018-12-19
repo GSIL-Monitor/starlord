@@ -1,3 +1,4 @@
+<import src="/common/loginBtn.wxml"/>
 <!--template-->
 <template name="list">
   <navigator url="/pages/{{uri}}/{{uri}}" class="list-item">
@@ -15,18 +16,21 @@
 <view class='page'>
   <!-- profile info -->
   <view class='list'>
-    <view class='list-item profile'>
-      <view class='list-avatar profile-avatar'>
-        <open-data class="list-avatar-image" type="userAvatarUrl" lang="zh_CN"></open-data>
-      </view>
-      <view class='list-content'>
-        <view>
-          <open-data class="nickname" type="userNickName" lang="zh_CN"></open-data>
+    <block wx:if="{{is_login}}">
+      <view class='list-item profile'>
+        <view class='list-avatar profile-avatar'>
+          <open-data class="list-avatar-image" type="userAvatarUrl" lang="zh_CN"></open-data>
         </view>
-        <open-data class="profile-item" type="userProvince" lang="zh_CN"></open-data>
-        <open-data class="profile-item" type="userCity" lang="zh_CN"></open-data>
+        <view class='list-content'>
+          <view>
+            <open-data class="nickname" type="userNickName" lang="zh_CN"></open-data>
+          </view>
+          <open-data class="profile-item" type="userProvince" lang="zh_CN"></open-data>
+          <open-data class="profile-item" type="userCity" lang="zh_CN"></open-data>
+        </view>
       </view>
-    </view>
+    </block>
+    <template is="loginBtn" data='{{is_login: is_login, auth_message: null}}' />
   </view>
 
   <!-- 功能链接 -->
