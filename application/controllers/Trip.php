@@ -191,6 +191,7 @@ class Trip extends Base
             $this->GroupService->increaseTripInGroups($groupIds);
         }
 
+        $newTrip['trip_id'] = $newTrip['trip_id'] . "";
         $this->_returnSuccess($newTrip);
     }
 
@@ -228,6 +229,7 @@ class Trip extends Base
 
         }
 
+        $newTrip['trip_id'] = $newTrip['trip_id'] . "";
         $this->_returnSuccess($newTrip);
     }
 

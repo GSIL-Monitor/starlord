@@ -52,7 +52,7 @@ class Group extends Base
         $this->load->model('service/GroupService');
         $group = $this->GroupService->getByGroupIds(array($groupId));
 
-        $this->_returnSuccess($group);
+        $this->_returnSuccess($group[0]);
     }
 
     public function updateNotice()
