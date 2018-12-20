@@ -30,7 +30,6 @@ Page({
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
     });
-    this.loadData();
   },
 
   /**
@@ -44,6 +43,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.loadData();
   },
 
   /**
@@ -116,7 +116,7 @@ Page({
               ...self.data.form_data,
               start_location_address: res.address,
               start_location_name: res.name,
-              start_location_point: `(${res.latitude},${res.latitude})`,
+              start_location_point: `(${res.latitude},${res.longitude})`,
             }
           });
         } else {
@@ -125,7 +125,7 @@ Page({
               ...self.data.form_data,
               end_location_address: res.address,
               end_location_name: res.name,
-              end_location_point: `(${res.latitude},${res.latitude})`,
+              end_location_point: `(${res.latitude},${res.longitude})`,
             }
           });
         }
@@ -224,7 +224,7 @@ Page({
             title: '提交成功'
           });
           if (submitType == 'publish') {
-            wx.navigateTo({
+            wx.redirectTo({
               url: `/pages/passengerPublishInfo/passengerPublishInfo?trip_id=${tripInfo.trip_id}&user_id=${tripInfo.user_id}`,
             });
           } else {

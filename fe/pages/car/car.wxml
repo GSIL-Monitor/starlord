@@ -63,7 +63,7 @@
       </view>
       <view class='btn-wrap'>
         <button type="primary" formType="submit" loading='{{loading_update}}'>保存</button>
-        <text class='form-info'>发布行程时自动显示的车辆信息</text>
+        <text class='form-info' wx:if="{{ docoment.car_tip }}">{{ docoment.car_tip }}</text>
       </view>
     </form>
   </block>

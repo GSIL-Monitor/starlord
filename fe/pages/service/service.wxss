@@ -4,3 +4,8 @@
 .list-item {
   padding: 0px 12px;
 }
+
+.wrap {
+  /* background: #fff; */
+  padding: 12px;
+}

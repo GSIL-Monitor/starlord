@@ -8,22 +8,22 @@
     <text class="title">加入管理的拼车</text>
     <view class="list">
       <block wx:for-items="{{list}}" wx:key="{{item.id}}">
-        <navigator url="/pages/shareGroup/shareGroup"  id="{{item.id}}" class="list-item">
+        <navigator url="/pages/shareGroup/shareGroup?group_id={{item.group_id}}"  id="{{item.id}}" class="list-item">
           <image class="list-avatar" src="../../images/profile.png" />
           <view class="list-content">
-            <text class="list-title">{{ item.title }}</text>
+            <open-data class="list-title" type="groupName" open-gid="{{ item.wx_gid }}"></open-data>
             <view class="list-info">
-              <text>33人</text>
+              <text>{{ item.member_num }}人</text>
               <view class="list-division" />
-              <text>行程:33</text>
+              <text>行程:{{ item.trip_num }}</text>
               <view class="list-division" />
               <text>群主:</text>
-              <block>
+              <block wx:if="{{ item.owner_user_id == 0 }}">
                 <text class='list-warning'>群主未认领</text>
               </block>
-              <block>
-                <image class='group-avatar' src='../../images/profile.png' />
-                <text>昵称</text>
+              <block wx:if="{{ item.owner_user_id > 0 }}">
+                <image class='group-avatar' src='{{ item.owner_avatar_url || "../../images/profile.png" }}' />
+                <text>{{ item.owner_nick_name }}</text>
               </block>
             </view>
           </view>

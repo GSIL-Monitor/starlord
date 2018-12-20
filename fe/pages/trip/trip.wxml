@@ -25,11 +25,11 @@
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.start_location_address}}</text>
+                    <text class='trip-item-value'>{{item.start_location_name}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_end.png' />
-                    <text class='trip-item-value'>{{item.end_location_address}}</text>
+                    <text class='trip-item-value'>{{item.end_location_name}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />

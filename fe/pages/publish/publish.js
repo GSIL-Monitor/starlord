@@ -9,7 +9,8 @@ Page({
    */
   data: {
     loading_data: false,
-    templates: []
+    templates: [],
+    docoment: {}
   },
 
   /**
@@ -30,6 +31,12 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    const { userConfig } = app.globalData;
+    if (userConfig && userConfig.docoment) {
+      this.setData({
+        docoment: userConfig.docoment,
+      });
+    }
     this.fetchTemplateData();
   },
 
