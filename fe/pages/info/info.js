@@ -12,6 +12,7 @@ Page({
     profile: {},
     loading_data: false,
     loading_submit: false,
+    docoment: {}
   },
 
   /**
@@ -35,6 +36,12 @@ Page({
     this.setData({
       is_login: app.globalData.is_login
     });
+    const { userConfig } = app.globalData;
+    if (userConfig && userConfig.docoment) {
+      this.setData({
+        docoment: userConfig.docoment,
+      });
+    }
     wx.startPullDownRefresh();
   },
 

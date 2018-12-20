@@ -1,4 +1,7 @@
-// pages/findCustomerList/findCustomerList.js
+const service = require('../../utils/service');
+const config = require('../../utils/config');
+const app = getApp();
+let self;
 Page({
 
   /**
@@ -6,15 +9,20 @@ Page({
    */
   data: {
     list: [
-      {}, {}, {}, {}, {}, {},
-    ]
+    ],
+    loading: false,
+    params: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    self = this;
+    self.setData({
+      params: options
+    });
+    wx.startPullDownRefresh();
   },
 
   /**
@@ -49,7 +57,16 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    self.setData({
+      loading: true
+    });
+    service.passengerSearch(self.data.params, (success, data) => {
+      wx.stopPullDownRefresh();
+      self.setData({
+        loading: false,
+        list: success ? data : []
+      });
+    });
   },
 
   /**

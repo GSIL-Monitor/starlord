@@ -11,9 +11,6 @@ Page({
   },
   onLoad: function (r) {
     self = this;
-    wx.showShareMenu({
-      withShareTicket: true
-    });
   },
   /**
    * 生命周期函数--监听页面显示

@@ -13,9 +13,10 @@
     "pages/trip/trip",
     "pages/driverPublish/driverPublish",
     "pages/driverPublishInfo/driverPublishInfo",
-    "pages/findCustomerList/findCustomerList",
+    "pages/driverList/driverList",
     "pages/passengerPublish/passengerPublish",
-    "pages/passengerPublishInfo/passengerPublishInfo"
+    "pages/passengerPublishInfo/passengerPublishInfo",
+    "pages/passengerList/passengerList"
   ],
   "window": {
     "backgroundTextStyle": "dark",

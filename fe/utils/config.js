@@ -7,6 +7,12 @@ const config = {
   storage_ticket: 'user_ticket',// 本地存储ticket的名称
   storage_userconfig: 'user_config',// 本地存储userConfig信息
 
+  // 分享页面
+  share_pages: [
+    'pages/driverPublishInfo/driverPublishInfo',
+    'pages/passengerPublishInfo/passengerPublishInfo'
+  ],
+
   // 车辆信息
   car_colors: ['蓝色', '白色', '黄色'],
   car_types: ['轿车', 'SUV', '商务车', '大巴车'],

@@ -1,1 +1,38 @@
-/* pages/shareGroup/shareGroup.wxss */
+.group-wrap {
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 2rpx;
+}
+.group-data {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+.group-avatar {
+  height: 44px;
+  width: 44px;
+  background: #3cc51f;
+  color: #fff;
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+}
+.group-content {
+  flex: 1;
+}
+.group-operation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.group-btn {
+  border: none !important;
+  padding-right: 0 !important;
+  white-space: nowrap;
+}
+.tab-navBar {
+  position: static;
+}

@@ -1,2 +1,41 @@
-<!--pages/shareGroup/shareGroup.wxml-->
-<text>pages/shareGroup/shareGroup.wxml</text>
+<import src="/common/emptyPage.wxml"/>
+<view class='page'>
+  <view class="group-wrap">
+    <view class="group-data">
+      <view class='group-avatar'>
+        群
+      </view>
+      <view class='group-content'>
+        <view class='group-name'>
+          <open-data type="groupName" open-gid="{{ detail.wx_gid }}"></open-data>
+        </view>
+        <view class='group-info'>
+          {{ detail.member_num }}人 | 行程: {{ detail.trip_num }}
+        </view>
+      </view>
+      <view class='group-operation'>
+        <button type='primary' size='mini' plain class='group-btn' bindtap='exitGroup'>退出该群</button>
+      </view>
+    </view>
+    <view class='group-notice'>
+      群公告: {{ detail.notice }}
+    </view>
+  </view>
+  <view class='tab-navBar'>
+    <block wx:for="{{tabs}}" wx:key="{{index}}">
+    <view id="{{index}}" class="tab-navItem {{currentTab==index ? 'tab-active' : ''}}" hover-class='ontap' bindtap="navTabClick">{{ item }}</view>
+    </block>
+  </view>
+  <view class='list' wx:if="{{ currentTab == 0 }}">
+    <block wx:for-items="{{driverTrips}}" wx:key="{{item.id}}">
+      <template is="driverInfoBox" data="{{ detail: item }}" />
+    </block>
+    <template is="emptyPage" data="{{ show: !driver_loading && driverTrips.length == 0 }}" />
+  </view>
+  <view class='list' wx:if="{{ currentTab == 1 }}">
+    <block wx:for-items="{{passengerTrips}}" wx:key="{{item.id}}">
+      <template is="passengerInfoBox" data="{{ detail: item }}" />
+    </block>
+    <template is="emptyPage" data="{{ show: !passenger_loading && passengerTrips.length == 0 }}" />
+  </view>
+</view>
