@@ -1,0 +1,8 @@
+<import src="/common/driverInfoBox.wxml"/>
+<import src="/common/emptyPage.wxml"/>
+<view class='page'>
+  <block wx:for-items="{{list}}">
+    <template is="driverInfoBox" data="{{ detail: item }}" />
+  </block>
+  <template is="emptyPage" data="{{ show: !loading && list.length == 0 }}" />
+</view>

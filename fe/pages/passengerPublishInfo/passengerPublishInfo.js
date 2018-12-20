@@ -19,6 +19,9 @@ Page({
    */
   onLoad: function (options) {
     self = this;
+    wx.showShareMenu({
+      withShareTicket: true
+    });
     options = options || {};
     this.setData({
       trip_id: options.trip_id || null,

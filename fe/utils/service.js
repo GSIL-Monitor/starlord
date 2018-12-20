@@ -179,6 +179,12 @@ const deleteTemplate = (data,callback) => {
 const getGroupListByUserId = (callback) => {
   request('group/getListByUserId', null, callback);
 }
+const getDetailByGroupId = (data, callback) => {
+  request('group/getDetailByGroupId', data, callback);
+}
+const exitGroup = (data, callback) => {
+  request('group/exitGroup', data, callback);
+}
 
 /**
  * 车找人发布、保存
@@ -195,6 +201,9 @@ const driverGetDetailByTripId = (data, success) => {
 /** 我的车找人行程 */
 const driverGetMyList = (success) => {
   request('trip/driverGetMyList', null, success);
+}
+const driverGetListByGroupId = (data, success) => {
+  request('trip/driverGetListByGroupId', data, success);
 }
 
 /**
@@ -213,6 +222,17 @@ const passengerGetDetailByTripId = (data, success) => {
 const passengerGetMyList = (success) => {
   request('trip/passengerGetMyList', null, success);
 }
+const passengerGetListByGroupId = (data, success) => {
+  request('trip/passengerGetListByGroupId', data, success);
+}
+
+/** 搜索 */
+const driverSearch = (data, callback) => {
+  request('search/all', { ...data, trip_type: 0 }, callback);
+}
+const passengerSearch = (data, callback) => {
+  request('search/all', { ...data, trip_type: 1 }, callback);
+}
 
 module.exports = {
   request,
@@ -226,12 +246,18 @@ module.exports = {
   getTemplateList,
   deleteTemplate,
   getGroupListByUserId,
+  getDetailByGroupId,
+  exitGroup,
   driverPublish,
   driverSave,
   driverGetDetailByTripId,
   driverGetMyList,
+  driverGetListByGroupId,
+  driverSearch,
   passengerPublish,
   passengerSave,
   passengerGetDetailByTripId,
-  passengerGetMyList
+  passengerGetMyList,
+  passengerGetListByGroupId,
+  passengerSearch,
 }

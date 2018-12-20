@@ -15,7 +15,8 @@ Page({
     car_color_index: -1,
     car_type_index: -1,
     loading_data: false,
-    loading_update: false
+    loading_update: false,
+    docoment: {}
   },
 
   /**
@@ -41,6 +42,15 @@ Page({
       loading_data: true,
       loading_update: false
     });
+    
+
+    const { userConfig } = app.globalData;
+    if (userConfig && userConfig.docoment) {
+      this.setData({
+        docoment: userConfig.docoment,
+      });
+    }
+
     service.getProfile(app, this.onGetProfile);
   },
 
@@ -116,8 +126,8 @@ Page({
       profile: {
         ...this.data.profile,
         [name]: value,
-        [`${name}_index`]: e.detail.value
-      }
+      },
+      [`${name}_index`]: e.detail.value
     });
   },
 

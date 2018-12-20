@@ -44,6 +44,6 @@
       <button class='btn-create' type='primary' data-page='driverPublish' bindtap='goPage'>车找人</button>
       <button class='btn-create' type='primary' data-page='passengerPublish' bindtap='goPage'>人找车</button>
     </view>
-    <view class='info'>发布行程到你的拼车群，同群好友快速查询，其他群的拼友也可以搜到你的行程。</view>
+    <view class='info' wx:if="{{ docoment.publish_tip }}">{{ docoment.publish_tip }}</view>
   </view>
 </view>

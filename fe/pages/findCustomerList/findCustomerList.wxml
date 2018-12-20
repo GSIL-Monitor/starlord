@@ -1,6 +1,0 @@
-<import src="/common/driverInfoBox.wxml"/>
-<view class='page'>
-  <block wx:for-items="{{list}}">
-    <template is="driverInfoBox" />
-  </block>
-</view>
