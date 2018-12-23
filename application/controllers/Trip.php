@@ -12,6 +12,69 @@ class Trip extends Base
 
     }
 
+    public function getTripDetailInSharePage()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+        $userId = $user['user_id'];
+        $tripUserId = $input['user_id'];
+        $tripId = $input['trip_id'];
+        $tripType = $input['trip_type'];
+
+
+        $this->load->model('api/WxApi');
+        $encryptedData = $input['encryptedData'];
+        $iv = $input['iv'];
+        $sessionKey = $user['wx_session_key'];
+        $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
+        $wxGid = $groupInfo['openGId'];
+
+        //先检查群是否存在，如果不存在则创建群，最终获取group_id
+        $this->load->model('service/GroupService');
+        $group = $this->GroupService->getByWxGid($wxGid);
+        if (empty($group)) {
+            //如果不存在群组，则创建member_num为0的新群组
+            $group = $this->GroupService->createNewGroup($wxGid);
+        }
+
+        $groupId = $group['group_id'];
+        $this->load->model('service/GroupUserService');
+        try {
+            //检查人是否存在
+            $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
+        } catch (StatusException $e) {
+            //如果不存在
+            $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
+            if ($ret) {
+                //用户是第一次加入群，需要把group的member_num加1
+                $this->GroupService->increaseMember($groupId, $group);
+            }
+        }
+
+        $trip = $this->_getDetailByTripId($tripType, $tripUserId, $tripId);
+        $retTrip = $trip;
+        $this->load->model('service/GroupTripService');
+        try {
+            //检查行程是否在群里
+
+            $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
+        } catch (StatusException $e) {
+            //否则把行程加群
+            $this->load->model('service/GroupService');
+            $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
+            $this->GroupService->increaseTripInGroup(array($groupId));
+
+            unset($trip['is_expired']);
+            if ($tripType == Config::TRIP_TYPE_DRIVER) {
+                $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+            } else {
+                $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+            }
+        }
+
+        $this->_returnSuccess($retTrip);
+    }
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //获取群内行程列表
     public function driverGetListByGroupId()
@@ -168,28 +231,8 @@ class Trip extends Base
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
 
-
-        //获取用户所在群的id
-        $this->load->model('service/GroupUserService');
-        $groups = $this->GroupUserService->getGroupsByUserId($userId);
-        $groupIds = array();
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $groupIds[] = $group['group_id'];
-            }
-        }
-
         //发布到trip表
-        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user, $groups);
-
-
-        if (!empty($groupIds)) {
-            //同步到grouptrip表
-            $this->load->model('service/GroupTripService');
-            $this->load->model('service/GroupService');
-            $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_DRIVER);
-            $this->GroupService->increaseTripInGroups($groupIds);
-        }
+        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
 
         $newTrip['trip_id'] = $newTrip['trip_id'] . "";
         $this->_returnSuccess($newTrip);
@@ -209,25 +252,7 @@ class Trip extends Base
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
         //发布到trip表
-        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user, $groups);
-
-        //获取用户所在群的id
-        $this->load->model('service/GroupUserService');
-        $groups = $this->GroupUserService->getGroupsByUserId($userId);
-        $groupIds = array();
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $groupIds[] = $group['group_id'];
-            }
-        }
-        if (!empty($groupIds)) {
-            //同步到grouptrip表
-            $this->load->model('service/GroupTripService');
-            $this->load->model('service/GroupService');
-            $this->GroupTripService->publishTripsToGroup($newTrip['trip_id'], $groupIds, $newTrip, Config::TRIP_TYPE_PASSENGER);
-            $this->GroupService->increaseTripInGroups($groupIds);
-
-        }
+        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user);
 
         $newTrip['trip_id'] = $newTrip['trip_id'] . "";
         $this->_returnSuccess($newTrip);
@@ -453,4 +478,6 @@ class Trip extends Base
         $this->_returnSuccess($ret);
     }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 }

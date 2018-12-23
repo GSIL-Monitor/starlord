@@ -12,38 +12,7 @@ class Group extends Base
 
     }
 
-    public function addUser()
-    {
-        $input = $this->input->post();
-        $user = $this->_user;
-        $userId = $user['user_id'];
 
-
-        $this->load->model('api/WxApi');
-        $encryptedData = $input['encryptedData'];
-        $iv = $input['iv'];
-        $sessionKey = $user['wx_session_key'];
-        $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
-        $wxGid = $groupInfo['openGId'];
-
-        //先检查群是否存在，如果不存在则创建群，最终获取group_id
-        $this->load->model('service/GroupService');
-        $group = $this->GroupService->getByWxGid($wxGid);
-        if (empty($group)) {
-            //如果不存在群组，则创建member_num为0的新群组
-            $group = $this->GroupService->createNewGroup($wxGid);
-        }
-
-        //把人加到群里
-        $this->load->model('service/GroupUserService');
-        $ret = $this->GroupUserService->add($userId, $group['group_id'], $wxGid);
-        if ($ret) {
-            //用户是第一次加入群，需要把group的member_num加1
-            $this->GroupService->increaseMember($group['group_id'], $group);
-        }
-
-        $this->_returnSuccess(null);
-    }
 
     public function getDetailByGroupId()
     {
@@ -171,5 +140,33 @@ class Group extends Base
             $this->GroupService->decreaseMember($group['group_id'], $group);
         }
         $this->_returnSuccess($ret);
+    }
+
+    private function _getDetailByTripId($tripType, $userId, $tripId)
+    {
+
+        if ($tripId == null) {
+            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
+        }
+
+        //无需鉴权，所有用户都能看行程详情，因为分享页需要
+        $trip = null;
+        if ($tripType == Config::TRIP_TYPE_DRIVER) {
+            $this->load->model('service/TripDriverService');
+            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
+
+        } else {
+            $this->load->model('service/TripPassengerService');
+            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
+        }
+
+        $currentDate = date('Y-m-d');
+        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+            $trip['is_expired'] = true;
+        } else {
+            $trip['is_expired'] = false;
+        }
+
+        return $trip;
     }
 }

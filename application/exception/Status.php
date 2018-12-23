@@ -15,6 +15,7 @@ class Status
     const USER_TICKET_NOT_EXIST = 1005;
     const USER_FROZEN = 1006;
     const USER_NOT_EXIST = 1007;
+    const USER_PHONE_INVALID = 1008;
 
     //group
     const GROUP_NOT_EXIST = 1101;
@@ -80,6 +81,7 @@ class Status
         self::USER_TICKET_NOT_EXIST => 'ticket对应用户不存在，请先登录',
         self::USER_FROZEN => '用户冻结不允许登录',
         self::USER_NOT_EXIST => '用户不存在',
+        self::USER_PHONE_INVALID => '手机号格式错误',
 
         //group
         self::GROUP_NOT_EXIST => '群不存在',

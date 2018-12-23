@@ -18,7 +18,9 @@ class GroupUserService extends CI_Model
         }
 
         $ret = $this->GroupUserDao->getOneByGroupIdAndUserId($userId, $groupId);
-        ensureNotNull($ret);
+        if (empty($ret)) {
+            throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
+        }
 
         return;
     }

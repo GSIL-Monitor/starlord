@@ -137,10 +137,20 @@ class User extends Base
         $this->load->model('service/UserService');
 
         $user['phone'] = $input['phone'];
-
+        $this->_checkPhone($user['phone']);
+        
         $ret = $this->UserService->updateUser($user);
         $this->_returnSuccess($ret);
 
     }
 
+    private function _checkPhone($phone)
+    {
+        $preg = '/^1\d{10}$/ims';
+
+        if (!preg_match($preg, $phone)) {
+            throw new StatusException(Status::$message[Status::USER_PHONE_INVALID], Status::USER_PHONE_INVALID);
+        }
+    }
 }
+

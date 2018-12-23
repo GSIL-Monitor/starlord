@@ -91,7 +91,7 @@ class GroupService extends CI_Model
         return $this->GroupDao->updateByGroupId($groupId, $group);
     }
 
-    public function increaseTripInGroups($groupIds)
+    public function increaseTripInGroup($groupIds)
     {
         $groups = $this->getByGroupIds($groupIds);
         $updateGroups = array();

@@ -66,7 +66,7 @@ class TripDriverService extends CI_Model
         return true;
     }
 
-    public function createNewTrip($userId, $tripDriverDetail, $user, $summeryGroups)
+    public function createNewTrip($userId, $tripDriverDetail, $user)
     {
         $this->load->model('dao/TripDriverDao');
         $this->load->model('redis/IdGenRedis');
@@ -96,11 +96,34 @@ class TripDriverService extends CI_Model
             )
         );
 
-        $trip['group_info'] = json_encode($summeryGroups);
-
         $newTrip = $this->TripDriverDao->insertOne($userId, $trip);
 
         return $newTrip;
+    }
+
+    public function addGroupInfoToTrip($userId, $tripId, $trip, $group)
+    {
+        unset($group['id']);
+        unset($group['status']);
+        unset($group['is_del']);
+        unset($group['created_time']);
+        unset($group['modified_time']);
+
+        $groupInfoJson = $trip['group_info'];
+        if (empty($groupInfoJson)) {
+            $groups = array();
+            $groups[] = $group;
+            $trip['group_info'] = json_encode($groups);
+        } else {
+            $groups = json_decode($groupInfoJson, true);
+            $groups[] = $group;
+            $trip['group_info'] = json_encode($groups);
+        }
+
+        //只有正常状态的行程才允许编辑
+        $this->TripDriverDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $trip);
+
+        return;
     }
 
 
