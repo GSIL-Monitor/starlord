@@ -16,10 +16,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const { userConfig } = app.globalData;
-    if (userConfig && userConfig.docoment) {
+    const { user_config } = app.globalData;
+    if (user_config && user_config.docoment) {
       this.setData({
-        notice_list: userConfig.docoment.notice_list
+        notice_list: user_config.docoment.notice_list
       });
     }
     this.onLoadData();

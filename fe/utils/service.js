@@ -108,7 +108,7 @@ const userConfig = (app) => {
   const callback = (success, data) => {
     if (!success) return;
     wx.setStorageSync(config.storage_userconfig, data);
-    app.globalData.userConfig = data;
+    app.globalData.user_config = data;
 
     // 刷新当前页面
     const pages = getCurrentPages();

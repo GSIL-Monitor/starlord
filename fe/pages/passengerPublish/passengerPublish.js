@@ -25,11 +25,12 @@ Page({
   onLoad: function (options) {
     self = this;
     options = options || {};
-    this.setData({
+    self.setData({
       is_login: app.globalData.is_login,
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
     });
+    self.loadTemplate();
   },
 
   /**
@@ -43,7 +44,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.loadData();
+    this.loadProfile();
   },
 
   /**
@@ -81,7 +82,7 @@ Page({
 
   },
 
-  loadData: () => {
+  loadTemplate: () => {
     const { trip_id, user_id } = self.data;
     if (trip_id && user_id) {
       self.setData({
@@ -94,7 +95,9 @@ Page({
         });
       });
     }
+  },
 
+  loadProfile: () => {
     self.setData({
       loading_profile: true
     });

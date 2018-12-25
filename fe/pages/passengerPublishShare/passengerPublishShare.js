@@ -1,13 +1,11 @@
-const service = require('../../utils/service');
-const config = require('../../utils/config');
-const app = getApp();
+// pages/passengerPublishShare/passengerPublishShare.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    docoment: {}
+
   },
 
   /**
@@ -28,12 +26,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const { user_config } = app.globalData;
-    if (user_config && user_config.docoment) {
-      this.setData({
-        docoment: user_config.docoment,
-      });
-    }
+
   },
 
   /**
@@ -69,24 +62,5 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-
-  /**
-   * 复制微信号
-   */
-  clipboardWechatData: function () {
-    wx.setClipboardData({
-      data: this.data.wechat,
-    })
-  },
-
-  /**
-   * 拨打客服电话
-   */
-  makePhoneCall: function () {
-    wx.makePhoneCall({
-      phoneNumber: this.data.phone,
-    });
-  },
-
+  }
 })

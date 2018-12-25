@@ -24,7 +24,6 @@ Page({
    */
   onLoad: function (options) {
     self = this;
-    
   },
 
   /**
@@ -44,10 +43,10 @@ Page({
     });
     
 
-    const { userConfig } = app.globalData;
-    if (userConfig && userConfig.docoment) {
+    const { user_config } = app.globalData;
+    if (user_config && user_config.docoment) {
       this.setData({
-        docoment: userConfig.docoment,
+        docoment: user_config.docoment,
       });
     }
 
