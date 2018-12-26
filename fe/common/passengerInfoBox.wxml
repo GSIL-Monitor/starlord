@@ -56,8 +56,8 @@
           <view class='trip-item-value'>
             <text class='trip-hl'>来自拼车群:</text>
             <view class='trip-group-wrap'>
-              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群1</navigator>
-              <navigator class='trip-group' url='/pages/shareGroup/shareGroup'>拼车群2</navigator>
+              <navigator class='trip-group' url='/pages/groupDetail/groupDetail'>拼车群1</navigator>
+              <navigator class='trip-group' url='/pages/groupDetail/groupDetail'>拼车群2</navigator>
             </view>
           </view>
         </view>

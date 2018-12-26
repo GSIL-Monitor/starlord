@@ -11,6 +11,7 @@ Page({
     trip_id: null,
     user_id: null,
     detail: {},
+    loading_data: true
   },
 
   /**
@@ -39,6 +40,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    self.setData({
+      loading_data: true
+    });
     wx.startPullDownRefresh();
   },
 
@@ -71,12 +75,14 @@ Page({
       wx.stopPullDownRefresh();
       return;
     }
+    self.setData({loading_data: true});
     const params = {
       trip_id, user_id, shareTicket,
       trip_type: 0
     };
     const callback = (success, data) => {
       wx.stopPullDownRefresh();
+      self.setData({ loading_data: false });
       if (success) {
         let tags = [];
         config.driver_tags.map(tag => {

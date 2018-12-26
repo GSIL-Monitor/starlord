@@ -140,5 +140,16 @@ Page({
         }
       }
     })
+  },
+  onEditNotice: () => {
+    wx.navigateTo({
+      url: `/pages/groupNotice/groupNotice?group_id=${self.data.params.group_id}`,
+    })
+  },
+
+  groupOwnerTip: () => {
+    wx.navigateTo({
+      url: `/pages/groupOwnerTip/groupOwnerTip?group_id=${self.data.params.group_id}`,
+    })
   }
 })

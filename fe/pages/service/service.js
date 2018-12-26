@@ -1,20 +1,21 @@
 const service = require('../../utils/service');
 const config = require('../../utils/config');
+const WxParse = require('../../utils/wxParse/wxParse.js');
 const app = getApp();
+let self;
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    docoment: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    self = this;
   },
 
   /**
@@ -29,11 +30,9 @@ Page({
    */
   onShow: function () {
     const { user_config } = app.globalData;
-    if (user_config && user_config.docoment) {
-      this.setData({
-        docoment: user_config.docoment,
-      });
-    }
+    const { docoment } = (user_config || {}) || {};
+    const contact = docoment.contact || ''
+    WxParse.wxParse('contact', 'html', contact, self, 5);
   },
 
   /**

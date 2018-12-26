@@ -14,3 +14,8 @@
   font-weight: 500;
   font-size: 36rpx;
 }
+.trip-list-btn {
+  color: #3cc51f;
+  font-size: 14px;
+  text-decoration: underline;
+}

@@ -172,6 +172,9 @@ const getDetailByGroupId = (data, callback) => {
 const exitGroup = (data, callback) => {
   request('group/exitGroup', data, callback);
 }
+const updateNotice = (data, callback) => {
+  request('group/updateNotice', data, callback);
+}
 /** 获取分享群的信息 */
 const getTripDetailInSharePage = (data, callback) => {
   const successCb = (r) => {
@@ -253,6 +256,7 @@ module.exports = {
   getDetailByGroupId,
   getTripDetailInSharePage,
   exitGroup,
+  updateNotice,
   driverPublish,
   driverSave,
   driverGetDetailByTripId,

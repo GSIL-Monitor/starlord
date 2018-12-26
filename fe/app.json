@@ -5,7 +5,6 @@
     "pages/profile/profile",
     "pages/search/search",
     "pages/publish/publish",
-    "pages/shareGroup/shareGroup",
     "pages/about/about",
     "pages/service/service",
     "pages/car/car",
@@ -19,7 +18,10 @@
     "pages/passengerPublishInfo/passengerPublishInfo",
     "pages/passengerPublishShare/passengerPublishShare",
     "pages/passengerList/passengerList",
-    "pages/groupIntro/groupIntro"
+    "pages/groupIntro/groupIntro",
+    "pages/groupNotice/groupNotice",
+    "pages/groupOwnerTip/groupOwnerTip",
+    "pages/groupDetail/groupDetail"
   ],
   "window": {
     "backgroundTextStyle": "dark",
