@@ -1,6 +1,21 @@
 <template name="tripForm">
   <!-- 时间 -->
-  <view class='list-item'>
+  <view class='list-item' wx:if="{{ show_frequency }}">
+    <view class='label'>
+      <text class='label-text'>频次</text>
+    </view>
+    <view class='list-content'>
+      <radio-group bindchange="bindRadioChange">
+        <label class="radio">
+          <radio value="0" checked="{{ data.is_everyday != 1 }}" />单次
+        </label>
+        <label class="radio">
+          <radio value="1" checked="{{ data.is_everyday == 1 }}" />每天
+        </label>
+      </radio-group>
+    </view>
+  </view>
+  <view class='list-item' wx:if="{{ show_frequency && data.is_everyday != 1 }}">
     <view class='label'>
       <text class='label-text'>日期</text>
     </view>
