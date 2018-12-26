@@ -29,7 +29,11 @@ class TripDriverDetail
 
     public function __construct($input)
     {
-        $this->beginDate = $input["begin_date"];
+        if(isset($input["is_everyday"]) && $input["is_everyday"] == 1){
+            $this->beginDate = "2031-11-23";
+        }else{
+            $this->beginDate = $input["begin_date"];
+        }
         $this->beginTime = $input["begin_time"];
         $this->startLocationName = $input["start_location_name"];
         $this->startLocationAddress = $input["start_location_address"];

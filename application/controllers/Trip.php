@@ -31,48 +31,55 @@ class Trip extends Base
 
         //先检查群是否存在，如果不存在则创建群，最终获取group_id
         $this->load->model('service/GroupService');
-        $group = $this->GroupService->getByWxGid($wxGid);
-        if (empty($group)) {
-            //如果不存在群组，则创建member_num为0的新群组
-            $group = $this->GroupService->createNewGroup($wxGid);
-        }
 
-        $groupId = $group['group_id'];
-        $this->load->model('service/GroupUserService');
+        DbTansactionHanlder::begin('default');
         try {
-            //检查人是否存在
-            $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
-        } catch (StatusException $e) {
-            //如果不存在
-            $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
-            if ($ret) {
-                //用户是第一次加入群，需要把group的member_num加1
-                $this->GroupService->increaseMember($groupId, $group);
+            $group = $this->GroupService->getByWxGid($wxGid);
+            if (empty($group)) {
+                //如果不存在群组，则创建member_num为0的新群组
+                $group = $this->GroupService->createNewGroup($wxGid);
             }
-        }
 
-        $trip = $this->_getDetailByTripId($tripType, $tripUserId, $tripId);
-        $retTrip = $trip;
-        $this->load->model('service/GroupTripService');
-        try {
-            //检查行程是否在群里
-
-            $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
-        } catch (StatusException $e) {
-            //否则把行程加群
-            $this->load->model('service/GroupService');
-            $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
-            $this->GroupService->increaseTripInGroup(array($groupId));
-
-            unset($trip['is_expired']);
-            if ($tripType == Config::TRIP_TYPE_DRIVER) {
-                $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
-            } else {
-                $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+            $groupId = $group['group_id'];
+            $this->load->model('service/GroupUserService');
+            try {
+                //检查人是否存在
+                $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
+            } catch (StatusException $e) {
+                //如果不存在
+                $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
+                if ($ret) {
+                    //用户是第一次加入群，需要把group的member_num加1
+                    $this->GroupService->increaseMember($groupId, $group);
+                }
             }
-        }
 
-        $this->_returnSuccess($retTrip);
+            $trip = $this->_getDetailByTripId($tripType, $tripUserId, $tripId);
+            $retTrip = $trip;
+            $this->load->model('service/GroupTripService');
+            try {
+                //检查行程是否在群里
+
+                $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
+            } catch (StatusException $e) {
+                //否则把行程加群
+                $this->load->model('service/GroupService');
+                $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
+                $this->GroupService->increaseTripInGroup(array($groupId));
+
+                unset($trip['is_expired']);
+                if ($tripType == Config::TRIP_TYPE_DRIVER) {
+                    $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                } else {
+                    $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                }
+            }
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess($retTrip);
+        } catch (StatusException $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -196,10 +203,16 @@ class Trip extends Base
         $tripDriverDetail = new TripDriverDetail($input);
 
         $this->load->model('service/TripDriverService');
-        
-        $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail->getTripArray());
 
-        $this->_returnSuccess($ret);
+        DbTansactionHanlder::begin('default');
+        try {
+            $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail->getTripArray());
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess($ret);
+        } catch (StatusException $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     public function passengerSave()
@@ -212,9 +225,17 @@ class Trip extends Base
         $tripPassengerDetail = new TripPassengerDetail($input);
 
         $this->load->model('service/TripPassengerService');
-        $ret = $this->TripPassengerService->saveTripTemplate($tripId, $userId, $tripPassengerDetail->getTripArray());
 
-        $this->_returnSuccess($ret);
+        DbTansactionHanlder::begin('default');
+        try {
+            $ret = $this->TripPassengerService->saveTripTemplate($tripId, $userId, $tripPassengerDetail->getTripArray());
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess($ret);
+        } catch (StatusException $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
+
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
