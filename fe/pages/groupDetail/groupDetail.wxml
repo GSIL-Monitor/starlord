@@ -12,13 +12,20 @@
         <view class='group-info'>
           {{ detail.member_num }}人 | 行程: {{ detail.trip_num }}
         </view>
-      </view>
-      <view class='group-operation'>
-        <button type='primary' size='mini' plain class='group-btn' bindtap='exitGroup'>退出该群</button>
+        <view class='group-operation'>
+          <view class='group-owner-wrap' wx:if="{{ detail.owner_nick_name }}">
+            <image class='group-owner-avatar' src='{{ detail.owner_avatar_url || "../../images/profile.png" }}' />
+            <text class='group-owner-nickname'>{{ detail.owner_nick_name }}</text>
+          </view>
+          <view class='group-btn' hover-class='ontap' bindtap='groupOwnerTip' wx:if="{{ detail.owner_user_id == 0 }}">待群主认领</view>
+          <view class='group-btn' hover-class='ontap' bindtap='exitGroup'>退出该群</view>
+        </view>
       </view>
     </view>
     <view class='group-notice'>
-      群公告: {{ detail.notice }}
+      <text class='notice-title'>群公告: </text>
+      {{ detail.notice || '暂无群公告' }}
+      <view hover-class='ontap' class='group-btn btn-notice-edit' bindtap='onEditNotice' wx:if="{{ detail.is_owner == 1 }}">编辑</view>
     </view>
   </view>
   <view class='tab-navBar'>

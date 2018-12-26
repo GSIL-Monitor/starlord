@@ -10,7 +10,7 @@
     <swiper current="{{currentTab}}" duration="300" bindchange="bindTabChange" class='tab-swiper'>
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
-          <template is="pageLoading" data="{{loading:loading_driver}}" />
+          <template is="pageLoading" data="{{ loading:loading_driver }}" />
           <template is="emptyPage" data="{{ show: !loading_driver && driverTrips.length == 0 }}" />
           <view class='list'>
             <block wx:for-items="{{driverTrips}}" wx:key="{{item.id}}">
@@ -20,9 +20,7 @@
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
                       <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
-                      <button type='primary' size='mini' plain class='trip-btn' catch:tap="onCancelTrip" data-tripid="{{ item.trip_id }}" data-triptype="driver">
-                        取消行程
-                      </button>
+                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="driver">取消行程</view>
                     </view>
                   </view>
                   <view class='trip-data-item'>
@@ -47,7 +45,7 @@
       </swiper-item>
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
-          <template is="pageLoading" data="{{loading:loading_passenger}}" />
+          <template is="pageLoading" data="{{ loading:loading_passenger }}" />
           <template is="emptyPage" data="{{ show: !loading_passenger && passengerTrips.length == 0 }}" />
           <view class='list'>
             <block wx:for-items="{{passengerTrips}}" wx:key="{{item.id}}">
@@ -58,7 +56,7 @@
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
                       <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
-                      <button type='primary' size='mini' plain class='trip-btn' catch:tap="onCancelTrip" data-tripid="{{ item.trip_id }}" data-triptype="passenger">取消行程</button>
+                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="passenger">取消行程</view>
                     </view>
                   </view>
                   <view class='trip-data-item'>
