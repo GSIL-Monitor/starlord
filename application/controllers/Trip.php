@@ -196,6 +196,7 @@ class Trip extends Base
         $tripDriverDetail = new TripDriverDetail($input);
 
         $this->load->model('service/TripDriverService');
+        
         $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail->getTripArray());
 
         $this->_returnSuccess($ret);
@@ -222,6 +223,12 @@ class Trip extends Base
     {
         $input = $this->input->post();
         $user = $this->_user;
+
+        //没有手机号码的人无法发布行程
+        if (empty($user['phone'])) {
+            throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
+        }
+
         $userId = $user['user_id'];
         $tripDriverDetail = new TripDriverDetail($input);
 
@@ -242,6 +249,12 @@ class Trip extends Base
     {
         $input = $this->input->post();
         $user = $this->_user;
+
+        //没有手机号码的人无法发布行程
+        if (empty($user['phone'])) {
+            throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
+        }
+
         $userId = $user['user_id'];
 
         $tripPassengerDetail = new TripPassengerDetail($input);

@@ -48,7 +48,20 @@ class TripPassengerDetail
         $this->tips = $input["tips"];
     }
 
-    public function getTripArray(){
+    public function getTripArray()
+    {
+        if (empty($this->beginDate)
+            || empty($this->beginTime)
+            || empty($this->startLocationName)
+            || empty($this->startLocationAddress)
+            || empty($this->startLocationPoint)
+            || empty($this->endLocationName)
+            || empty($this->endLocationAddress)
+            || empty($this->endLocationPoint)) {
+            throw new StatusException(Status::$message[Status::TRIP_PARAMS_INVALID], Status::TRIP_PARAMS_INVALID);
+        }
+
+
         return array(
             "begin_date" => $this->beginDate,
             "begin_time" => $this->beginTime,
