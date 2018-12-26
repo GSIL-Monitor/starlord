@@ -25,12 +25,12 @@ Page({
   onLoad: function (options) {
     self = this;
     options = options || {};
-    this.setData({
+    self.setData({
       is_login: app.globalData.is_login,
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
     });
-    this.loadTemplate();
+    self.loadTemplate();
   },
 
   /**
@@ -135,6 +135,14 @@ Page({
       },
     })
   },
+  bindRadioChange: (e) => {
+    self.setData({
+      form_data: {
+        ...self.data.form_data,
+        is_everyday: e.detail.value
+      }
+    });
+  },
   bindDateChange: function (e) {
     self.setData({
       form_data: {
@@ -183,7 +191,7 @@ Page({
     const submitType = target.dataset.type;
     const { form_data, trip_id, tags, loading_submit }  = self.data;
     if (loading_submit) return;
-    if (!form_data.begin_date) {
+    if (!form_data.begin_date && form_data.is_everyday != 1) {
       wx.showToast({
         icon: 'none', title: '日期不能为空',
       });
@@ -201,6 +209,7 @@ Page({
       });
     } else {
       let params = {
+        is_everyday: form_data.is_everyday || null,
         begin_date: form_data.begin_date || null,
         begin_time: form_data.begin_time || null,
         start_location_name: form_data.start_location_name || null,
