@@ -13,15 +13,25 @@ class Group extends Base
     }
 
 
-
     public function getDetailByGroupId()
     {
         $input = $this->input->post();
+        $user = $this->_user;
+        $userId = $user['user_id'];
+
         $groupId = $input['group_id'];
         $this->load->model('service/GroupService');
-        $group = $this->GroupService->getByGroupIds(array($groupId));
+        $groups = $this->GroupService->getByGroupIds(array($groupId));
 
-        $this->_returnSuccess($group[0]);
+        $group = $groups[0];
+
+        if ($group['owner_user_id'] == $userId) {
+            $group['is_owner'] = 1;
+        } else {
+            $group['is_owner'] = 0;
+        }
+
+        $this->_returnSuccess($group);
     }
 
     public function updateNotice()

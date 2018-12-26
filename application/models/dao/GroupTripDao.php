@@ -65,7 +65,7 @@ class GroupTripDao extends CI_Model
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and is_del = ? and trip_begin_date > ?";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and is_del = ? and trip_begin_date >= ?";
 
         $query = $this->db->query($sql, array($groupId, $tripType, Config::RECORD_EXISTS, $date));
 
