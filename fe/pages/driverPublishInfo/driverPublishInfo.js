@@ -10,7 +10,7 @@ Page({
   data: {
     trip_id: null,
     user_id: null,
-    loading_data: false,
+    loading_data: true,
     detail: {},
   },
 

@@ -1,11 +1,4 @@
-.list {
-  margin: 12px 0;
-}
-.list-item {
-  padding: 0px 12px;
-}
-
-.wrap {
-  /* background: #fff; */
+.page {
   padding: 12px;
+  text-align: justify;
 }

@@ -1,16 +1,14 @@
 <view class='page'>
   <view class='section-title'>
     行程模板管理
-    <block wx:if="{{templates.length > 0}}">
-    (长按删除模板)
-    </block>
   </view>
   <view class='list'>
     <block wx:for-items="{{templates}}" wx:key="{{item.id}}">
-      <view id="{{index}}" class="list-item" hover-class='ontap' data-tripid='{{item.trip_id}}' data-userid='{{item.user_id}}' data-page="{{ item.trip_type == 1 ? 'passengerPublish' : 'driverPublish' }}" data-tripType='{{item.trip_type}}' bindtap='goPage' bindlongpress="onDeleteTemplate">
-        <view class='data-item'>
+      <view id="{{index}}" class="list-item" hover-class='ontap' data-tripid='{{item.trip_id}}' data-userid='{{item.user_id}}' data-page="{{ item.trip_type == 1 ? 'passengerPublish' : 'driverPublish' }}" bindtap='goPage'>
+        <view class='data-item data-item-title'>
           <image class='item-icon' src='/images/profile_HL.png' />
           <text class='item-value item-value-hl'>{{ item.trip_type == 1 ? '人找车' : '车找人' }}</text>
+          <view class='item-btn' data-tripid='{{item.trip_id}}' data-tripType='{{item.trip_type}}' catchtap='onDeleteTemplate' hover-class='ontap'>删除</view>
         </view>
         <view class='data-item'>
           <image class='item-icon' src='/images/location_start.png' />
