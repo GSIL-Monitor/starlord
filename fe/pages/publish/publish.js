@@ -8,7 +8,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    loading_data: false,
     templates: [],
     docoment: {}
   },
@@ -37,7 +36,7 @@ Page({
         docoment: user_config.docoment,
       });
     }
-    this.fetchTemplateData();
+    wx.startPullDownRefresh();
   },
 
   /**
@@ -58,7 +57,12 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.fetchTemplateData();
+    service.getTemplateList((success, data) => {
+      self.setData({
+        templates: data || []
+      });
+      wx.stopPullDownRefresh();
+    });
   },
 
   /**
@@ -73,19 +77,6 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-
-  fetchTemplateData: () => {
-    self.setData({
-      loading_data: true
-    });
-    service.getTemplateList((success, data) => {
-      self.setData({
-        loading_data: false,
-        templates: data || []
-      });
-      wx.stopPullDownRefresh();
-    });
   },
 
   goPage: function (e) {
@@ -113,7 +104,7 @@ Page({
           }, (success, data) => {
             wx.hideLoading();
             if (success) {
-              self.fetchTemplateData();
+              wx.startPullDownRefresh();
             }
           });
         }

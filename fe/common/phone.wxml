@@ -9,7 +9,7 @@
     </view>
     <view class='list-extra'>
       <view class='list-phone-division'></view>
-      <navigator url='/pages/info/info'>
+      <navigator url='/pages/info/info?back=1'>
         <view class='btn-text'>
           {{ phone ? '修改' : '设置' }}
         </view>

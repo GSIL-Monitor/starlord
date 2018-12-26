@@ -1,7 +1,7 @@
 <import src="/common/passengerInfoBox.wxml"/>
 <import src="/common/emptyPage.wxml"/>
 <view class='page'>
-  <block wx:for-items="{{list}}">
+  <block wx:for-items="{{list}}" wx:key="{{item.id}}">
     <template is="passengerInfoBox" data="{{ detail: item }}" />
   </block>
   <template is="emptyPage" data="{{ show: !loading && list.length == 0 }}" />

@@ -43,7 +43,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
@@ -128,4 +127,41 @@ Page({
     });
     this.loadData();
   },
+  onCancelTrip: (e) => {
+    const { tripid, triptype } = e.target.dataset;
+    wx.showModal({
+      title: '删除行程',
+      content: '您确定删除该行程吗？',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({mask: true});
+          if (triptype == 'driver') {
+            service.driverDeleteMy({
+              trip_id: tripid,
+            }, (success) => {
+              wx.hideLoading();
+              if (success) {
+                wx.showToast({
+                  title: '行程已删除',
+                });
+                self.driverGetMyList();
+              }
+            });
+          } else if (triptype == 'passenger') {
+            service.passengerDeleteMy({
+              trip_id: tripid,
+            }, (success) => {
+              wx.hideLoading();
+              if (success) {
+                wx.showToast({
+                  title: '行程已删除',
+                });
+                self.passengerGetMyList();
+              }
+            });
+          }
+        }
+      }
+    })
+  }
 })

@@ -121,10 +121,11 @@ Page({
       });
     } else {
       const searchParams = {
-        begin_date: params.begin_date,
-        begin_time: params.begin_time,
-        target_start: params.start_location_point,
-        target_end: params.end_location_point,
+        begin_date: params.begin_date || null,
+        begin_time: params.begin_time || null,
+        target_start: params.start_location_point || null,
+        target_end: params.end_location_point || null,
+        only_in_my_group: params.only_in_my_group || null,
       };
       const urlParams = Object.keys(searchParams).map(key => {
         return [key, searchParams[key]].join('=');
@@ -184,6 +185,14 @@ Page({
       params: {
         ...self.data.params,
         begin_time: e.detail.value
+      }
+    });
+  },
+  bindSwitch: (e) => {
+    self.setData({
+      params: {
+        ...self.data.params,
+        only_in_my_group: e.detail.value ? 1 : 0
       }
     });
   },

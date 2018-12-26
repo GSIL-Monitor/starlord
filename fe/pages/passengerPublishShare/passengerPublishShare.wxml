@@ -1,2 +1,11 @@
-<!--pages/passengerPublishShare/passengerPublishShare.wxml-->
-<text>pages/passengerPublishShare/passengerPublishShare.wxml</text>
+<import src="/common/passengerInfoBox.wxml"/>
+<import src="/common/emptyPage.wxml"/>
+<view class='page'>
+  <block wx:if="{{ detail.trip_id }}">
+    <template is="passengerInfoBox" data="{{ detail: detail }}" />
+    <view class='submit-wrap'>
+      <button type='primary' bindtap='nativeBack'>查看本群所有行程</button>
+    </view>
+  </block>
+  <template is="emptyPage" data="{{ show: (!loading_data && !detail.trip_id), homepage: true }}" />
+</view>

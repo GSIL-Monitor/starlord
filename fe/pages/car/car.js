@@ -16,7 +16,8 @@ Page({
     car_type_index: -1,
     loading_data: false,
     loading_update: false,
-    docoment: {}
+    docoment: {},
+    back: false
   },
 
   /**
@@ -24,6 +25,9 @@ Page({
    */
   onLoad: function (options) {
     self = this;
+    this.setData({
+      back: !!(options.back == 1)
+    });
   },
 
   /**
@@ -149,6 +153,9 @@ Page({
         wx.showToast({
           title: '车辆信息提交成功',
         });
+        if (self.data.back) {
+          wx.navigateBack();
+        }
       }
     });
   },

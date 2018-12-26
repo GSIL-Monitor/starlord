@@ -12,7 +12,8 @@ Page({
     profile: {},
     loading_data: false,
     loading_submit: false,
-    docoment: {}
+    docoment: {},
+    back: false
   },
 
   /**
@@ -20,6 +21,9 @@ Page({
    */
   onLoad: function (options) {
     self = this;
+    this.setData({
+      back: !!(options.back == 1)
+    });
   },
 
   /**
@@ -137,13 +141,16 @@ Page({
       loading_submit: true
     });
     service.updateUserPhone({phone: profile.phone}, (success) => {
+      self.setData({
+        loading_submit: false
+      });
       if (success) {
         wx.showToast({
           title: '信息更改成功'
         });
-        self.setData({
-          loading_submit: false
-        });
+        if (self.data.back) {
+          wx.navigateBack();
+        }
       }
     });
   },

@@ -18,7 +18,8 @@
     "pages/passengerPublish/passengerPublish",
     "pages/passengerPublishInfo/passengerPublishInfo",
     "pages/passengerPublishShare/passengerPublishShare",
-    "pages/passengerList/passengerList"
+    "pages/passengerList/passengerList",
+    "pages/groupIntro/groupIntro"
   ],
   "window": {
     "backgroundTextStyle": "dark",

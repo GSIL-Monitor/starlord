@@ -119,19 +119,6 @@ const userConfig = (app) => {
   request('user/config', {}, callback);
 }
 
-/** 获取分享群的信息 */
-const getAndUploadGroup = (shareTicket) => {
-  const success = (r) => {
-    if (r.errMsg == 'getShareInfo:ok') {
-      request('group/addUser', {
-        iv: r.iv,
-        encryptedData: r.encryptedData
-      });
-    }
-  }
-  wx.getShareInfo({shareTicket,success})
-}
-
 /** 上传用户信息 */
 const userCompleteUser = (detail, app, page, success) => {
   success = success || (() => {});
@@ -185,6 +172,22 @@ const getDetailByGroupId = (data, callback) => {
 const exitGroup = (data, callback) => {
   request('group/exitGroup', data, callback);
 }
+/** 获取分享群的信息 */
+const getTripDetailInSharePage = (data, callback) => {
+  const successCb = (r) => {
+    if (r.errMsg == 'getShareInfo:ok') {
+      const params = {
+        iv: r.iv,
+        encryptedData: r.encryptedData,
+        user_id: data.user_id,
+        trip_id: data.trip_id,
+        trip_type: data.trip_type,
+      };
+      request('trip/getTripDetailInSharePage', params, callback);
+    }
+  }
+  wx.getShareInfo({ shareTicket: data.shareTicket, success: successCb });
+}
 
 /**
  * 车找人发布、保存
@@ -198,12 +201,17 @@ const driverSave = (data, success) => {
 const driverGetDetailByTripId = (data, success) => {
   request('trip/driverGetDetailByTripId', data, success);
 }
-/** 我的车找人行程 */
 const driverGetMyList = (success) => {
   request('trip/driverGetMyList', null, success);
 }
+const driverDeleteMy = (data, success) => {
+  request('trip/driverDeleteMy', data, success);
+}
 const driverGetListByGroupId = (data, success) => {
   request('trip/driverGetListByGroupId', data, success);
+}
+const driverSearch = (data, callback) => {
+  request('search/all', { ...data, trip_type: 0 }, callback);
 }
 
 /**
@@ -218,17 +226,14 @@ const passengerSave = (data, success) => {
 const passengerGetDetailByTripId = (data, success) => {
   request('trip/passengerGetDetailByTripId', data, success);
 }
-/** 我的人找车行程 */
 const passengerGetMyList = (success) => {
   request('trip/passengerGetMyList', null, success);
 }
+const passengerDeleteMy = (data, success) => {
+  request('trip/passengerDeleteMy', data, success);
+}
 const passengerGetListByGroupId = (data, success) => {
   request('trip/passengerGetListByGroupId', data, success);
-}
-
-/** 搜索 */
-const driverSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 0 }, callback);
 }
 const passengerSearch = (data, callback) => {
   request('search/all', { ...data, trip_type: 1 }, callback);
@@ -240,24 +245,26 @@ module.exports = {
   getProfile,
   updateUserCar,
   userConfig,
-  getAndUploadGroup,
   userCompleteUser,
   updateUserPhone,
   getTemplateList,
   deleteTemplate,
   getGroupListByUserId,
   getDetailByGroupId,
+  getTripDetailInSharePage,
   exitGroup,
   driverPublish,
   driverSave,
   driverGetDetailByTripId,
   driverGetMyList,
+  driverDeleteMy,
   driverGetListByGroupId,
   driverSearch,
   passengerPublish,
   passengerSave,
   passengerGetDetailByTripId,
   passengerGetMyList,
+  passengerDeleteMy,
   passengerGetListByGroupId,
   passengerSearch,
 }
