@@ -27,7 +27,6 @@ Page({
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
     });
-    this.loadData();
   },
 
   /**
@@ -41,7 +40,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    self.setData({loading_data: true});
+    wx.startPullDownRefresh();
   },
 
   /**
@@ -99,12 +99,17 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function (r) {
+    console.error(r);
+    const { user_config } = app.globalData;
+    const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
+    const { trip_id, user_id } = self.data;
 
-  },
-
-  loadData: () => {
-    wx.startPullDownRefresh();
+    return {
+      title: share_title,
+      path: `/pages/driverPublishShare/driverPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
+      imageUrl: '../../images/address.png'
+    };
   },
 
   makeCall: function (e) {

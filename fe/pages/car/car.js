@@ -16,7 +16,8 @@ Page({
     car_type_index: -1,
     loading_data: false,
     loading_update: false,
-    docoment: {}
+    docoment: {},
+    back: false
   },
 
   /**
@@ -24,7 +25,9 @@ Page({
    */
   onLoad: function (options) {
     self = this;
-    
+    this.setData({
+      back: !!(options.back == 1)
+    });
   },
 
   /**
@@ -44,10 +47,10 @@ Page({
     });
     
 
-    const { userConfig } = app.globalData;
-    if (userConfig && userConfig.docoment) {
+    const { user_config } = app.globalData;
+    if (user_config && user_config.docoment) {
       this.setData({
-        docoment: userConfig.docoment,
+        docoment: user_config.docoment,
       });
     }
 
@@ -150,6 +153,9 @@ Page({
         wx.showToast({
           title: '车辆信息提交成功',
         });
+        if (self.data.back) {
+          wx.navigateBack();
+        }
       }
     });
   },

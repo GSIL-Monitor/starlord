@@ -15,7 +15,7 @@
     </view>
     <view class='list-extra'>
       <view class='list-car-division'></view>
-      <navigator url='/pages/car/car'>
+      <navigator url='/pages/car/car?back=1'>
         <view class='btn-text'>
           {{ info.car_plate ? '修改' : '设置' }}
         </view>

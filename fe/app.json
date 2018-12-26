@@ -13,10 +13,13 @@
     "pages/trip/trip",
     "pages/driverPublish/driverPublish",
     "pages/driverPublishInfo/driverPublishInfo",
+    "pages/driverPublishShare/driverPublishShare",
     "pages/driverList/driverList",
     "pages/passengerPublish/passengerPublish",
     "pages/passengerPublishInfo/passengerPublishInfo",
-    "pages/passengerList/passengerList"
+    "pages/passengerPublishShare/passengerPublishShare",
+    "pages/passengerList/passengerList",
+    "pages/groupIntro/groupIntro"
   ],
   "window": {
     "backgroundTextStyle": "dark",

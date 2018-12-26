@@ -12,12 +12,12 @@
         <view class='list'>
           <template is="message" wx:if="{{ docoment.platform_info }}" data="{{list: [docoment.platform_info] }}" />
           <template is="tripForm" data='{{ data: params }}' />
-          <view class='list-item' wx:if="{{false}}">
+          <view class='list-item'>
             <view class='label'>
               <text class='label-text'>只搜索我的拼车群的行程</text>
             </view>
             <view class='list-content'>
-              <switch bindchange="switch2Change" />
+              <switch bindchange="bindSwitch" checked="{{ params.only_in_my_group == 1 }}" />
             </view>
           </view>
           <view class='list-item list-tags-wrap' wx:if="{{false}}">

@@ -10,7 +10,6 @@ Page({
   data: {
     trip_id: null,
     user_id: null,
-    loading_data: false,
     detail: {},
   },
 
@@ -40,9 +39,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    self.setData({
-      loading_data: true
-    });
     wx.startPullDownRefresh();
   },
 
@@ -65,30 +61,39 @@ Page({
    */
   onPullDownRefresh: function () {
     const { trip_id, user_id } = self.data;
-    if (trip_id && user_id) {
-      self.setData({
-        loading_data: true
+    const { wx_config } = app.globalData;
+    const { shareTicket } = wx_config;
+    if (!trip_id || !user_id || !shareTicket) {
+      wx.showToast({
+        title: '页面参数不正确',
+        icon: null
       });
-      service.passengerGetDetailByTripId({ trip_id, user_id }, (success, data) => {
-        wx.stopPullDownRefresh();
-        if (success && data) {
-          let tags = [];
-          config.passenger_tags.map(tag => {
-            if (data[tag.value] == 1) {
-              tags.push(tag.label);
-            }
-          });
-          data.tags = tags;
-          if (data.user_info) {
-            data.user_info = JSON.parse(data.user_info);
+      wx.stopPullDownRefresh();
+      return;
+    }
+    const params = {
+      trip_id, user_id, shareTicket,
+      trip_type: 1
+    };
+    const callback = (success, data) => {
+      wx.stopPullDownRefresh();
+      if (success) {
+        let tags = [];
+        config.passenger_tags.map(tag => {
+          if (data[tag.value] == 1) {
+            tags.push(tag.label);
           }
+        });
+        data.tags = tags;
+        if (data.user_info) {
+          data.user_info = JSON.parse(data.user_info);
         }
         self.setData({
-          loading_data: false,
           detail: data || {}
         });
-      });
+      }
     }
+    service.getTripDetailInSharePage(params, callback);
   },
 
   /**
@@ -102,24 +107,12 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    const { user_config } = app.globalData;
-    const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
-    const { trip_id, user_id } = self.data;
 
-    return {
-      title: share_title,
-      path: `/pages/passengerPublishShare/passengerPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
-      imageUrl: '../../images/address.png'
-    };
   },
 
-  makeCall: function (e) {
-    const { phone } = e.currentTarget.dataset;
-    wx.makePhoneCall({
-      phoneNumber: phone,
-    });
+  nativeBack: () => {
+    wx.reLaunch({
+      url: '/pages/index/index',
+    })
   },
-  shareTopGroup: function () {
-
-  }
 })

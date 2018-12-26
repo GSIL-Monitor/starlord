@@ -1,7 +1,7 @@
 <view class='page'>
   <view class='section-title'>
     行程模板管理
-    <block wx:if="{{!loading_data && templates.length > 0}}">
+    <block wx:if="{{templates.length > 0}}">
     (长按删除模板)
     </block>
   </view>
@@ -31,11 +31,8 @@
         </view>
       </view>
     </block>
-    <block wx:if="{{!loading_data && (!templates || templates.length == 0)}}">
+    <block wx:if="{{!templates || templates.length == 0}}">
       <text class='empty-message'>暂无模板</text>
-    </block>
-    <block wx:if="{{loading_data}}">
-      <text class='empty-message'>数据加载中...</text>
     </block>
   </view>
   <view class='section-title'>创建行程或模板</view>
