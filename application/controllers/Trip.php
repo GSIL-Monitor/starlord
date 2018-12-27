@@ -45,7 +45,7 @@ class Trip extends Base
             try {
                 //检查人是否存在
                 $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
-            } catch (StatusException $e) {
+            } catch (Exception $e) {
                 //如果不存在
                 $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
                 if ($ret) {
@@ -61,7 +61,7 @@ class Trip extends Base
                 //检查行程是否在群里
 
                 $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
-            } catch (StatusException $e) {
+            } catch (Exception $e) {
                 //否则把行程加群
                 $this->load->model('service/GroupService');
                 $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
@@ -74,7 +74,6 @@ class Trip extends Base
                     $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
                 }
             }
-            throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
         } catch (Exception $e) {
@@ -210,7 +209,7 @@ class Trip extends Base
             $ret = $this->TripDriverService->saveTripTemplate($tripId, $userId, $tripDriverDetail->getTripArray());
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($ret);
-        } catch (StatusException $e) {
+        } catch (Exception $e) {
             DbTansactionHanlder::rollBack('default');
             throw $e;
         }
@@ -232,7 +231,7 @@ class Trip extends Base
             $ret = $this->TripPassengerService->saveTripTemplate($tripId, $userId, $tripPassengerDetail->getTripArray());
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($ret);
-        } catch (StatusException $e) {
+        } catch (Exception $e) {
             DbTansactionHanlder::rollBack('default');
             throw $e;
         }
@@ -259,12 +258,18 @@ class Trip extends Base
         if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
+        DbTansactionHanlder::begin('default');
+        try {
+            //发布到trip表
+            $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
+            DbTansactionHanlder::commit('default');
 
-        //发布到trip表
-        $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
-
-        $newTrip['trip_id'] = $newTrip['trip_id'] . "";
-        $this->_returnSuccess($newTrip);
+            $newTrip['trip_id'] = $newTrip['trip_id'] . "";
+            $this->_returnSuccess($newTrip);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     public function passengerPublish()
@@ -286,11 +291,18 @@ class Trip extends Base
         if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
-        //发布到trip表
-        $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user);
+        DbTansactionHanlder::begin('default');
+        try {
+            //发布到trip表
+            $newTrip = $this->TripPassengerService->createNewTrip($userId, $tripPassengerDetail->getTripArray(), $this->_user);
+            DbTansactionHanlder::commit('default');
 
-        $newTrip['trip_id'] = $newTrip['trip_id'] . "";
-        $this->_returnSuccess($newTrip);
+            $newTrip['trip_id'] = $newTrip['trip_id'] . "";
+            $this->_returnSuccess($newTrip);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -305,9 +317,16 @@ class Trip extends Base
         $tripDriverDetail = new TripDriverDetail($input);
 
         $this->load->model('service/TripDriverService');
-        $ret = $this->TripDriverService->updateTrip($tripId, $userId, $tripDriverDetail->getTripArray());
+        DbTansactionHanlder::begin('default');
+        try {
+            $ret = $this->TripDriverService->updateTrip($tripId, $userId, $tripDriverDetail->getTripArray());
+            DbTansactionHanlder::commit('default');
 
-        $this->_returnSuccess($ret);
+            $this->_returnSuccess($ret);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     public function passengerUpdateMy()
@@ -321,9 +340,16 @@ class Trip extends Base
 
         $this->load->model('service/TripPassengerService');
 
-        $ret = $this->TripPassengerService->updateTrip($tripId, $userId, $tripPassengerDetail->getTripArray());
+        DbTansactionHanlder::begin('default');
+        try {
+            $ret = $this->TripPassengerService->updateTrip($tripId, $userId, $tripPassengerDetail->getTripArray());
+            DbTansactionHanlder::commit('default');
 
-        $this->_returnSuccess($ret);
+            $this->_returnSuccess($ret);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -336,31 +362,38 @@ class Trip extends Base
         $tripId = $input['trip_id'];
 
         $this->load->model('service/TripDriverService');
-        $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
-        //鉴权不过，无法删除
-        if (empty($trip)) {
-            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
-        }
-
-        $this->TripDriverService->deleteTrip($userId, $tripId);
-
-        //获取用户所在群的id
-        $this->load->model('service/GroupUserService');
-        $groups = $this->GroupUserService->getGroupsByUserId($userId);
-        $groupIds = array();
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $groupIds[] = $group['group_id'];
+        DbTansactionHanlder::begin('default');
+        try {
+            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
+            //鉴权不过，无法删除
+            if (empty($trip)) {
+                throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
             }
-        }
-        if (!empty($groupIds)) {
-            $this->load->model('service/GroupTripService');
-            $this->load->model('service/GroupService');
-            $this->GroupTripService->deleteTripsFromGroup($tripId);
-            $this->GroupService->decreaseTripInGroups($groupIds);
-        }
 
-        $this->_returnSuccess(null);
+            $this->TripDriverService->deleteTrip($userId, $tripId);
+
+            //获取用户所在群的id
+            $this->load->model('service/GroupUserService');
+            $groups = $this->GroupUserService->getGroupsByUserId($userId);
+            $groupIds = array();
+            if (!empty($groups)) {
+                foreach ($groups as $group) {
+                    $groupIds[] = $group['group_id'];
+                }
+            }
+            if (!empty($groupIds)) {
+                $this->load->model('service/GroupTripService');
+                $this->load->model('service/GroupService');
+                $this->GroupTripService->deleteTripsFromGroup($tripId);
+                $this->GroupService->decreaseTripInGroups($groupIds);
+            }
+
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess(null);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     public function passengerDeleteMy()
@@ -371,31 +404,38 @@ class Trip extends Base
         $tripId = $input['trip_id'];
 
         $this->load->model('service/TripPassengerService');
-        $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
-        //鉴权不过，无法删除
-        if (empty($trip)) {
-            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
-        }
-
-        $this->TripPassengerService->deleteTrip($userId, $tripId);
-
-        //获取用户所在群的id
-        $this->load->model('service/GroupUserService');
-        $groups = $this->GroupUserService->getGroupsByUserId($userId);
-        $groupIds = array();
-        if (!empty($groups)) {
-            foreach ($groups as $group) {
-                $groupIds[] = $group['group_id'];
+        DbTansactionHanlder::begin('default');
+        try {
+            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
+            //鉴权不过，无法删除
+            if (empty($trip)) {
+                throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
             }
-        }
-        if (!empty($groupIds)) {
-            $this->load->model('service/GroupTripService');
-            $this->load->model('service/GroupService');
-            $this->GroupTripService->deleteTripsFromGroup($tripId);
-            $this->GroupService->decreaseTripInGroups($groupIds);
-        }
 
-        $this->_returnSuccess(null);
+            $this->TripPassengerService->deleteTrip($userId, $tripId);
+
+            //获取用户所在群的id
+            $this->load->model('service/GroupUserService');
+            $groups = $this->GroupUserService->getGroupsByUserId($userId);
+            $groupIds = array();
+            if (!empty($groups)) {
+                foreach ($groups as $group) {
+                    $groupIds[] = $group['group_id'];
+                }
+            }
+            if (!empty($groupIds)) {
+                $this->load->model('service/GroupTripService');
+                $this->load->model('service/GroupService');
+                $this->GroupTripService->deleteTripsFromGroup($tripId);
+                $this->GroupService->decreaseTripInGroups($groupIds);
+            }
+
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess(null);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -492,25 +532,31 @@ class Trip extends Base
         $tripId = $input['trip_id'];
         $tripType = $input['trip_type'];
 
-
-        if ($tripType == Config::TRIP_TYPE_DRIVER) {
-            $this->load->model('service/TripDriverService');
-            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
-            if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
-                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+        DbTansactionHanlder::begin('default');
+        try {
+            if ($tripType == Config::TRIP_TYPE_DRIVER) {
+                $this->load->model('service/TripDriverService');
+                $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
+                if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
+                    throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+                }
+                $ret = $this->TripDriverService->deleteTrip($userId, $tripId);
             }
-            $ret = $this->TripDriverService->deleteTrip($userId, $tripId);
-        }
-        if ($tripType == Config::TRIP_TYPE_PASSENGER) {
-            $this->load->model('service/TripPassengerService');
-            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
-            if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
-                throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+            if ($tripType == Config::TRIP_TYPE_PASSENGER) {
+                $this->load->model('service/TripPassengerService');
+                $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
+                if ($trip['status'] != Config::TRIP_STATUS_DRAFT) {
+                    throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
+                }
+                $ret = $this->TripPassengerService->deleteTrip($userId, $tripId);
             }
-            $ret = $this->TripPassengerService->deleteTrip($userId, $tripId);
+            
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess($ret);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
         }
-
-        $this->_returnSuccess($ret);
     }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -132,51 +132,30 @@ class Group extends Base
         $userId = $user['user_id'];
         $groupId = $input['group_id'];
         $this->load->model('service/GroupUserService');
+        DbTansactionHanlder::begin('default');
+        try {
+            //确保群内有该用户
+            $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
 
-        //确保群内有该用户
-        $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
+            //先检查是否为群主，群主无法退群
+            $this->load->model('service/GroupService');
+            $groups = $this->GroupService->getByGroupIds(array($groupId));
+            $group = $groups[0];
+            if ($group['owner_user_id'] == $userId) {
+                throw new StatusException(Status::$message[Status::GROUP_OWNER_CAN_NOT_EXIT], Status::GROUP_OWNER_CAN_NOT_EXIT);
+            }
 
-        //先检查是否为群主，群主无法退群
-        $this->load->model('service/GroupService');
-        $groups = $this->GroupService->getByGroupIds(array($groupId));
-        $group = $groups[0];
-        if ($group['owner_user_id'] == $userId) {
-            throw new StatusException(Status::$message[Status::GROUP_OWNER_CAN_NOT_EXIT], Status::GROUP_OWNER_CAN_NOT_EXIT);
+            $ret = $this->GroupUserService->delete($userId, $groupId);
+            if ($ret) {
+                //需要把group的member_num减少1
+                $this->GroupService->decreaseMember($group['group_id'], $group);
+            }
+
+            DbTansactionHanlder::commit('default');
+            $this->_returnSuccess($ret);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
         }
-
-        $ret = $this->GroupUserService->delete($userId, $groupId);
-        if ($ret) {
-            //需要把group的member_num减少1
-            $this->GroupService->decreaseMember($group['group_id'], $group);
-        }
-        $this->_returnSuccess($ret);
-    }
-
-    private function _getDetailByTripId($tripType, $userId, $tripId)
-    {
-
-        if ($tripId == null) {
-            throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
-        }
-
-        //无需鉴权，所有用户都能看行程详情，因为分享页需要
-        $trip = null;
-        if ($tripType == Config::TRIP_TYPE_DRIVER) {
-            $this->load->model('service/TripDriverService');
-            $trip = $this->TripDriverService->getTripByTripId($userId, $tripId);
-
-        } else {
-            $this->load->model('service/TripPassengerService');
-            $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
-        }
-
-        $currentDate = date('Y-m-d');
-        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-            $trip['is_expired'] = true;
-        } else {
-            $trip['is_expired'] = false;
-        }
-
-        return $trip;
     }
 }
