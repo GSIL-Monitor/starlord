@@ -151,6 +151,11 @@ class TripPassengerService extends CI_Model
         if (!empty($trips)) {
             foreach ($trips as $trip) {
                 $trip['trip_type'] = Config::TRIP_TYPE_PASSENGER;
+                if ($trip['begin_date'] == Config::EVERYDAY_DATE) {
+                    $trip['is_everyday'] = 1;
+                } else {
+                    $trip['is_everyday'] = 0;
+                }
                 $tripsWithType[] = $trip;
             }
         }

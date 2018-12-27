@@ -33,7 +33,7 @@ class Config
     const TRIP_TYPE_PASSENGER = 1;
 
     //每天类型的行程的date常量
-    const EVERYDAY_DATE = '2031-11-23';
+    const EVERYDAY_DATE = '2085-11-23';
 
     //行程状态
     const TRIP_STATUS_DRAFT = 0;

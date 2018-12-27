@@ -29,9 +29,9 @@ class TripDriverDetail
 
     public function __construct($input)
     {
-        if(isset($input["is_everyday"]) && $input["is_everyday"] == 1){
-            $this->beginDate = "2031-11-23";
-        }else{
+        if (isset($input["is_everyday"]) && $input["is_everyday"] == 1) {
+            $this->beginDate = Config::EVERYDAY_DATE;
+        } else {
             $this->beginDate = $input["begin_date"];
         }
         $this->beginTime = $input["begin_time"];

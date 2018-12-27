@@ -67,13 +67,15 @@ class Trip extends Base
                 $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
                 $this->GroupService->increaseTripInGroup(array($groupId));
 
-                unset($trip['is_expired']);
                 if ($tripType == Config::TRIP_TYPE_DRIVER) {
                     $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
                 } else {
                     $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
                 }
             }
+
+            $this->_formatTripWithExpireAndIsEveryday($retTrip);
+
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
         } catch (Exception $e) {
@@ -104,6 +106,8 @@ class Trip extends Base
         $restTrips = array();
 
         foreach ($trips as $trip) {
+            $this->_formatTripWithExpireAndIsEveryday($trip);
+
             if (empty($trip['top_time'])) {
                 $restTripsSortKeys[] = $trip['created_time'];
                 $restTrips[] = $trip;
@@ -152,7 +156,9 @@ class Trip extends Base
         $userId = $input['user_id'];
         $tripId = $input['trip_id'];
 
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER, $userId, $tripId));
+        $trip = $this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER, $userId, $tripId);
+        $this->_formatTripWithExpireAndIsEveryday($trip);
+        $this->_returnSuccess($trip);
     }
 
     public function passengerGetDetailByTripId()
@@ -161,7 +167,9 @@ class Trip extends Base
         $userId = $input['user_id'];
         $tripId = $input['trip_id'];
 
-        $this->_returnSuccess($this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER, $userId, $tripId));
+        $trip = $this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER, $userId, $tripId);
+        $this->_formatTripWithExpireAndIsEveryday($trip);
+        $this->_returnSuccess($trip);
     }
 
     private function _getDetailByTripId($tripType, $userId, $tripId)
@@ -180,13 +188,6 @@ class Trip extends Base
         } else {
             $this->load->model('service/TripPassengerService');
             $trip = $this->TripPassengerService->getTripByTripId($userId, $tripId);
-        }
-
-        $currentDate = date('Y-m-d');
-        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-            $trip['is_expired'] = true;
-        } else {
-            $trip['is_expired'] = false;
         }
 
         return $trip;
@@ -265,6 +266,9 @@ class Trip extends Base
             DbTansactionHanlder::commit('default');
 
             $newTrip['trip_id'] = $newTrip['trip_id'] . "";
+
+            $this->_formatTripWithExpireAndIsEveryday($newTrip);
+
             $this->_returnSuccess($newTrip);
         } catch (Exception $e) {
             DbTansactionHanlder::rollBack('default');
@@ -298,6 +302,9 @@ class Trip extends Base
             DbTansactionHanlder::commit('default');
 
             $newTrip['trip_id'] = $newTrip['trip_id'] . "";
+
+            $this->_formatTripWithExpireAndIsEveryday($newTrip);
+
             $this->_returnSuccess($newTrip);
         } catch (Exception $e) {
             DbTansactionHanlder::rollBack('default');
@@ -449,15 +456,10 @@ class Trip extends Base
 
         $trips = $this->TripDriverService->getMyTripList($userId);
 
-        $currentDate = date('Y-m-d');
         $resTrips = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-                    $trip['is_expired'] = true;
-                } else {
-                    $trip['is_expired'] = false;
-                }
+                $this->_formatTripWithExpireAndIsEveryday($newTrip);
                 $resTrips[] = $trip;
             }
         }
@@ -474,15 +476,10 @@ class Trip extends Base
 
         $trips = $this->TripPassengerService->getMyTripList($userId);
 
-        $currentDate = date('Y-m-d');
         $resTrips = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-                    $trip['is_expired'] = true;
-                } else {
-                    $trip['is_expired'] = false;
-                }
+                $this->_formatTripWithExpireAndIsEveryday($trip);
                 $resTrips[] = $trip;
             }
         }
@@ -550,7 +547,7 @@ class Trip extends Base
                 }
                 $ret = $this->TripPassengerService->deleteTrip($userId, $tripId);
             }
-            
+
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($ret);
         } catch (Exception $e) {
@@ -558,7 +555,24 @@ class Trip extends Base
             throw $e;
         }
     }
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    private function _formatTripWithExpireAndIsEveryday(&$trip)
+    {
+        $currentDate = date('Y-m-d');
+
+        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+            $trip['is_expired'] = true;
+        } else {
+            $trip['is_expired'] = false;
+        }
+
+        if ($trip['begin_date'] == Config::EVERYDAY_DATE) {
+            $trip['is_everyday'] = 1;
+        } else {
+            $trip['is_everyday'] = 0;
+        }
+    }
 
 }
