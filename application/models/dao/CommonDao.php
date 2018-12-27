@@ -2,27 +2,28 @@
 
 class CommonDao extends CI_Model
 {
-    protected static $aDbResources = array();
+    protected static $dbResources = array();
+    protected $db = null;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function getConn($sDbConfName = null)
+    public function getConn($dbConfName = null)
     {
-        if ($sDbConfName == null) {
-            $sDbConfName = $this->sDbConfName;
+        if ($dbConfName == null) {
+            $dbConfName = $this->dbConfName;
         }
-        if (!isset(self::$aDbResources[$sDbConfName])) {
-            self::$aDbResources[$sDbConfName] = $this->load->database($sDbConfName, true);
+        if (!isset(self::$dbResources[$dbConfName])) {
+            self::$dbResources[$dbConfName] = $this->load->database($dbConfName, true);
         }
-        return self::$aDbResources[$sDbConfName];
+        return self::$dbResources[$dbConfName];
     }
 
     public function reConn()
     {
-        $this->oCommonDb->reconnect();
+        $this->db->reconnect();
     }
 
 }

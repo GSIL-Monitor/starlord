@@ -1,6 +1,6 @@
 <?php
 
-class UserDao extends CI_Model
+class UserDao extends CommonDao
 {
     const TABLE_NUM = 1;
 
@@ -34,30 +34,12 @@ class UserDao extends CI_Model
     );
 
     protected $primaryKey = 'id';
-    protected $db = null;
-    protected $dbConfName = "default";
     protected $tablePrefix = "user_";
-    protected static $dbResources = array();
+    protected $dbConfName = "default";
 
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function getConn($dbConfName = null)
-    {
-        if ($dbConfName == null) {
-            $dbConfName = $this->dbConfName;
-        }
-        if (!isset(self::$dbResources[$dbConfName])) {
-            self::$dbResources[$dbConfName] = $this->load->database($dbConfName, true);
-        }
-        return self::$dbResources[$dbConfName];
-    }
-
-    public function reConn()
-    {
-        $this->db->reconnect();
     }
 
     protected function _getShardedTable($shardKey)

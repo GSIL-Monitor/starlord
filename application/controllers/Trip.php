@@ -74,9 +74,10 @@ class Trip extends Base
                     $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
                 }
             }
+            throw new StatusException(Status::$message[Status::TRIP_IS_NOT_TEMPLATE], Status::TRIP_IS_NOT_TEMPLATE);
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
-        } catch (StatusException $e) {
+        } catch (Exception $e) {
             DbTansactionHanlder::rollBack('default');
             throw $e;
         }
