@@ -84,3 +84,6 @@
   line-height: 44px;
   height: 44px;
 }
+.list {
+  margin: 0;
+}

@@ -2,6 +2,22 @@
  * 所有请求
  */
 const config = require('./config');
+let app;
+let prevent_request = false;
+
+/** 重启当前页面 */
+const reLaunchCurrentPage = () => {
+  const pages = getCurrentPages();
+  if (pages.length > 0) {
+    const currPage = pages[pages.length - 1];
+    const urlParams = Object.keys(currPage.options).map(key => {
+      return [key, currPage.options[key]].join('=');
+    }).join('&');
+    wx.reLaunch({
+      url: `/${currPage.route}?${urlParams}`,
+    })
+  }
+}
 
 /**
  * 通用request
@@ -12,12 +28,13 @@ const config = require('./config');
  */
 const request = (uri, data, callback, myOptions = {}) => {
   console.debug(`http request`, uri, data);
-  // callback 返回2个参数，第一个参数为是否返回success，第二个参数为返回数据
+  const ticket = wx.getStorageSync(config.storage_ticket);
   const defaultCallBack = () => {
     console.warn(`${uri}:无callback请求`);
   }
+  if (prevent_request && uri != 'common/login') return;
+  // callback 返回2个参数，第一个参数为是否返回success，第二个参数为返回数据
   callback = callback || defaultCallBack;
-  const ticket = wx.getStorageSync(config.storage_ticket);
   const defaultOptions = {
     url: `${config.host}/${uri}`,
     method: 'POST',
@@ -34,6 +51,7 @@ const request = (uri, data, callback, myOptions = {}) => {
       if (response.errno != 0) {
         // 登录失效，重新登录
         if (response.errno == 1004) {
+          prevent_request = true;
           login(() => {
             request(uri, data, callback, myOptions);
           });
@@ -68,6 +86,7 @@ const login = (loginCb) => {
       const callback = (success, data) => {
         if (!success) return;
         wx.setStorageSync(config.storage_ticket, data.ticket);
+        prevent_request = false;
         if (loginCb) loginCb(data.ticket);
       }
       if (res.code) {
@@ -89,45 +108,50 @@ const login = (loginCb) => {
 }
 
 /** 获取用户profile */
-const getProfile = (app, myCallback) => {
-  const callback = (success, data) => {
+const getProfile = (app, callback) => {
+  request('user/getProfile', null, (success, data) => {
     if (success) {
       app.globalData.profile = data;
     }
-    if (myCallback) {
-      myCallback(success, data);
+    if (callback) {
+      callback(success, data);
     }
-  }
-  request('user/getProfile', null, callback);
+  });
 }
 
 /** 用户配置信息 */
-const userConfig = (app) => {
-  getProfile(app);
-  // !TODO从本地获取config判断expire信息
+const userConfig = (myApp) => {
+  app = myApp;
+  // getProfile(app);
+  // 从本地获取config判断expire信息
+  const now = new Date().getTime()/1000;
+  const localConfig = wx.getStorageSync(config.storage_userconfig);
+  if (localConfig && localConfig.expire > now) {
+    app.globalData.user_config = localConfig;
+    return;
+  }
+
   const callback = (success, data) => {
     if (!success) return;
+    data.expire = data.expire + now;
     wx.setStorageSync(config.storage_userconfig, data);
     app.globalData.user_config = data;
 
     // 刷新当前页面
-    const pages = getCurrentPages();
-    if (pages.length > 0) {
-      pages[pages.length - 1].onShow();
-    }
+    reLaunchCurrentPage();
   }
   request('user/config', {}, callback);
 }
 
 /** 上传用户信息 */
-const userCompleteUser = (detail, app, page, success) => {
-  success = success || (() => {});
+const userCompleteUser = (detail, app, page, callback) => {
+  callback = callback || (() => {});
   if (detail.errMsg != 'getUserInfo:ok') {
     wx.showToast({
       title: '无法获取用户信息',
       icon: 'none'
     });
-    success(false);
+    callback(false);
   } else {
     const data = {
       rawData: detail.rawData,
@@ -139,18 +163,18 @@ const userCompleteUser = (detail, app, page, success) => {
     page.setData({
       is_login: true
     });
-    request('user/completeUser', data, success);
+    request('user/completeUser', data, callback);
   }
 }
 
 /** 更改手机号码 */
-const updateUserPhone = (data, success) => {
-  request('user/updateUserPhone', data, success);
+const updateUserPhone = (data, callback) => {
+  request('user/updateUserPhone', data, callback);
 }
 
 /** 更改车辆信息 */
-const updateUserCar = (data, success) => {
-  request('user/updateUserCar', data, success);
+const updateUserCar = (data, callback) => {
+  request('user/updateUserCar', data, callback);
 }
 
 /** 获取发布模板 */
@@ -195,23 +219,54 @@ const getTripDetailInSharePage = (data, callback) => {
 /**
  * 车找人发布、保存
  */
-const driverPublish = (data, success) => {
-  request('trip/driverPublish', data, success);
+const driverPublish = (data, callback) => {
+  request('trip/driverPublish', data, callback);
 }
-const driverSave = (data, success) => {
-  request('trip/driverSave', data, success);
+const driverSave = (data, callback) => {
+  request('trip/driverSave', data, callback);
 }
-const driverGetDetailByTripId = (data, success) => {
-  request('trip/driverGetDetailByTripId', data, success);
+const driverGetDetailByTripId = (data, callback) => {
+  request('trip/driverGetDetailByTripId', data, (success, responseData) => {
+    if (success && responseData) {
+      let tags = [];
+      config.driver_tags.map(tag => {
+        if (responseData[tag.value] == 1) {
+          tags.push(tag.label);
+        }
+      });
+      responseData.tags = tags;
+      if (responseData.user_info) {
+        responseData.user_info = JSON.parse(responseData.user_info);
+      }
+    }
+    callback(success, responseData);
+  });
 }
-const driverGetMyList = (success) => {
-  request('trip/driverGetMyList', null, success);
+const driverGetMyList = (callback) => {
+  request('trip/driverGetMyList', null, callback);
 }
-const driverDeleteMy = (data, success) => {
-  request('trip/driverDeleteMy', data, success);
+const driverDeleteMy = (data, callback) => {
+  request('trip/driverDeleteMy', data, callback);
 }
-const driverGetListByGroupId = (data, success) => {
-  request('trip/driverGetListByGroupId', data, success);
+const driverGetListByGroupId = (data, callback) => {
+  request('trip/driverGetListByGroupId', data, (success, responseData) => {
+    if (success && responseData && responseData.length > 0) {
+      responseData = responseData.map(item => {
+        let tags = [];
+        config.driver_tags.map(tag => {
+          if (item[tag.value] == 1) {
+            tags.push(tag.label);
+          }
+        });
+        item.tags = tags;
+        if (item.user_info) {
+          item.user_info = JSON.parse(item.user_info);
+        }
+        return item;
+      });
+    }
+    callback(success, responseData);
+  });
 }
 const driverSearch = (data, callback) => {
   request('search/all', { ...data, trip_type: 0 }, callback);
@@ -220,29 +275,61 @@ const driverSearch = (data, callback) => {
 /**
  * 人找车发布、保存
  */
-const passengerPublish = (data, success) => {
-  request('trip/passengerPublish', data, success);
+const passengerPublish = (data, callback) => {
+  request('trip/passengerPublish', data, callback);
 }
-const passengerSave = (data, success) => {
-  request('trip/passengerSave', data, success);
+const passengerSave = (data, callback) => {
+  request('trip/passengerSave', data, callback);
 }
-const passengerGetDetailByTripId = (data, success) => {
-  request('trip/passengerGetDetailByTripId', data, success);
+const passengerGetDetailByTripId = (data, callback) => {
+  request('trip/passengerGetDetailByTripId', data, (success, responseData) => {
+    if (success && responseData) {
+      let tags = [];
+      config.passenger_tags.map(tag => {
+        if (responseData[tag.value] == 1) {
+          tags.push(tag.label);
+        }
+      });
+      responseData.tags = tags;
+      if (responseData.user_info) {
+        responseData.user_info = JSON.parse(responseData.user_info);
+      }
+    }
+    callback(success, responseData);
+  });
 }
-const passengerGetMyList = (success) => {
-  request('trip/passengerGetMyList', null, success);
+const passengerGetMyList = (callback) => {
+  request('trip/passengerGetMyList', null, callback);
 }
-const passengerDeleteMy = (data, success) => {
-  request('trip/passengerDeleteMy', data, success);
+const passengerDeleteMy = (data, callback) => {
+  request('trip/passengerDeleteMy', data, callback);
 }
-const passengerGetListByGroupId = (data, success) => {
-  request('trip/passengerGetListByGroupId', data, success);
+const passengerGetListByGroupId = (data, callback) => {
+  request('trip/passengerGetListByGroupId', data, (success, responseData) => {
+    if (success && responseData && responseData.length > 0) {
+      responseData = responseData.map(item => {
+        let tags = [];
+        config.passenger_tags.map(tag => {
+          if (item[tag.value] == 1) {
+            tags.push(tag.label);
+          }
+        });
+        item.tags = tags;
+        if (item.user_info) {
+          item.user_info = JSON.parse(item.user_info);
+        }
+        return item;
+      });
+    }
+    callback(success, responseData);
+  });
 }
 const passengerSearch = (data, callback) => {
   request('search/all', { ...data, trip_type: 1 }, callback);
 }
 
 module.exports = {
+  reLaunchCurrentPage,
   request,
   login,
   getProfile,

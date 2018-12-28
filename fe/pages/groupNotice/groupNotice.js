@@ -78,6 +78,13 @@ Page({
 
   },
 
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    return app.appShare();
+  },
+
   bindinput(e) {
     const { name } = e.currentTarget.dataset;
     self.setData({

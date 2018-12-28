@@ -79,7 +79,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return app.appShare();
   },
 
   loadTemplate: () => {
@@ -209,18 +209,18 @@ Page({
       });
     } else {
       let params = {
-        is_everyday: form_data.is_everyday || null,
-        begin_date: form_data.begin_date || null,
-        begin_time: form_data.begin_time || null,
-        start_location_name: form_data.start_location_name || null,
-        start_location_address: form_data.start_location_address || null,
-        start_location_point: form_data.start_location_point || null,
-        end_location_name: form_data.end_location_name || null,
-        end_location_address: form_data.end_location_address || null,
-        end_location_point: form_data.end_location_point || null,
-        price_everyone: form_data.price_everyone || null,
-        people_num: form_data.people_num || null,
-        tips: form_data.tips || null,
+        is_everyday: form_data.is_everyday || '',
+        begin_date: form_data.begin_date || '',
+        begin_time: form_data.begin_time || '',
+        start_location_name: form_data.start_location_name || '',
+        start_location_address: form_data.start_location_address || '',
+        start_location_point: form_data.start_location_point || '',
+        end_location_name: form_data.end_location_name || '',
+        end_location_address: form_data.end_location_address || '',
+        end_location_point: form_data.end_location_point || '',
+        price_everyone: form_data.price_everyone || '',
+        people_num: form_data.people_num || '',
+        tips: form_data.tips || '',
       };
       if (trip_id) {
         params.trip_id = trip_id;

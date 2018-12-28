@@ -113,12 +113,26 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
+    const { user_config } = app.globalData;
+    const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
+    const { trip_id, user_id } = self.data;
 
+    return {
+      title: share_title,
+      path: `/pages/driverPublishShare/driverPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
+      imageUrl: '../../images/address.png'
+    };
   },
 
   nativeBack: () => {
     wx.reLaunch({
       url: '/pages/index/index',
     })
+  },
+  makeCall: function (e) {
+    const { phone } = e.currentTarget.dataset;
+    wx.makePhoneCall({
+      phoneNumber: phone,
+    });
   },
 })
