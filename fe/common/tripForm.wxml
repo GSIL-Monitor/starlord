@@ -15,7 +15,7 @@
       </radio-group>
     </view>
   </view>
-  <view class='list-item' wx:if="{{ show_frequency && data.is_everyday != 1 }}">
+  <view class='list-item' wx:if="{{ !show_frequency || data.is_everyday != 1 }}">
     <view class='label'>
       <text class='label-text'>日期</text>
     </view>

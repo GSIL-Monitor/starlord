@@ -1,4 +1,6 @@
 <import src="/common/emptyPage.wxml"/>
+<import src="/common/passengerInfoBox.wxml"/>
+<import src="/common/driverInfoBox.wxml"/>
 <view class='page'>
   <view class="group-wrap">
     <view class="group-data">

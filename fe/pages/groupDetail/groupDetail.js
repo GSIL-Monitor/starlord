@@ -85,7 +85,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return app.appShare();
   },
 
   navTabClick: function (e) {
@@ -151,5 +151,11 @@ Page({
     wx.navigateTo({
       url: `/pages/groupOwnerTip/groupOwnerTip?group_id=${self.data.params.group_id}`,
     })
-  }
+  },
+  makeCall: function (e) {
+    const { phone } = e.currentTarget.dataset;
+    wx.makePhoneCall({
+      phoneNumber: phone,
+    });
+  },
 })

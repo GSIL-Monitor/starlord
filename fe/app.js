@@ -7,10 +7,11 @@ App({
   },
   onShow: function (r) {
     this.globalData.wx_config = r || {};
-    // console.error(r,'xxxx');
-    // if (r.shareTicket && config.share_pages.indexOf(r.path) > -1) {
-    //   service.getAndUploadGroup(r.shareTicket);
-    // }
+  },
+  appShare: () => {
+    return {
+      path: '/pages/index/index'
+    }
   },
   globalData: {
     is_login: false,

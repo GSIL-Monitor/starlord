@@ -69,18 +69,6 @@ Page({
       });
       service.driverGetDetailByTripId({ trip_id, user_id }, (success, data) => {
         wx.stopPullDownRefresh();
-        if (success && data) {
-          let tags = [];
-          config.driver_tags.map(tag => {
-            if(data[tag.value] == 1) {
-              tags.push(tag.label);
-            }
-          });
-          data.tags = tags;
-          if (data.user_info) {
-            data.user_info = JSON.parse(data.user_info);
-          }
-        }
         self.setData({
           loading_data: false,
           detail: data || {}
@@ -100,7 +88,6 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (r) {
-    console.error(r);
     const { user_config } = app.globalData;
     const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
     const { trip_id, user_id } = self.data;
