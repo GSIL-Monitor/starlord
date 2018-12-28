@@ -189,7 +189,7 @@ Page({
     const { detail } = e;
     const { target } = detail;
     const submitType = target.dataset.type;
-    const { form_data, trip_id, tags, loading_submit }  = self.data;
+    const { form_data, trip_id, tags, loading_submit, profile }  = self.data;
     if (loading_submit) return;
     if (!form_data.begin_date && form_data.is_everyday != 1) {
       wx.showToast({
@@ -206,6 +206,10 @@ Page({
     } else if (!form_data.end_location_name) {
       wx.showToast({
         icon: 'none', title: '请选择终点',
+      });
+    } else if (!profile.phone) {
+      wx.showToast({
+        icon: 'none', title: '请填写手机号码',
       });
     } else {
       let params = {

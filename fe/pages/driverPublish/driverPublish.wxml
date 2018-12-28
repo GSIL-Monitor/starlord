@@ -10,11 +10,11 @@
         <template is="tripForm" data='{{ data: form_data, show_frequency: true }}' />
         <!---->
         <template is="phone" data="{{phone:profile.phone}}" />
-        <template is="car" data="{{info: profile}}" />
       </view>
       <view class='section-title'>其它信息（选填）</view>
       <view class='list'>
         <!---->
+        <template is="car" data="{{info: profile}}" />
         <view class='list-item'>
           <view class='label'>
             <text class='label-text'>途径地点</text>
