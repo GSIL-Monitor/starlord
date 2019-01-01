@@ -200,7 +200,32 @@ class TripDao extends CommonDao
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
         }
 
-        return array_merge($queryStart->result_array(), $queryEnd->result_array());
+
+        $tripsStart = $queryStart->result_array();
+        $tripsEnd = $queryEnd->result_array();
+        if(empty($tripsStart)){
+            return $tripsEnd;
+        }
+
+        if(empty($tripsEnd)){
+            return $tripsStart;
+        }
+
+        //$tripsStart取出所有trip_id,$tripEnd中如果有trip_id重复的就忽略，剩余合并进入$tripsStart
+        $tripIdMap = array();
+        foreach ($tripsStart as $tripStart) {
+            $tripIdMap[$tripStart['trip_id']] = 1;
+        }
+
+        foreach ($tripsEnd as $tripEnd) {
+            if(isset($tripIdMap[$tripEnd['trip_id']])){
+                continue;
+            }else{
+                $tripsStart[] = $tripEnd;
+            }
+        }
+
+        return $tripsStart;
     }
 
 }

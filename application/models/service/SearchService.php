@@ -20,6 +20,7 @@ class SearchService extends CI_Model
         }
 
 
+
         if (empty($startAndEndRoundTrips)) {
             return array();
         }

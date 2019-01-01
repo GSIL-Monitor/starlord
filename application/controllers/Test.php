@@ -87,9 +87,9 @@ class Test extends CI_Controller
         $config['source_image'] = $source;
         $config['new_image'] = $new;
 
-        $config['wm_text'] = "我岛岛系郝勺勺";
+        $config['wm_text'] = "测试文字，随便写 121@#￥@：2342342-=-";
         $config['wm_type'] = 'text';
-        $config['wm_font_path'] = './system/fonts/texb.ttf';
+        $config['wm_font_path'] = '/home/chuanhui/starlord/application/ttf/songti.ttf';
         $config['wm_font_size'] = '160';
         $config['wm_font_color'] = 'ADFF2F';
         $config['wm_vrt_alignment'] = 'bottom';
