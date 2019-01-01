@@ -2,8 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
-class Test extends Base
+class Test extends CI_Controller
 {
 
     public function __construct()
@@ -62,4 +61,51 @@ class Test extends Base
 
     }
 
+
+    public function img()
+    {
+        $input = $this->input->post();
+
+        $key = $input['key'];
+        $this->load->model('api/OssApi');
+
+        $source = '/home/chuanhui/starlord/application/imgs/testpng.png';
+        $new = "/home/chuanhui/starlord/res/testpng.png";
+        unlink($new);
+
+        $this->imgHandler($source, $new);
+
+        $this->OssApi->uploadImg('test/111.png', $new);
+
+        $this->_returnSuccess($this->OssApi->getSignedUrlForGettingObject('test/111.png'));
+
+    }
+
+    public function imgHandler($source, $new)
+    {
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $source;
+        $config['new_image'] = $new;
+
+        $config['wm_text'] = "我岛岛系郝勺勺";
+        $config['wm_type'] = 'text';
+        $config['wm_font_path'] = './system/fonts/texb.ttf';
+        $config['wm_font_size'] = '160';
+        $config['wm_font_color'] = 'ADFF2F';
+        $config['wm_vrt_alignment'] = 'bottom';
+        $config['wm_hor_alignment'] = 'center';
+        $config['wm_padding'] = '20';
+
+        $this->load->library('image_lib', $config);
+        $this->image_lib->initialize($config);
+        $this->image_lib->watermark();
+
+    }
+
+
+    protected function _returnSuccess($data = array())
+    {
+        echo json_encode(array('errno' => 0, 'errmsg' => '', 'data' => $data));
+        exit;
+    }
 }

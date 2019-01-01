@@ -38,13 +38,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Common Functions
+ * OssApi Functions
  *
  * Loads the base classes and executes the request.
  *
  * @package		CodeIgniter
  * @subpackage	CodeIgniter
- * @category	Common Functions
+ * @category	OssApi Functions
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/user_guide/
  */

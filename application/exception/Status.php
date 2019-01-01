@@ -3,6 +3,9 @@ class Status
 {
     const SUCCESS = 0;
 
+    //oss
+    const OSS_CONNECT_FAIL = 801;
+
     //wx
     const WX_FETCH_SESSION_FAIL = 901;
     const WX_DECRYPT_ERROR = 902;
@@ -70,6 +73,10 @@ class Status
 
     static public $message = array(
         self::SUCCESS => '',
+
+        //oss
+        self::OSS_CONNECT_FAIL => 'oss失败',
+
         //wx
         self::WX_FETCH_SESSION_FAIL => '获取微信session失败',
         self::WX_DECRYPT_ERROR => '微信解密失败',

@@ -16,5 +16,16 @@ spl_autoload_register(function ($class) {
 
     if (isset($map[$class]) && file_exists($map[$class])) {
         include_once $map[$class];
+    }else{
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+        $file = APPPATH . "models/api". DIRECTORY_SEPARATOR . $path . '.php';
+        if (file_exists($file)) {
+            include_once $file;
+        }
+    }
+
+    if (isset($map[$class]) && file_exists($map[$class])) {
+        include_once $map[$class];
     }
 });
+

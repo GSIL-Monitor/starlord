@@ -39,17 +39,19 @@ class TripPassengerDetail
         $this->endLocationName = $input["end_location_name"];
         $this->endLocationAddress = $input["end_location_address"];
         $this->endLocationPoint = $input["end_location_point"];
-        $this->priceEveryone = $input["price_everyone"];
-        $this->peopleNum = $input["people_num"];
-        $this->passengerNoSmoke = $input["passenger_no_smoke"];
-        $this->passengerLastMile = $input["passenger_last_mile"];
-        $this->passengerGoods = $input["passenger_goods"];
-        $this->passengerCanDrive = $input["passenger_can_drive"];
-        $this->passengerChat = $input["passenger_chat"];
-        $this->passengerLuggage = $input["passenger_luggage"];
-        $this->passengerPet = $input["passenger_pet"];
-        $this->passengerNoCarsickness = $input["passenger_no_carsickness"];
-        $this->tips = $input["tips"];
+
+        //以下是选填
+        $this->priceEveryone = empty($input["price_everyone"]) ? null : $input["price_everyone"];
+        $this->peopleNum = empty($input["people_num"]) ? null : $input["people_num"];
+        $this->passengerNoSmoke = empty($input["passenger_no_smoke"]) ? null : $input["passenger_no_smoke"];
+        $this->passengerLastMile = empty($input["passenger_last_mile"]) ? null : $input["passenger_last_mile"];
+        $this->passengerGoods = empty($input["passenger_goods"]) ? null : $input["passenger_goods"];
+        $this->passengerCanDrive = empty($input["passenger_can_drive"]) ? null : $input["passenger_can_drive"];
+        $this->passengerChat = empty($input["passenger_chat"]) ? null : $input["passenger_chat"];
+        $this->passengerLuggage = empty($input["passenger_luggage"]) ? null : $input["passenger_luggage"];
+        $this->passengerPet = empty($input["passenger_pet"]) ? null : $input["passenger_pet"];
+        $this->passengerNoCarsickness = empty($input["passenger_no_carsickness"]) ? null : $input["passenger_no_carsickness"];
+        $this->tips = empty($input["tips"]) ? null : $input["tips"];
     }
 
     public function getTripArray()

@@ -41,19 +41,21 @@ class TripDriverDetail
         $this->endLocationName = $input["end_location_name"];
         $this->endLocationAddress = $input["end_location_address"];
         $this->endLocationPoint = $input["end_location_point"];
-        $this->route = $input["route"];
-        $this->priceEveryone = $input["price_everyone"];
-        $this->priceTotal = $input["price_total"];
-        $this->seatNum = $input["seat_num"];
-        $this->driverNoSmoke = $input["driver_no_smoke"];
-        $this->driverLastMile = $input["driver_last_mile"];
-        $this->driverGoods = $input["driver_goods"];
-        $this->driverNeedDrive = $input["driver_need_drive"];
-        $this->driverChat = $input["driver_chat"];
-        $this->driverHighway = $input["driver_highway"];
-        $this->driverPet = $input["driver_pet"];
-        $this->driverCooler = $input["driver_cooler"];
-        $this->tips = $input["tips"];
+
+        //以下是选填
+        $this->route = empty($input["route"]) ? null : $input["route"];
+        $this->priceEveryone = empty($input["price_everyone"]) ? null : $input["price_everyone"];
+        $this->priceTotal = empty($input["price_total"]) ? null : $input["price_total"];
+        $this->seatNum = empty($input["seat_num"]) ? null : $input["seat_num"];
+        $this->driverNoSmoke = empty($input["driver_no_smoke"]) ? null : $input["driver_no_smoke"];
+        $this->driverLastMile = empty($input["driver_last_mile"]) ? null : $input["driver_last_mile"];
+        $this->driverGoods = empty($input["driver_goods"]) ? null : $input["driver_goods"];
+        $this->driverNeedDrive = empty($input["driver_need_drive"]) ? null : $input["driver_need_drive"];
+        $this->driverChat = empty($input["driver_chat"]) ? null : $input["driver_chat"];
+        $this->driverHighway = empty($input["driver_highway"]) ? null : $input["driver_highway"];
+        $this->driverPet = empty($input["driver_pet"]) ? null : $input["driver_pet"];
+        $this->driverCooler = empty($input["driver_cooler"]) ? null : $input["driver_cooler"];
+        $this->tips = empty($input["tips"]) ? null : $input["tips"];
     }
 
     public function getTripArray()
