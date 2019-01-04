@@ -19,7 +19,7 @@
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
-                      <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
+                      <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
                       <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="driver">取消行程</view>
                     </view>
                   </view>
@@ -34,7 +34,7 @@
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      价格: {{ item.price_everyone }}元/人，包车:{{item.price_total}}元，座位:{{item.seat_num}}
+                      价格: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，包车: {{ item.price_total ? item.price_total + '元' : '面议' }}，座位: {{ item.seat_num || '未说明' }}
                     </view>
                   </view>
                 </view>
@@ -55,22 +55,22 @@
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
-                      <view class='trip-date-value'>{{item.begin_date}} {{ item.begin_time }}</view>
+                      <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
                       <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="passenger">取消行程</view>
                     </view>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.start_location_address}}</text>
+                    <text class='trip-item-value'>{{item.start_location_name}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/location_start.png' />
-                    <text class='trip-item-value'>{{item.end_location_address}}</text>
+                    <text class='trip-item-value'>{{item.end_location_name}}</text>
                   </view>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      愿付: {{ item.price_everyone }}元/人，人数: {{ item.people_num }}
+                      愿付: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，人数: {{ item.people_num || '未说明' }}
                     </view>
                   </view>
                 </view>
