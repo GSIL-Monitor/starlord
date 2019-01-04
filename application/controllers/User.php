@@ -14,6 +14,12 @@ class User extends Base
 
     public function config()
     {
+        $this->load->model('service/TripDriverService');
+        $this->load->model('service/TripPassengerService');
+        $this->load->model('service/GroupService');
+
+        $totalTripNum = $this->TripDriverService->getAllTripsCount() + $this->TripPassengerService->getAllTripsCount();
+        $totalGroupNum = $this->GroupService->getAllGroupsCount();
         $user = $this->_user;
         $config = array(
             'expire' => 3600,
@@ -26,7 +32,7 @@ class User extends Base
                 ),                //拼车群tab上的公告
                 'adopt' => '如果您是本群群主，请加客服（微信号：pinchequnguanjia）,成为该群管理员；<br />ps：群主同意的情况下，其他成员也可以担任管理员。<br />管理员福利：发布公告，置顶群内行程，微信群拉新~更多功能开发中',        //没有群主的群的认领文案
                 'faq' => '关于我们',                //没有拼车群的时候展现的使用说明，同时也是”我的“中”关于我们“的内容
-                'platform_info' => '目前共有x个群使用【拼车群管家】管理，共有y个有效行程',    //搜索页上方的平台信息，说明现在平台有x个微信群，y个行程
+                'platform_info' => '目前共有' . $totalGroupNum . '个群使用【拼车群管家】管理，共有' . $totalTripNum . '个有效行程',    //搜索页上方的平台信息，说明现在平台有x个微信群，y个行程
                 'search_tip' => '可以搜索到所有通过【拼车群管家】发布到拼车群的行程',        //搜索页搜索按钮下面的提示信息
                 'group_owner_info' => '在拼车群内点击任一拼车群管家的分享行程，即可在我的拼车群列表中添加该群',        //群主信息
                 'publish_tip' => '发布行程到你的拼车群，同群好友快速查询，其他群的拼友也可以搜到你的行程',        //发布首页下面的说明文字
@@ -138,7 +144,7 @@ class User extends Base
 
         $user['phone'] = $input['phone'];
         $this->_checkPhone($user['phone']);
-        
+
         $ret = $this->UserService->updateUser($user);
         $this->_returnSuccess($ret);
 

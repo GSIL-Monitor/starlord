@@ -31,6 +31,26 @@ class TripDao extends CommonDao
         }
     }
 
+    public function getCountOfAll()
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+        $currentDate = date('Y-m-d');
+        $sql = "select count(*) as total from " . $this->table . " where begin_date >= ? and status = ? and is_del = ?";
+
+        $query = $this->db->query($sql, array($currentDate, Config::TRIP_STATUS_NORMAL, Config::RECORD_EXISTS));
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        } else if ($query->num_rows() == 0) {
+            return array();
+        } else if ($query->num_rows() == 1) {
+            return $query->row_array();
+        } else if ($query->num_rows() > 1) {
+            throw new StatusException(Status::$message[Status::DAO_MORE_THAN_ONE_RECORD], Status::DAO_MORE_THAN_ONE_RECORD, var_export($this->db, true));
+        }
+    }
+
     public function getOneByTripId($userId, $tripId)
     {
         $this->table = $this->_getShardedTable($userId);
@@ -203,11 +223,11 @@ class TripDao extends CommonDao
 
         $tripsStart = $queryStart->result_array();
         $tripsEnd = $queryEnd->result_array();
-        if(empty($tripsStart)){
+        if (empty($tripsStart)) {
             return $tripsEnd;
         }
 
-        if(empty($tripsEnd)){
+        if (empty($tripsEnd)) {
             return $tripsStart;
         }
 
@@ -218,9 +238,9 @@ class TripDao extends CommonDao
         }
 
         foreach ($tripsEnd as $tripEnd) {
-            if(isset($tripIdMap[$tripEnd['trip_id']])){
+            if (isset($tripIdMap[$tripEnd['trip_id']])) {
                 continue;
-            }else{
+            } else {
                 $tripsStart[] = $tripEnd;
             }
         }

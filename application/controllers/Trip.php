@@ -574,5 +574,4 @@ class Trip extends Base
             $trip['is_everyday'] = 0;
         }
     }
-
 }

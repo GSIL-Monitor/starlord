@@ -33,6 +33,7 @@ class TripDriverDao extends TripDao
             "driver_pet",
             "driver_cooler",
             "tips",
+            "share_img_url",
             "status",
             "is_del",
             "created_time",

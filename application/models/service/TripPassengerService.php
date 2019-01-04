@@ -7,7 +7,14 @@ class TripPassengerService extends CI_Model
     public function __construct()
     {
         parent::__construct();
+    }
 
+    public function getAllTripsCount()
+    {
+        $this->load->model('dao/TripPassengerDao');
+        $count = $this->TripPassengerDao->getCountOfAll();
+
+        return $count['total'];
     }
 
     public function getTripByTripId($userId, $tripId)
@@ -34,6 +41,7 @@ class TripPassengerService extends CI_Model
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
 
+        $tripPassengerDetail['share_img_url'] = $this->getPassengerTripImageUrl($tripId, $tripPassengerDetail['start_location_name'], $tripPassengerDetail['end_location_name'], $tripPassengerDetail['price_everyone'], $tripPassengerDetail['$people_num']);
         //只有正常状态的行程才允许编辑
         $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $tripPassengerDetail);
 
@@ -75,6 +83,8 @@ class TripPassengerService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripPassengerDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
+        $trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
+
         //插入用户信息快照
         $trip['user_info'] = json_encode(
             array(
@@ -161,5 +171,76 @@ class TripPassengerService extends CI_Model
         }
 
         return $tripsWithType;
+    }
+
+
+    private function getPassengerTripImageUrl($tripId, $startLocationName, $endLocationName, $priceEveryone, $peopleNum)
+    {
+        $this->load->model('api/OssApi');
+
+        $source = '/home/chuanhui/starlord/application/imgs/testpng.png';
+        $firstNew = "/home/chuanhui/starlord/res/" . $tripId . "1.png";
+        $secondNew = "/home/chuanhui/starlord/res/" . $tripId . "2.png";
+        $thirdNew = "/home/chuanhui/starlord/res/" . $tripId . "3.png";
+
+        $firstLine = array(
+            'wm_text' => $startLocationName,
+            'wm_type' => 'text',
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
+            'wm_font_size' => '150',
+            'wm_font_color' => 'ADFF2F',
+            'wm_vrt_alignment' => 'bottom',
+            'wm_hor_alignment' => 'center',
+            'wm_padding' => '20',
+        );
+
+        $secondLine = array(
+            'wm_text' => $endLocationName,
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
+            'wm_font_size' => '150',
+            'wm_font_color' => 'ADFF2F',
+            'wm_vrt_alignment' => 'center',
+            'wm_hor_alignment' => 'center',
+            'wm_padding' => '180',
+        );
+
+        $thirdLine = array(
+            'wm_text' => "愿付" . $priceEveryone . "/人，有" . $peopleNum . "人",
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
+            'wm_font_size' => '150',
+            'wm_font_color' => 'ADFF2F',
+            'wm_vrt_alignment' => 'top',
+            'wm_hor_alignment' => 'center',
+            'wm_padding' => '340',
+        );
+
+        $this->imgHandler($source, $firstNew, $firstLine, true);
+        $this->imgHandler($firstNew, $secondNew, $secondLine, true);
+        $this->imgHandler($secondNew, $thirdNew, $thirdLine, true);
+
+        $this->OssApi->uploadImg('test/' . $tripId . '.png', $thirdNew);
+
+        unlink($firstNew);
+        unlink($secondNew);
+        unlink($thirdNew);
+
+        return $this->OssApi->getSignedUrlForGettingObject('test/' . $tripId . '.png');
+    }
+
+    public function imgHandler($source, $new, $config, $output2File)
+    {
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $source;
+        $config['new_image'] = $new;
+        $config['output_2_file'] = $output2File;
+
+        $this->load->library('image_lib', $config);
+        $this->image_lib->initialize($config);
+        $this->image_lib->watermark();
+        $this->image_lib->clear();
     }
 }
