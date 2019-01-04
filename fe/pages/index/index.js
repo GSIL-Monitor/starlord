@@ -2,7 +2,6 @@
 const service = require('../../utils/service');
 const app = getApp();
 let self;
-
 Page({
   data: {
     notice_list: [],

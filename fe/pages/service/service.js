@@ -4,7 +4,6 @@ const WxParse = require('../../utils/wxParse/wxParse.js');
 const app = getApp();
 let self;
 Page({
-
   /**
    * 页面的初始数据
    */
