@@ -1,5 +1,8 @@
-// pages/groupIntro/groupIntro.js
+const service = require('../../utils/service');
+const config = require('../../utils/config');
+const WxParse = require('../../utils/wxParse/wxParse.js');
 const app = getApp();
+let self;
 Page({
 
   /**
@@ -13,7 +16,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    self = this;
   },
 
   /**
@@ -27,7 +30,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    const { user_config } = app.globalData;
+    const { docoment } = (user_config || {}) || {};
+    const faq = docoment.faq || ''
+    WxParse.wxParse('faq', 'html', faq, self, 5);
   },
 
   /**

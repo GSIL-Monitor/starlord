@@ -33,6 +33,7 @@ const request = (uri, data, callback, myOptions = {}) => {
     console.warn(`${uri}:无callback请求`);
   }
   if (prevent_request && uri != 'common/login') return;
+  if (!ticket && uri != 'user/config' && uri != 'common/login') return;
   // callback 返回2个参数，第一个参数为是否返回success，第二个参数为返回数据
   callback = callback || defaultCallBack;
   const defaultOptions = {
@@ -269,7 +270,24 @@ const driverGetListByGroupId = (data, callback) => {
   });
 }
 const driverSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 0 }, callback);
+  request('search/all', { ...data, trip_type: 0 }, (success, responseData) => {
+    if (success && responseData && responseData.length > 0) {
+      responseData = responseData.map(item => {
+        let tags = [];
+        config.driver_tags.map(tag => {
+          if (item[tag.value] == 1) {
+            tags.push(tag.label);
+          }
+        });
+        item.tags = tags;
+        if (item.user_info) {
+          item.user_info = JSON.parse(item.user_info);
+        }
+        return item;
+      });
+    }
+    callback(success, responseData);
+  });
 }
 
 /**
@@ -325,7 +343,24 @@ const passengerGetListByGroupId = (data, callback) => {
   });
 }
 const passengerSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 1 }, callback);
+  request('search/all', { ...data, trip_type: 1 }, (success, responseData) => {
+    if (success && responseData && responseData.length > 0) {
+      responseData = responseData.map(item => {
+        let tags = [];
+        config.passenger_tags.map(tag => {
+          if (item[tag.value] == 1) {
+            tags.push(tag.label);
+          }
+        });
+        item.tags = tags;
+        if (item.user_info) {
+          item.user_info = JSON.parse(item.user_info);
+        }
+        return item;
+      });
+    }
+    callback(success, responseData);
+  });
 }
 
 module.exports = {

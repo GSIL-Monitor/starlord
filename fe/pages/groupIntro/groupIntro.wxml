@@ -1,1 +1,4 @@
-<view class='page'></view>
+<import src="/utils/wxParse/wxParse.wxml"/>
+<view class='page'>
+  <template is="wxParse" data="{{ wxParseData: faq.nodes }}"/>
+</view>
