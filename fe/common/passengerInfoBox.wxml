@@ -5,8 +5,8 @@
         <view class='trip-data-item'>
           <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
           <view class='trip-item-value trip-date'>
-            <text class='trip-date-value'>{{ detail.begin_date }} {{ detail.begin_time }}</text>
-            <text class='trip-info' wx:if="{{false}}">顺路度：89%</text>
+            <view class='trip-date-value'>{{detail.is_everyday == 1 ? '每天' : detail.begin_date}} {{ detail.begin_time }}</view>
+            <text class='trip-info' wx:if="{{score && detail.score}}">顺路度：{{ detail.score }}%</text>
           </view>
         </view>
         <view class='trip-data-item'>
@@ -20,7 +20,7 @@
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/price.png' />
           <view class='trip-item-value'>
-            愿付: {{ detail.price_everyone }}元/人，人数: {{ detail.people_num }}
+            愿付: {{ detail.price_everyone ? detail.price_everyone + '元/人' : '面议' }}，人数: {{ detail.people_num || '未说明' }}
           </view>
         </view>
       </view>
@@ -44,7 +44,7 @@
           <image class='trip-item-icon' src='/images/remark.png' />
           <view class='trip-item-value'>
             <text class='trip-hl'>备注:</text>
-            <view style='flex:1;'>{{ detail.tips }}</view>
+            <view style='flex:1;'>{{ detail.tips || '' }}</view>
           </view>
         </view>
       </view>

@@ -21,10 +21,10 @@
         <view class='data-item'>
           <image class='item-icon' src='/images/price.png' />
           <view class='item-value' wx:if='{{ item.trip_type == 1 }}'>
-            愿付: {{ item.price_everyone }}元/人，人数: {{ item.people_num }}
+            愿付: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，人数: {{ item.people_num || '未说明' }}
           </view>
           <view class='item-value' wx:if='{{ item.trip_type == 0 }}'>
-            价格: {{ item.price_everyone }}元/人，包车: {{ item.price_total }}元，座位: {{ item.seat_num }}
+            价格: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，包车: {{ item.price_total ? item.price_total + '元' : '面议' }}，座位: {{ item.seat_num || '未说明' }}
           </view>
         </view>
       </view>
