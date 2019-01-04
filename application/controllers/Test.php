@@ -85,6 +85,7 @@ class Test extends CI_Controller
         $secondLine = array(
             'wm_text' => '测试文字，随便写 121@#￥@：2342342-=-',
             'wm_type' => 'text',
+            'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
             'wm_font_size' => '150',
             'wm_font_color' => 'ADFF2F',
@@ -96,6 +97,7 @@ class Test extends CI_Controller
         $thirdLine = array(
             'wm_text' => '测试文字，随便写 121@#￥@：2342342-=-',
             'wm_type' => 'text',
+            'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
             'wm_font_size' => '150',
             'wm_font_color' => 'ADFF2F',
@@ -104,9 +106,9 @@ class Test extends CI_Controller
             'wm_padding' => '340',
         );
 
-        $this->imgHandler($source, $firstNew, $firstLine);
-        $this->imgHandler($firstNew, $secondNew, $secondLine);
-        $this->imgHandler($secondNew, $thirdNew, $thirdLine);
+        $this->imgHandler($source, $firstNew, $firstLine, true);
+        $this->imgHandler($firstNew, $secondNew, $secondLine, true);
+        $this->imgHandler($secondNew, $thirdNew, $thirdLine, true);
 
         $this->OssApi->uploadImg('test/111.png', $thirdNew);
 
@@ -117,15 +119,12 @@ class Test extends CI_Controller
         $this->_returnSuccess($this->OssApi->getSignedUrlForGettingObject('test/111.png'));
     }
 
-    public function imgHandler($source, $new, $config)
+    public function imgHandler($source, $new, $config, $output2File)
     {
         $config['image_library'] = 'gd2';
         $config['source_image'] = $source;
         $config['new_image'] = $new;
-        if (!empty($resource)) {
-            $config['source_img_in_memory'] = $resource;
-        }
-        $config['is_img_output'] = $isImgOutput;
+        $config['output_2_file'] = $output2File;
 
         $this->load->library('image_lib', $config);
         $this->image_lib->initialize($config);
