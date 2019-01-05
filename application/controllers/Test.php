@@ -66,7 +66,7 @@ class Test extends CI_Controller
     {
         $this->load->model('api/OssApi');
 
-        $source = '/home/chuanhui/starlord/application/imgs/testpng.png';
+        $source = '/home/chuanhui/starlord/application/imgs/ditu.png';
         $firstNew = "/home/chuanhui/starlord/res/testpng1.png";
         $secondNew = "/home/chuanhui/starlord/res/testpng2.png";
         $thirdNew = "/home/chuanhui/starlord/res/testpng3.png";
@@ -133,9 +133,133 @@ class Test extends CI_Controller
     }
 
 
+    //发布行程
+    public function driverPublish()
+    {
+        $input = $this->input->post();
+        $user = $this->_user;
+
+        //没有手机号码的人无法发布行程
+        if (empty($user['phone'])) {
+            throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
+        }
+
+        $userId = $user['user_id'];
+        $tripDriverDetail = new TripDriverDetail($input);
+
+        $this->load->model('service/TripDriverService');
+
+        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
+            throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
+        }
+        DbTansactionHanlder::begin('default');
+        try {
+            //发布到trip表
+            $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $this->_user);
+            DbTansactionHanlder::commit('default');
+
+            $newTrip['trip_id'] = $newTrip['trip_id'] . "";
+
+            $this->_formatTripWithExpireAndIsEveryday($newTrip);
+
+            $this->_returnSuccess($newTrip);
+        } catch (Exception $e) {
+            DbTansactionHanlder::rollBack('default');
+            throw $e;
+        }
+    }
+
+
     protected function _returnSuccess($data = array())
     {
         echo json_encode(array('errno' => 0, 'errmsg' => '', 'data' => $data));
         exit;
     }
+
+
+    //发布行程
+    public function tripsGen()
+    {
+        $input = $this->input->post();
+
+        $input['begin_date'] = '2085-11-23';
+        $input['begin_time'] = '14:45:00';
+
+        for ($i = 1; $i <= 10000; $i++) {
+            $f1 = 39.034068857643;
+            $f2 = 39.2318581994503;
+            $a = (rand(0, 10000)) / 10000;
+            $slon = $f1 + ($f2 - $f1) * $a;
+            $f1 = 117.055377802462;
+            $f2 = 117.319610825447;
+            $a = (rand(0, 10000)) / 10000;
+            $slat = $f1 + ($f2 - $f1) * $a;
+            $input['start_location_name'] = '起始点地址名'.$i;
+            $input['start_location_address'] = '起始点地址详情'.$i;
+            $input['start_location_point'] = '(' . $slon . ',' . $slat . ')';
+
+            $f1 = 39.7466386284469;
+            $f2 = 40.0784863733239;
+            $a = (rand(0, 10000)) / 10000;
+            $elon = $f1 + ($f2 - $f1) * $a;
+            $f1 = 116.152100405201;
+            $f2 = 116.622714095226;
+            $a = (rand(0, 10000)) / 10000;
+            $elat = $f1 + ($f2 - $f1) * $a;
+            $input['end_location_name'] = '终点地址名'.$i;
+            $input['end_location_address'] = '终点地址详情'.$i;
+            $input['end_location_point'] = '(' . $elon . ',' . $elat . ')';
+
+            $input['route'] = '路过，路过';
+            $input['price_everyone'] = 100;
+            $input['price_total'] = 350;
+            $input['seat_num'] = 4;
+            $input['driver_no_smoke'] = null;
+            $input['driver_last_mile'] = null;
+            $input['driver_goods'] = null;
+            $input['driver_need_drive'] = null;
+            $input['driver_chat'] = null;
+            $input['driver_highway'] = null;
+            $input['driver_pet'] = null;
+            $input['driver_cooler'] = null;
+            $input['tips'] = '备注';
+            $tripDriverDetail = new TripDriverDetail($input);
+
+            $this->load->model('service/TripDriverService');
+            $this->load->model('service/GroupTripService');
+            $this->load->model('service/GroupService');
+            $this->load->model('service/UserService');
+
+            $userId = '6485807247623455747';
+            $groupId = '6487139302223381507';
+            $user = $this->UserService->getUserByUserId($userId);
+
+            DbTansactionHanlder::begin('default');
+            try {
+                //发布到trip表
+                $newTrip = $this->TripDriverService->createNewTrip($userId, $tripDriverDetail->getTripArray(), $user);
+                $tripId = $newTrip['trip_id'];
+                $groups = $this->GroupService->getByGroupIds(array($groupId));
+                $group = $groups[0];
+                try {
+                    //检查行程是否在群里
+                    $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
+                } catch (Exception $e) {
+                    //否则把行程加群
+                    $newTrip['trip_id'] = $tripId . "";
+                    $this->GroupTripService->publishTripToGroup($tripId, $groupId, $newTrip, Config::TRIP_TYPE_DRIVER);
+                    $this->GroupService->increaseTripInGroup(array($groupId));
+                    $this->TripDriverService->addGroupInfoToTrip($userId, $tripId, $newTrip, $group);
+                }
+            } catch (Exception $e) {
+                DbTansactionHanlder::rollBack('default');
+                throw $e;
+            }
+            DbTansactionHanlder::commit('default');
+        }
+
+        $this->_returnSuccess(true);
+    }
+
+
 }

@@ -83,7 +83,7 @@ class TripPassengerService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripPassengerDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        $trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
+        //$trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
 
         //插入用户信息快照
         $trip['user_info'] = json_encode(
