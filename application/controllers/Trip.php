@@ -75,7 +75,11 @@ class Trip extends Base
             }
 
             $this->_formatTripWithExpireAndIsEveryday($retTrip);
-
+            if ($userId == $retTrip['user_id']) {
+                $retTrip['is_share_owner'] = 1;
+            } else {
+                $retTrip['is_share_owner'] = 0;
+            }
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
         } catch (Exception $e) {
@@ -86,15 +90,62 @@ class Trip extends Base
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //获取群内行程列表
+    //分页
     public function driverGetListByGroupId()
     {
-        $this->_returnSuccess($this->_getListByGroupId(Config::TRIP_TYPE_DRIVER));
+        $trips = $this->_getListByGroupId(Config::TRIP_TYPE_DRIVER);
+        $input = $this->input->post();
+        $page = $input['page'];
+
+        if (empty($page)) {
+            $this->_returnSuccess(
+                array(
+                    'has_next' => false,
+                    'trips' => $trips,
+                )
+            );
+        } else {
+            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $hasNext = true;
+            if (count($retTrips) < 20) {
+                $hasNext = false;
+            }
+            $this->_returnSuccess(
+                array(
+                    'has_next' => $hasNext,
+                    'trips' => $retTrips,
+                )
+            );
+        }
     }
 
+    //分页
     public function passengerGetListByGroupId()
     {
-        $this->_returnSuccess($this->_getListByGroupId(Config::TRIP_TYPE_PASSENGER));
+        $trips = $this->_getListByGroupId(Config::TRIP_TYPE_PASSENGER);
+        $input = $this->input->post();
+        $page = $input['page'];
 
+        if (empty($page)) {
+            $this->_returnSuccess(
+                array(
+                    'has_next' => false,
+                    'trips' => $trips,
+                )
+            );
+        } else {
+            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $hasNext = true;
+            if (count($retTrips) < 20) {
+                $hasNext = false;
+            }
+            $this->_returnSuccess(
+                array(
+                    'has_next' => $hasNext,
+                    'trips' => $retTrips,
+                )
+            );
+        }
     }
 
     private function _sortTripsInGroup($trips)
@@ -452,6 +503,10 @@ class Trip extends Base
         $user = $this->_user;
         $userId = $user['user_id'];
 
+        $input = $this->input->post();
+        $page = $input['page'];
+
+
         $this->load->model('service/TripDriverService');
 
         $trips = $this->TripDriverService->getMyTripList($userId);
@@ -464,13 +519,36 @@ class Trip extends Base
             }
         }
 
-        $this->_returnSuccess($this->_sortTripsByCreatedTime($resTrips));
+        $trips = $this->_sortTripsByCreatedTime($resTrips);
+        if (empty($page)) {
+            $this->_returnSuccess(
+                array(
+                    'has_next' => false,
+                    'trips' => $trips,
+                )
+            );
+        } else {
+            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $hasNext = true;
+            if (count($retTrips) < 20) {
+                $hasNext = false;
+            }
+            $this->_returnSuccess(
+                array(
+                    'has_next' => $hasNext,
+                    'trips' => $retTrips,
+                )
+            );
+        }
     }
 
     public function passengerGetMyList()
     {
         $user = $this->_user;
         $userId = $user['user_id'];
+
+        $input = $this->input->post();
+        $page = $input['page'];
 
         $this->load->model('service/TripPassengerService');
 
@@ -484,7 +562,27 @@ class Trip extends Base
             }
         }
 
-        $this->_returnSuccess($this->_sortTripsByCreatedTime($resTrips));
+        $trips = $this->_sortTripsByCreatedTime($resTrips);
+        if (empty($page)) {
+            $this->_returnSuccess(
+                array(
+                    'has_next' => false,
+                    'trips' => $trips,
+                )
+            );
+        } else {
+            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $hasNext = true;
+            if (count($retTrips) < 20) {
+                $hasNext = false;
+            }
+            $this->_returnSuccess(
+                array(
+                    'has_next' => $hasNext,
+                    'trips' => $retTrips,
+                )
+            );
+        }
     }
 
     private function _sortTripsByCreatedTime($trips)
