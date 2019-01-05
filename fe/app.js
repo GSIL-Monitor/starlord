@@ -14,6 +14,7 @@ App({
     }
   },
   globalData: {
+    app_init: false,
     is_login: false,
     profile: null,
     user_config: null,
