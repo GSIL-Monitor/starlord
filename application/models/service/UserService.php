@@ -26,6 +26,15 @@ class UserService extends CI_Model
         return $user;
     }
 
+    public function getUserByUserId($userId)
+    {
+        $this->load->model('dao/UserDao');
+
+        $user = $this->UserDao->getOneByUserId($userId);
+
+        return $user;
+    }
+
     public function createNewUser($sessionKey, $openId, $ticket, $isValid)
     {
         $this->load->model('redis/IdGenRedis');

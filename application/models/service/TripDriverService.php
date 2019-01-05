@@ -85,7 +85,7 @@ class TripDriverService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripDriverDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        $trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
+        //$trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
         //插入用户信息快照
         $trip['user_info'] = json_encode(
             array(
