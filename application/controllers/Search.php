@@ -12,6 +12,7 @@ class Search extends Base
 
     }
 
+    //分页
     public function all()
     {
         $input = $this->input->post();
@@ -24,6 +25,8 @@ class Search extends Base
         $targetStart = $input['target_start'];
         $targetEnd = $input['target_end'];
         $onlyInMyGroup = $input['only_in_my_group'];
+
+        $page = $input['page'];
 
         $this->load->model('service/SearchService');
         $this->load->model('service/GroupUserService');
@@ -45,17 +48,35 @@ class Search extends Base
                 if (empty($groupInfos)) {
                     continue;
                 }
-                foreach ($groupInfos as $groupInfo){
-                    if(isset($groupIdMap[$groupInfo['group_id']])){
+                foreach ($groupInfos as $groupInfo) {
+                    if (isset($groupIdMap[$groupInfo['group_id']])) {
                         $filteredTrips[] = $trip;
                     }
                 }
             }
 
-            $this->_returnSuccess($filteredTrips);
-
-
+            $trips = $filteredTrips;
         }
-        $this->_returnSuccess($trips);
+
+        if(empty($page)){
+            $this->_returnSuccess(
+                array(
+                    'has_next' => false,
+                    'trips' => $trips,
+                )
+            );
+        }else{
+            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $hasNext = true;
+            if (count($retTrips) < 20) {
+                $hasNext = false;
+            }
+            $this->_returnSuccess(
+                array(
+                    'has_next' => $hasNext,
+                    'trips' => $retTrips,
+                )
+            );
+        }
     }
 }

@@ -10,6 +10,16 @@ class GroupService extends CI_Model
 
     }
 
+
+    public function getAllGroupsCount()
+    {
+        $this->load->model('dao/GroupDao');
+
+        $count = $this->GroupDao->getCountOfAll();
+
+        return $count['total'];
+    }
+
     public function getByWxGid($wxGid)
     {
         $this->load->model('dao/GroupDao');

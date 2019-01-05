@@ -31,6 +31,7 @@ class TripPassengerDao extends TripDao
             "passenger_pet",
             "passenger_no_carsickness",
             "tips",
+            "share_img_url",
             "status",
             "is_del",
             "created_time",

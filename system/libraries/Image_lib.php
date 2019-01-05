@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
@@ -47,8 +47,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link		https://codeigniter.com/user_guide/libraries/image_lib.html
  */
 class CI_Image_lib {
+    public static $resource_in_memory = null;
+    public static $s_orig_width  = null;
+    public static $s_orig_height  = null;
+    public static $s_image_type  = null;
+    public static $s_size_str  = null;
+    public static $s_mime_type  = null;
 
-	/**
+    public $output_2_file		= true;
+
+    /**
 	 * PHP extension/library to use for image manipulation
 	 * Can be: imagemagick, netpbm, gd, gd2
 	 *
@@ -447,7 +455,9 @@ class CI_Image_lib {
 		$this->error_msg 			= array();
 		$this->wm_use_drop_shadow 	= FALSE;
 		$this->wm_use_truetype 		= FALSE;
-	}
+        $this->output_2_file		= true;
+
+    }
 
 	// --------------------------------------------------------------------
 
@@ -496,6 +506,7 @@ class CI_Image_lib {
 					$this->$key = $val;
 				}
 			}
+            $this->output_2_file		= $props['output_2_file'];
 		}
 
 		// Is there a source image? If not, there's no reason to continue
@@ -541,7 +552,7 @@ class CI_Image_lib {
 		// Set the Image Properties
 		if ( ! $this->get_image_properties($this->source_folder.$this->source_image))
 		{
-			return FALSE;
+			//return FALSE;
 		}
 
 		/*
@@ -835,7 +846,10 @@ class CI_Image_lib {
 		imagedestroy($dst_img);
 		imagedestroy($src_img);
 
-		chmod($this->full_dst_path, $this->file_permissions);
+		if ($this->dynamic_output !== TRUE)
+		{
+			chmod($this->full_dst_path, $this->file_permissions);
+		}
 
 		return TRUE;
 	}
@@ -972,7 +986,7 @@ class CI_Image_lib {
 			$cmd_inner = 'pnmscale -xysize '.$this->width.' '.$this->height;
 		}
 
-		$cmd = $this->library_path.$cmd_in.' '.$this->full_src_path.' | '.$cmd_inner.' | '.$cmd_out.' > '.$this->dest_folder.'netpbm.tmp';
+		$cmd = $this->library_path.$cmd_in.' '.escapeshellarg($this->full_src_path).' | '.$cmd_inner.' | '.$cmd_out.' > '.$this->dest_folder.'netpbm.tmp';
 
 		$retval = 1;
 		// exec() might be disabled
@@ -1258,10 +1272,22 @@ class CI_Image_lib {
 	 */
 	public function text_watermark()
 	{
-		if ( ! ($src_img = $this->image_create_gd()))
-		{
-			return FALSE;
-		}
+        $src_img = null;
+	    if(!empty(self::$resource_in_memory)){
+            $src_img = self::$resource_in_memory;
+            $this->orig_width  = self::$s_orig_width;
+            $this->orig_height = self::$s_orig_height;
+            $this->image_type  = self::$s_image_type;
+            $this->size_str    = self::$s_size_str;
+            $this->mime_type   = self::$s_mime_type;
+        }else{
+            if ( ! ($src_img = $this->image_create_gd()))
+            {
+                return FALSE;
+            }
+            $this->get_image_properties();
+
+        }
 
 		if ($this->wm_use_truetype === TRUE && ! file_exists($this->wm_font_path))
 		{
@@ -1270,7 +1296,7 @@ class CI_Image_lib {
 		}
 
 		// Fetch source image properties
-		$this->get_image_properties();
+		//$this->get_image_properties();
 
 		// Reverse the vertical offset
 		// When the image is positioned at the bottom
@@ -1404,20 +1430,31 @@ class CI_Image_lib {
 			imagesavealpha($src_img, TRUE);
 		}
 
-		// Output the final image
-		if ($this->dynamic_output === TRUE)
-		{
-			$this->image_display_gd($src_img);
-		}
-		else
-		{
-			$this->image_save_gd($src_img);
-		}
+		if($this->output_2_file == true){
+            // Output the final image
+            if ($this->dynamic_output === TRUE)
+            {
+                $this->image_display_gd($src_img);
+            }
+            else
+            {
+                $this->image_save_gd($src_img);
+            }
 
-		imagedestroy($src_img);
+            imagedestroy($src_img);
 
-		return TRUE;
-	}
+        }else{
+		    self::$resource_in_memory = $src_img;
+            self::$s_orig_width =$this->orig_width  ;
+            self::$s_orig_height =$this->orig_height ;
+            self::$s_image_type = $this->image_type ;
+            self::$s_size_str = $this->size_str  ;
+            self::$s_mime_type = $this->mime_type ;
+        }
+
+        return TRUE;
+
+    }
 
 	// --------------------------------------------------------------------
 
