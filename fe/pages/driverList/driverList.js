@@ -7,8 +7,10 @@ Page({
    * 页面的初始数据
    */
   data: {
-    list: [
-    ],
+    list: {
+      trips: [],
+      has_next: false
+    },
     loading: false,
     params: {}
   },

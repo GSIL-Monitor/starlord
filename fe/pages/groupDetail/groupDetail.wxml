@@ -37,7 +37,7 @@
     </block>
   </view>
   <view class='list' wx:if="{{ currentTab == 0 }}">
-    <block wx:for-items="{{driverTrips}}" wx:key="{{item.id}}">
+    <block wx:for-items="{{driverTrips.trips}}" wx:key="{{item.id}}">
       <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&hide_share=1" id="{{item.id}}" class="list-item">
         <view class='list-content'>
           <view class='trip-data-item'>
@@ -65,11 +65,10 @@
       </navigator>
 
     </block>
-    <template is="emptyPage" data="{{ show: !driver_loading && driverTrips.length == 0 }}" />
+    <template is="emptyPage" data="{{ show: !driver_loading && driverTrips.trips.length == 0 }}" />
   </view>
   <view class='list' wx:if="{{ currentTab == 1 }}">
-    <block wx:for-items="{{passengerTrips}}" wx:key="{{item.id}}">
-      
+    <block wx:for-items="{{passengerTrips.trips}}" wx:key="{{item.id}}">
       <navigator
         url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&hide_share=1"  id="{{item.id}}" class="list-item">
         <view class='list-content'>
@@ -98,6 +97,6 @@
       </navigator>
 
     </block>
-    <template is="emptyPage" data="{{ show: !passenger_loading && passengerTrips.length == 0 }}" />
+    <template is="emptyPage" data="{{ show: !passenger_loading && passengerTrips.trips.length == 0 }}" />
   </view>
 </view>
