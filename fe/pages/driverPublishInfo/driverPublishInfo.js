@@ -11,6 +11,7 @@ Page({
     user_id: null,
     loading_data: true,
     detail: {},
+    hide_share: false,
   },
 
   /**
@@ -25,6 +26,7 @@ Page({
     this.setData({
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
+      hide_share: !!(options.hide_share == 1)
     });
   },
 
