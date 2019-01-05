@@ -1,3 +1,4 @@
+<import src="./driverPrice.wxml"/>
 <template name="driverInfoBox">
   <view class='list list-trip-info'>
     <view class='list-item'>
@@ -20,7 +21,7 @@
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/price.png' />
           <view class='trip-item-value'>
-            价格: {{ detail.price_everyone ? detail.price_everyone + '元/人' : '面议' }}，包车: {{ detail.price_total ? detail.price_total + '元' : '面议' }}，座位: {{ detail.seat_num || '未说明' }}
+            <template is="driverPrice" data="{{ detail: detail }}" />
           </view>
         </view>
         <view class='trip-data-item'>
