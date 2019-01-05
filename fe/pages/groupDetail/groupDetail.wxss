@@ -84,6 +84,27 @@
   line-height: 44px;
   height: 44px;
 }
+
 .list {
-  margin: 0;
+  margin: 0 0 8px 0;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.list-item {
+  margin-bottom: 4px;
+}
+.trip-date-icon {
+  margin-top: 18rpx;
+}
+.trip-date {
+  margin-bottom: 4px;
+}
+.trip-date-value {
+  font-weight: 500;
+  font-size: 36rpx;
+}
+.trip-list-btn {
+  color: #3cc51f;
+  font-size: 14px;
+  text-decoration: underline;
 }

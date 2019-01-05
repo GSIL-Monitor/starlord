@@ -1,3 +1,5 @@
+<import src="/common/passengerPrice.wxml"/>
+<import src="/common/driverPrice.wxml"/>
 <import src="/common/pageLoading.wxml"/>
 <import src="/common/emptyPage.wxml"/>
 <view class='page'>
@@ -34,7 +36,7 @@
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      价格: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，包车: {{ item.price_total ? item.price_total + '元' : '面议' }}，座位: {{ item.seat_num || '未说明' }}
+                      <template is="driverPrice" data="{{ detail: item }}" />
                     </view>
                   </view>
                 </view>
@@ -70,7 +72,7 @@
                   <view class='trip-data-item'>
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
-                      愿付: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，人数: {{ item.people_num || '未说明' }}
+                      <template is="passengerPrice" data="{{ detail: item }}" />
                     </view>
                   </view>
                 </view>

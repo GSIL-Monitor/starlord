@@ -12,8 +12,14 @@ Page({
     detail: {},
     tabs: ['车找人', '人找车'],
     currentTab: 0,
-    driverTrips: [],
-    passengerTrips: [],
+    driverTrips: {
+      trips: [],
+      has_next: false
+    },
+    passengerTrips: {
+      trips: [],
+      has_next: false
+    },
     driver_loading: false,
     passenger_loading: false,
   },

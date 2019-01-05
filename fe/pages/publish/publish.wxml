@@ -1,3 +1,5 @@
+<import src="/common/passengerPrice.wxml"/>
+<import src="/common/driverPrice.wxml"/>
 <view class='page'>
   <view class='section-title'>
     行程模板管理
@@ -21,10 +23,10 @@
         <view class='data-item'>
           <image class='item-icon' src='/images/price.png' />
           <view class='item-value' wx:if='{{ item.trip_type == 1 }}'>
-            愿付: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，人数: {{ item.people_num || '未说明' }}
+            <template is="passengerPrice" data="{{ detail: item }}" />
           </view>
           <view class='item-value' wx:if='{{ item.trip_type == 0 }}'>
-            价格: {{ item.price_everyone ? item.price_everyone + '元/人' : '面议' }}，包车: {{ item.price_total ? item.price_total + '元' : '面议' }}，座位: {{ item.seat_num || '未说明' }}
+            <template is="driverPrice" data="{{ detail: item }}" />
           </view>
         </view>
       </view>
