@@ -44,7 +44,9 @@
             <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
             <view class='trip-item-value trip-date'>
               <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
-              <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="driver">置顶</view>
+              <view class='trip-list-btn' hover-class='ontap' catchtap='toggleOnTop' data-tripid="{{ item.trip_id }}" data-toptime="{{ item.top_time }}" data-type='driver'>
+                {{ item.top_time ? '取消置顶' : '置顶' }}
+              </view>
             </view>
           </view>
           <view class='trip-data-item'>
@@ -76,7 +78,16 @@
             <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
             <view class='trip-item-value trip-date'>
               <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
-              <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="passenger">置顶</view>
+              <block wx:if="{{ detail.is_owner == 1 }}">
+                <view class='trip-list-btn' hover-class='ontap' catchtap='toggleOnTop' data-tripid="{{ item.trip_id }}" data-toptime="{{ item.top_time }}" data-type='passenger'>
+                  {{ item.top_time ? '取消置顶' : '置顶' }}
+                </view>
+              </block>
+              <block wx:if="{{ detail.is_owner != 1 && item.top_time }}">
+                <view class='trip-list-info'>
+                  置顶
+                </view>
+              </block>
             </view>
           </view>
           <view class='trip-data-item'>

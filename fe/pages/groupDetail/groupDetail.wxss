@@ -108,3 +108,6 @@
   font-size: 14px;
   text-decoration: underline;
 }
+.trip-list-info {
+  font-size: 14px;
+}

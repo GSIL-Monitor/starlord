@@ -163,4 +163,40 @@ Page({
       phoneNumber: phone,
     });
   },
+  toggleOnTop: (e) => {
+    const { tripid, toptime, type } = e.currentTarget.dataset;
+    const { group_id } = self.data.params;
+    const func = toptime ? service.unTopOneTrip : service.topOneTrip;
+    const params = { group_id, trip_id: tripid};
+    const callback = (success, data) => {
+      if (!success) return;
+      const trips = (type == 'driver') ? self.data.driverTrips.trips : self.data.passengerTrips.trips;
+      const newTrips = trips.map(item => {
+        if (item.trip_id == tripid) {
+          return {
+            ...item,
+            top_time: toptime ? null : 1
+          }
+        }
+        return item;
+      });
+      if (type == 'driver') {
+        self.setData({
+          driverTrips: {
+            trips: newTrips,
+            has_next: self.data.driverTrips.has_next,
+          }
+        });
+      } else {
+        self.setData({
+          passengerTrips: {
+            trips: newTrips,
+            has_next: self.data.passengerTrips.has_next,
+          }
+        });
+      }
+    };
+
+    func(params, callback);
+  },
 })

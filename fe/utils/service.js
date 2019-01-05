@@ -200,6 +200,14 @@ const exitGroup = (data, callback) => {
 const updateNotice = (data, callback) => {
   request('group/updateNotice', data, callback);
 }
+//置顶
+const topOneTrip = (data, callback) => {
+  request('group/topOneTrip', data, callback);
+}
+const unTopOneTrip = (data, callback) => {
+  request('group/unTopOneTrip', data, callback);
+}
+
 /** 获取分享群的信息 */
 const getTripDetailInSharePage = (data, callback) => {
   const successCb = (r) => {
@@ -379,6 +387,8 @@ module.exports = {
   getTripDetailInSharePage,
   exitGroup,
   updateNotice,
+  topOneTrip,
+  unTopOneTrip,
   driverPublish,
   driverSave,
   driverGetDetailByTripId,
