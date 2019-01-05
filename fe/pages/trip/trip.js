@@ -12,8 +12,14 @@ Page({
     contentHeight: 0,
     loading_passenger: true,
     loading_driver: true,
-    driverTrips: [],
-    passengerTrips: [],
+    driverTrips: {
+      trips: [],
+      has_next: false
+    },
+    passengerTrips: {
+      trips: [],
+      has_next: false
+    },
   },
 
   /**

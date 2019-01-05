@@ -3,7 +3,6 @@
  */
 const config = require('./config');
 let app;
-let prevent_request = false;
 
 /** 重启当前页面 */
 const reLaunchCurrentPage = () => {
@@ -32,8 +31,9 @@ const request = (uri, data, callback, myOptions = {}) => {
   const defaultCallBack = () => {
     console.warn(`${uri}:无callback请求`);
   }
-  if (prevent_request && uri != 'common/login') return;
-  if (!ticket && uri != 'user/config' && uri != 'common/login') return;
+
+  if (!app.globalData.app_init && ['common/login', 'user/config'].indexOf(uri) == -1) return;
+
   // callback 返回2个参数，第一个参数为是否返回success，第二个参数为返回数据
   callback = callback || defaultCallBack;
   const defaultOptions = {
@@ -52,7 +52,7 @@ const request = (uri, data, callback, myOptions = {}) => {
       if (response.errno != 0) {
         // 登录失效，重新登录
         if (response.errno == 1004) {
-          prevent_request = true;
+          app.globalData.app_init = false;
           login(() => {
             request(uri, data, callback, myOptions);
           });
@@ -86,8 +86,8 @@ const login = (loginCb) => {
     success(res) {
       const callback = (success, data) => {
         if (!success) return;
+        app.globalData.app_init = true;
         wx.setStorageSync(config.storage_ticket, data.ticket);
-        prevent_request = false;
         if (loginCb) loginCb(data.ticket);
       }
       if (res.code) {
@@ -108,6 +108,40 @@ const login = (loginCb) => {
   })
 }
 
+/** 用户配置信息 */
+const userConfig = (myApp) => {
+  app = myApp;
+
+  const callback = (success, data) => {
+    if (!success) return;
+    app.globalData.app_init = true;
+    app.globalData.user_config = data;
+
+    // system maintain
+    if (data.switch && data.switch['9999']) {
+      wx.reLaunch({
+        url: '/pages/9999/9999',
+      });
+      return;
+    } else {
+      const pages = getCurrentPages();
+      if (pages.length > 0) {
+        const currPage = pages[pages.length - 1];
+        if (currPage.route == 'pages/9999/9999') {
+          wx.reLaunch({
+            url: '/pages/index/index',
+          });
+          return;
+        }
+      }
+    }
+
+    // 刷新当前页面
+    reLaunchCurrentPage();
+  }
+  request('user/config', {}, callback);
+}
+
 /** 获取用户profile */
 const getProfile = (app, callback) => {
   request('user/getProfile', null, (success, data) => {
@@ -118,30 +152,6 @@ const getProfile = (app, callback) => {
       callback(success, data);
     }
   });
-}
-
-/** 用户配置信息 */
-const userConfig = (myApp) => {
-  app = myApp;
-  // getProfile(app);
-  // 从本地获取config判断expire信息
-  const now = new Date().getTime()/1000;
-  const localConfig = wx.getStorageSync(config.storage_userconfig);
-  if (localConfig && localConfig.expire > now) {
-    app.globalData.user_config = localConfig;
-    return;
-  }
-
-  const callback = (success, data) => {
-    if (!success) return;
-    data.expire = data.expire + now;
-    wx.setStorageSync(config.storage_userconfig, data);
-    app.globalData.user_config = data;
-
-    // 刷新当前页面
-    reLaunchCurrentPage();
-  }
-  request('user/config', {}, callback);
 }
 
 /** 上传用户信息 */
@@ -278,24 +288,7 @@ const driverGetListByGroupId = (data, callback) => {
   });
 }
 const driverSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 0 }, (success, responseData) => {
-    if (success && responseData && responseData.length > 0) {
-      responseData = responseData.map(item => {
-        let tags = [];
-        config.driver_tags.map(tag => {
-          if (item[tag.value] == 1) {
-            tags.push(tag.label);
-          }
-        });
-        item.tags = tags;
-        if (item.user_info) {
-          item.user_info = JSON.parse(item.user_info);
-        }
-        return item;
-      });
-    }
-    callback(success, responseData);
-  });
+  request('search/all', { ...data, trip_type: 0 }, callback);
 }
 
 /**
@@ -351,24 +344,7 @@ const passengerGetListByGroupId = (data, callback) => {
   });
 }
 const passengerSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 1 }, (success, responseData) => {
-    if (success && responseData && responseData.length > 0) {
-      responseData = responseData.map(item => {
-        let tags = [];
-        config.passenger_tags.map(tag => {
-          if (item[tag.value] == 1) {
-            tags.push(tag.label);
-          }
-        });
-        item.tags = tags;
-        if (item.user_info) {
-          item.user_info = JSON.parse(item.user_info);
-        }
-        return item;
-      });
-    }
-    callback(success, responseData);
-  });
+  request('search/all', { ...data, trip_type: 1 }, callback);
 }
 
 module.exports = {

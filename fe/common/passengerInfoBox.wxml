@@ -7,7 +7,7 @@
           <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
           <view class='trip-item-value trip-date'>
             <view class='trip-date-value'>{{detail.is_everyday == 1 ? '每天' : detail.begin_date}} {{ detail.begin_time }}</view>
-            <text class='trip-info' wx:if="{{score && detail.score}}">顺路度：{{ detail.score }}%</text>
+            <text class='trip-info' wx:if="{{score && detail.score > -1}}">顺路度：{{ detail.score }}%</text>
           </view>
         </view>
         <view class='trip-data-item'>
