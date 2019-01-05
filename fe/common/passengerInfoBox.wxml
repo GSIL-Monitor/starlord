@@ -12,11 +12,15 @@
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/location_start.png' />
-          <text class='trip-item-value'>{{ detail.start_location_name }}</text>
+          <text class='trip-item-value'>{{ detail.start_location_name }}
+            <block wx:if="{{false}}">({{ detail.start_location_address }})</block>
+          </text>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/location_end.png' />
-          <text class='trip-item-value'>{{ detail.end_location_name }}</text>
+          <text class='trip-item-value'>{{ detail.end_location_name }}
+            <block wx:if="{{false}}">({{ detail.end_location_address }})</block>
+            </text>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/price.png' />

@@ -87,3 +87,8 @@
 .list {
   margin: 0;
 }
+.list-trip-info {
+  margin-bottom: 8px;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
