@@ -80,12 +80,13 @@ class TripDriverService extends CI_Model
         $this->load->model('dao/TripDriverDao');
         $this->load->model('redis/IdGenRedis');
 
+
         $trip = array();
         $trip['user_id'] = $userId;
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripDriverDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        //$trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
+        $trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
         //插入用户信息快照
         $trip['user_info'] = json_encode(
             array(
@@ -104,6 +105,14 @@ class TripDriverService extends CI_Model
                 "car_type" => $user["car_type"],
             )
         );
+
+        $this->load->model('api/WxApi');
+        try {
+            $trip['lbs_route_info'] = $this->WxApi->getRoutesByFromAndTo($trip['start_location_point'], $trip['end_location_point']);
+        } catch (StatusException $e) {
+            $trip['lbs_route_info'] = null;
+            //日志
+        }
 
         $newTrip = $this->TripDriverDao->insertOne($userId, $trip);
 

@@ -33,6 +33,7 @@ class TripPassengerDao extends TripDao
             "tips",
             "share_img_url",
             "status",
+            "lbs_route_info",
             "is_del",
             "created_time",
             "modified_time",

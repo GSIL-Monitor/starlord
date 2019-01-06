@@ -34,6 +34,7 @@ class TripDriverDao extends TripDao
             "driver_cooler",
             "tips",
             "share_img_url",
+            "lbs_route_info",
             "status",
             "is_del",
             "created_time",

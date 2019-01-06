@@ -9,6 +9,8 @@ class Status
     //wx
     const WX_FETCH_SESSION_FAIL = 901;
     const WX_DECRYPT_ERROR = 902;
+    const WX_FETCH_LBS_ROUTE_FAIL = 903;
+    const WX_FETCH_LBS_NO_ROUTE_FOUND = 904;
 
     //user
     const USER_LOGIN_CODE_INVALID = 1001;
@@ -80,6 +82,8 @@ class Status
         //wx
         self::WX_FETCH_SESSION_FAIL => '获取微信session失败',
         self::WX_DECRYPT_ERROR => '微信解密失败',
+        self::WX_FETCH_LBS_ROUTE_FAIL => '获取路径规划失败',
+        self::WX_FETCH_LBS_NO_ROUTE_FOUND => '为发现路径',
 
         //user
         self::USER_LOGIN_CODE_INVALID => 'login code不能为空',

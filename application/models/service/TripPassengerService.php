@@ -40,8 +40,18 @@ class TripPassengerService extends CI_Model
         if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
-
         $tripPassengerDetail['share_img_url'] = $this->getPassengerTripImageUrl($tripId, $tripPassengerDetail['start_location_name'], $tripPassengerDetail['end_location_name'], $tripPassengerDetail['price_everyone'], $tripPassengerDetail['$people_num']);
+
+        if ($trip['start_location_point'] != $tripPassengerDetail['start_location_point']
+            || $trip['end_location_point'] != $tripPassengerDetail['end_location_point']) {
+            $this->load->model('api/WxApi');
+            try {
+                $tripPassengerDetail['lbs_route_info'] = $this->WxApi->getRoutesByFromAndTo($trip['start_location_point'], $trip['end_location_point']);
+            } catch (StatusException $e) {
+                $tripPassengerDetail['lbs_route_info'] = null;
+                //日志
+            }
+        }
         //只有正常状态的行程才允许编辑
         $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $tripPassengerDetail);
 
@@ -83,7 +93,7 @@ class TripPassengerService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripPassengerDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        //$trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
+        $trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
 
         //插入用户信息快照
         $trip['user_info'] = json_encode(
@@ -103,6 +113,14 @@ class TripPassengerService extends CI_Model
                 "car_type" => $user["car_type"],
             )
         );
+
+        $this->load->model('api/WxApi');
+        try {
+            $trip['lbs_route_info'] = $this->WxApi->getRoutesByFromAndTo($trip['start_location_point'], $trip['end_location_point']);
+        } catch (StatusException $e) {
+            $trip['lbs_route_info'] = null;
+            //日志
+        }
         $newTrip = $this->TripPassengerDao->insertOne($userId, $trip);
 
         return $newTrip;
