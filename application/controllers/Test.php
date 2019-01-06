@@ -261,5 +261,11 @@ class Test extends CI_Controller
         $this->_returnSuccess(true);
     }
 
+    public function idgentest(){
+        $this->load->model('redis/IdGenRedis');
+        $this->_returnSuccess($this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP));
+
+    }
+
 
 }
