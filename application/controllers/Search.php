@@ -58,15 +58,21 @@ class Search extends Base
             $trips = $filteredTrips;
         }
 
+        $tripsFormatted = array();
+        foreach ($trips as $t){
+            $this->_formatTripWithExpireAndIsEveryday($t);
+            $tripsFormatted[] = $t;
+        }
+
         if(empty($page)){
             $this->_returnSuccess(
                 array(
                     'has_next' => false,
-                    'trips' => $trips,
+                    'trips' => $tripsFormatted,
                 )
             );
         }else{
-            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+            $retTrips = array_slice($tripsFormatted, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
             if (count($retTrips) < 20) {
                 $hasNext = false;
@@ -77,6 +83,25 @@ class Search extends Base
                     'trips' => $retTrips,
                 )
             );
+        }
+    }
+
+
+
+    private function _formatTripWithExpireAndIsEveryday(&$trip)
+    {
+        $currentDate = date('Y-m-d');
+
+        if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
+            $trip['is_expired'] = true;
+        } else {
+            $trip['is_expired'] = false;
+        }
+
+        if ($trip['begin_date'] == Config::EVERYDAY_DATE) {
+            $trip['is_everyday'] = 1;
+        } else {
+            $trip['is_everyday'] = 0;
         }
     }
 }

@@ -29,8 +29,9 @@ class GroupTripService extends CI_Model
         $currentDate = date('Y-m-d');
         $this->load->model('dao/GroupTripDao');
 
-        $groupTrips = $this->GroupTripDao->getListByGroupIdAndDate($groupId, $currentDate, $tripType);
-
+        $groupTripsWithTopTime = $this->GroupTripDao->getListByGroupIdAndDateWithTopTime($groupId, $currentDate, $tripType);
+        $groupTripsWithoutTopTime = $this->GroupTripDao->getListByGroupIdAndDateWithoutTopTime($groupId, $currentDate, $tripType);
+        $groupTrips = array_merge($groupTripsWithTopTime, $groupTripsWithoutTopTime);
         $ret = array();
 
         //从group的trip extend info中解压出行程快照，快照在发布和更新行程的时候写入

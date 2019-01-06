@@ -43,13 +43,30 @@ class GroupTripDao extends CommonDao
         }
     }
 
-    public function getListByGroupIdAndDate($groupId, $date, $tripType)
+    public function getListByGroupIdAndDateWithTopTime($groupId, $date, $tripType)
     {
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
-        $sql = "select * from " . $this->table . " where group_id = ? and trip_type = ? and is_del = ? and trip_begin_date >= ?";
 
-        $query = $this->db->query($sql, array($groupId, $tripType, Config::RECORD_EXISTS, $date));
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is not null limit 500";
+
+        $query = $this->db->query($sql, array($groupId, $date,$tripType, Config::RECORD_EXISTS));
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        }
+
+        return $query->result_array();
+    }
+
+    public function getListByGroupIdAndDateWithoutTopTime($groupId, $date, $tripType)
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is null limit 500";
+
+        $query = $this->db->query($sql, array($groupId, $date,$tripType, Config::RECORD_EXISTS));
 
         if (!$query) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
