@@ -37,21 +37,12 @@ class TripPassengerService extends CI_Model
         $this->load->model('dao/TripPassengerDao');
 
         $trip = $this->TripPassengerDao->getOneByTripId($userId, $tripId);
+
         if ($trip['status'] != Config::TRIP_STATUS_NORMAL) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
-        $tripPassengerDetail['share_img_url'] = $this->getPassengerTripImageUrl($tripId, $tripPassengerDetail['start_location_name'], $tripPassengerDetail['end_location_name'], $tripPassengerDetail['price_everyone'], $tripPassengerDetail['$people_num']);
 
-        if ($trip['start_location_point'] != $tripPassengerDetail['start_location_point']
-            || $trip['end_location_point'] != $tripPassengerDetail['end_location_point']) {
-            $this->load->model('api/WxApi');
-            try {
-                $tripPassengerDetail['lbs_route_info'] = $this->WxApi->getRoutesByFromAndTo($trip['start_location_point'], $trip['end_location_point']);
-            } catch (StatusException $e) {
-                $tripPassengerDetail['lbs_route_info'] = null;
-                //日志
-            }
-        }
+        $tripPassengerDetail['share_img_url'] = $this->getPassengerTripImageUrl($tripId, $tripPassengerDetail['start_location_name'], $tripPassengerDetail['end_location_name'], $tripPassengerDetail['price_everyone'], $tripPassengerDetail['$people_num']);
         //只有正常状态的行程才允许编辑
         $this->TripPassengerDao->updateByTripIdAndStatus($userId, $tripId, Config::TRIP_STATUS_NORMAL, $tripPassengerDetail);
 
@@ -64,6 +55,7 @@ class TripPassengerService extends CI_Model
         $trip['trip_id'] = $tripId;
         $trip['user_id'] = $userId;
         $trip = array_merge($trip, $tripPassengerDetail);
+
         $trip['status'] = Config::TRIP_STATUS_DRAFT;
 
         $this->load->model('dao/TripPassengerDao');
@@ -121,6 +113,7 @@ class TripPassengerService extends CI_Model
             $trip['lbs_route_info'] = null;
             //日志
         }
+
         $newTrip = $this->TripPassengerDao->insertOne($userId, $trip);
 
         return $newTrip;
@@ -159,8 +152,7 @@ class TripPassengerService extends CI_Model
         return $ret;
     }
 
-    public
-    function getMyTripList($userId)
+    public function getMyTripList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
@@ -170,8 +162,7 @@ class TripPassengerService extends CI_Model
         return $trips;
     }
 
-    public
-    function getMyTemplateList($userId)
+    public function getMyTemplateList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_DRAFT));
@@ -190,7 +181,6 @@ class TripPassengerService extends CI_Model
 
         return $tripsWithType;
     }
-
 
     private function getPassengerTripImageUrl($tripId, $startLocationName, $endLocationName, $priceEveryone, $peopleNum)
     {
