@@ -1,8 +1,35 @@
 <import src="/common/driverInfoBox.wxml"/>
+<import src="/common/driverPrice.wxml"/>
 <import src="/common/emptyPage.wxml"/>
 <view class='page'>
-  <block wx:for-items="{{list.trips}}" wx:key="{{item.id}}">
-    <template is="driverInfoBox" data="{{ detail: item, score: true }}" />
-  </block>
+  <view class='list'>
+    <block wx:for-items="{{list.trips}}" wx:key="{{item.id}}">
+      <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}" id="{{item.id}}" class="list-item">
+        <view class='list-content'>
+          <view class='trip-data-item'>
+            <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
+            <view class='trip-item-value trip-date'>
+              <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
+              <view class='trip-list-info'>顺路度：{{ item.score || 0 }}%</view>
+            </view>
+          </view>
+          <view class='trip-data-item'>
+            <image class='trip-item-icon' src='/images/location_start.png' />
+            <text class='trip-item-value'>{{item.start_location_name}}</text>
+          </view>
+          <view class='trip-data-item'>
+            <image class='trip-item-icon' src='/images/location_end.png' />
+            <text class='trip-item-value'>{{item.end_location_name}}</text>
+          </view>
+          <view class='trip-data-item'>
+            <image class='trip-item-icon' src='/images/price.png' />
+            <view class='trip-item-value'>
+              <template is="driverPrice" data="{{ detail: item }}" />
+            </view>
+          </view>
+        </view>
+      </navigator>
+    </block>
+  </view>
   <template is="emptyPage" data="{{ show: !loading && list.trips.length == 0 }}" />
 </view>

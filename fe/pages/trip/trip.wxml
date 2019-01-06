@@ -13,9 +13,9 @@
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
           <template is="pageLoading" data="{{ loading:loading_driver }}" />
-          <template is="emptyPage" data="{{ show: !loading_driver && driverTrips.length == 0 }}" />
+          <template is="emptyPage" data="{{ show: !loading_driver && driverTrips.trips.length == 0 }}" />
           <view class='list'>
-            <block wx:for-items="{{driverTrips}}" wx:key="{{item.id}}">
+            <block wx:for-items="{{driverTrips.trips}}" wx:key="{{item.id}}">
               <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}" id="{{item.id}}" class="list-item">
                 <view class='list-content'>
                   <view class='trip-data-item'>
@@ -48,9 +48,9 @@
       <swiper-item class="tab-swiper-item">
         <scroll-view class='tab-scroll' scroll-y="{{true}}">
           <template is="pageLoading" data="{{ loading:loading_passenger }}" />
-          <template is="emptyPage" data="{{ show: !loading_passenger && passengerTrips.length == 0 }}" />
+          <template is="emptyPage" data="{{ show: !loading_passenger && passengerTrips.trips.length == 0 }}" />
           <view class='list'>
-            <block wx:for-items="{{passengerTrips}}" wx:key="{{item.id}}">
+            <block wx:for-items="{{passengerTrips.trips}}" wx:key="{{item.id}}">
               <navigator
                 url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}"  id="{{item.id}}" class="list-item">
                 <view class='list-content'>

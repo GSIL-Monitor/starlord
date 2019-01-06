@@ -5,7 +5,9 @@
 const config = {
   host: 'https://api.pinche.mobi',
   storage_ticket: 'user_ticket',// 本地存储ticket的名称
-  storage_userconfig: 'user_config',// 本地存储userConfig信息
+
+  // qq地图key
+  qq_map_key: 'SMBBZ-FP5CJ-V4OFT-FXMXR-QPEOJ-BOFIO',
 
   // 分享页面
   share_pages: [

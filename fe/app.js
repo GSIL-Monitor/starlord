@@ -17,7 +17,7 @@ App({
     app_init: false,
     is_login: false,
     profile: null,
-    user_config: null,
+    user_config: {},
     wx_config: {},
   }
 })
