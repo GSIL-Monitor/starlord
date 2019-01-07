@@ -22,15 +22,19 @@
           <open-data class="list-avatar-image" type="userAvatarUrl" lang="zh_CN"></open-data>
         </view>
         <view class='list-content'>
-          <view>
-            <open-data class="nickname" type="userNickName" lang="zh_CN"></open-data>
+          <view class='profile-info-wrap'>
+            <view class='nickname'>{{ profile.nick_name }}</view>
           </view>
-          <open-data class="profile-item" type="userProvince" lang="zh_CN"></open-data>
-          <open-data class="profile-item" type="userCity" lang="zh_CN"></open-data>
+          <view class='profile-item'>{{ profile.country }}{{ profile.city }}</view>
+        </view>
+        <view>
+          <button size="mini" type='primary' class='profile-refresh-btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo" lang="zh_CN" loading='{{ loading_profile }}' disabled='{{ loading_profile }}'>
+              更新
+            </button>
         </view>
       </view>
     </block>
-    <template is="loginBtn" data='{{is_login: is_login, auth_message: null}}' />
+    <template is="loginBtn" wx:if="{{ !loading_profile }}" data='{{is_login: is_login, auth_message: null}}' />
   </view>
 
   <!-- 功能链接 -->

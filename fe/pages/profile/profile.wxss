@@ -33,3 +33,20 @@
 .profile-item {
   color: #666;
 }
+.profile-info-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 28px;
+  line-height: 28px;
+}
+.profile-refresh-btn {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  margin: 0 0 0 8px !important;
+}
+.profile-refresh-icon {
+  display: block;
+  height: 24px;
+  width: 24px;
+}

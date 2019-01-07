@@ -20,7 +20,7 @@
       <text class='label-text'>日期</text>
     </view>
     <view class='list-content'>
-      <picker mode="date" name="begin_date" value='{{data.begin_date}}' bindchange="bindDateChange">
+      <picker mode="date" name="begin_date" value='{{data.begin_date}}' bindchange="bindDateChange" start="{{limit.min_begin_date }}" end="{{ limit.max_begin_date }}">
         <view class='picker-value'>
           <text class='placeholder' wx:if="{{ !data.begin_date }}">请选择日期</text>
           <text wx:if="{{ !!data.begin_date }}">{{ data.begin_date }}</text>

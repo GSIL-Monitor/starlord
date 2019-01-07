@@ -92,6 +92,7 @@ Page({
     const currentTab = e.currentTarget.id;
     this.setData({
       params: {
+        ...this.data.params,
         trip_type: currentTab
       },
       tags: currentTab == 0 ? config.driver_tags : config.passenger_tags

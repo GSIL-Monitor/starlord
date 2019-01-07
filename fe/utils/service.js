@@ -2,6 +2,12 @@
  * 所有请求
  */
 const config = require('./config');
+const moment = require('./moment.min.js');
+moment.locale('zh-cn', {
+  longDateFormat: {
+    LT: 'HH:mm'
+  }
+});
 let app;
 
 /** 重启当前页面 */
@@ -118,7 +124,7 @@ const userConfig = (myApp) => {
     app.globalData.user_config = data;
 
     // system maintain
-    if (data.switch && data.switch['9999']) {
+    if (data.switch && data.switch['9999'] == 1) {
       wx.reLaunch({
         url: '/pages/9999/9999',
       });
@@ -146,6 +152,9 @@ const userConfig = (myApp) => {
 const getProfile = (app, callback) => {
   request('user/getProfile', null, (success, data) => {
     if (success) {
+      if (data.audit_status == 1) {
+        app.globalData.is_login = true;
+      }
       app.globalData.profile = data;
     }
     if (callback) {
@@ -170,6 +179,7 @@ const userCompleteUser = (detail, app, page, callback) => {
       signature: detail.signature,
       encryptedData: detail.encryptedData
     };
+
     app.globalData.is_login = true;
     page.setData({
       is_login: true
@@ -257,38 +267,56 @@ const driverGetDetailByTripId = (data, callback) => {
       if (responseData.user_info) {
         responseData.user_info = JSON.parse(responseData.user_info);
       }
+
+      responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+      if (responseData.lbs_route_info) {
+        responseData.lbs_route_info = JSON.parse(responseData.lbs_route_info);
+      }
     }
     callback(success, responseData);
   });
 }
 const driverGetMyList = (callback) => {
-  request('trip/driverGetMyList', null, callback);
+  request('trip/driverGetMyList', null, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        return item;
+      });
+    }
+    if (callback) {
+      callback(success, data);
+    }
+  });
 }
 const driverDeleteMy = (data, callback) => {
   request('trip/driverDeleteMy', data, callback);
 }
 const driverGetListByGroupId = (data, callback) => {
-  request('trip/driverGetListByGroupId', data, (success, responseData) => {
-    if (success && responseData && responseData.length > 0) {
-      responseData = responseData.map(item => {
-        let tags = [];
-        config.driver_tags.map(tag => {
-          if (item[tag.value] == 1) {
-            tags.push(tag.label);
-          }
-        });
-        item.tags = tags;
-        if (item.user_info) {
-          item.user_info = JSON.parse(item.user_info);
-        }
+  request('trip/driverGetListByGroupId', data, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
         return item;
       });
     }
-    callback(success, responseData);
+    if (callback) {
+      callback(success, data);
+    }
   });
 }
 const driverSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 0 }, callback);
+  request('search/all', { ...data, trip_type: 0 }, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        return item;
+      });
+    }
+    if (callback) {
+      callback(success, data);
+    }
+  });
 }
 
 /**
@@ -313,41 +341,65 @@ const passengerGetDetailByTripId = (data, callback) => {
       if (responseData.user_info) {
         responseData.user_info = JSON.parse(responseData.user_info);
       }
+      responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+      if (responseData.lbs_route_info) {
+        const lbs_route_info = JSON.parse(responseData.lbs_route_info);
+        console.error(lbs_route_info);
+        responseData.polyline = [{
+          points: lbs_route_info.polyline,
+          width: 8,
+          color: '#FF0000DD'
+        }];
+      }
     }
     callback(success, responseData);
   });
 }
 const passengerGetMyList = (callback) => {
-  request('trip/passengerGetMyList', null, callback);
+  request('trip/passengerGetMyList', null, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        return item;
+      });
+    }
+    if (callback) {
+      callback(success, data);
+    }
+  });
 }
 const passengerDeleteMy = (data, callback) => {
   request('trip/passengerDeleteMy', data, callback);
 }
 const passengerGetListByGroupId = (data, callback) => {
-  request('trip/passengerGetListByGroupId', data, (success, responseData) => {
-    if (success && responseData && responseData.length > 0) {
-      responseData = responseData.map(item => {
-        let tags = [];
-        config.passenger_tags.map(tag => {
-          if (item[tag.value] == 1) {
-            tags.push(tag.label);
-          }
-        });
-        item.tags = tags;
-        if (item.user_info) {
-          item.user_info = JSON.parse(item.user_info);
-        }
+  request('trip/passengerGetListByGroupId', data, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
         return item;
       });
     }
-    callback(success, responseData);
+    if (callback) {
+      callback(success, data);
+    }
   });
 }
 const passengerSearch = (data, callback) => {
-  request('search/all', { ...data, trip_type: 1 }, callback);
+  request('search/all', { ...data, trip_type: 1 }, (success, data) => {
+    if (success && data && data.trips && data.trips.length > 0) {
+      data.trips = data.trips.map(item => {
+        item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        return item;
+      });
+    }
+    if (callback) {
+      callback(success, data);
+    }
+  });
 }
 
 module.exports = {
+  moment,
   reLaunchCurrentPage,
   request,
   login,

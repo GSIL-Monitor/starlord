@@ -16,6 +16,10 @@ Page({
     loading_submit: false,
     loading_profile: false,
     profile: app.globalData.profile || {},
+    limit: {
+      min_begin_date: service.moment().format('YYYY-MM-DD'),
+      max_begin_date: service.moment().add(1, 'years').format('YYYY-MM-DD'),
+    }
   },
 
   /**
@@ -103,7 +107,8 @@ Page({
     service.getProfile(app, (success, data) => {
       self.setData({
         loading_profile: false,
-        profile: data || {}
+        profile: data || {},
+        is_login: app.globalData.is_login,
       });
     });
   },
@@ -138,6 +143,7 @@ Page({
     self.setData({
       form_data: {
         ...self.data.form_data,
+        begin_date: null,
         is_everyday: e.detail.value
       }
     });

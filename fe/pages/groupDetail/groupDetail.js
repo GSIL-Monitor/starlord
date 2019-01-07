@@ -32,6 +32,7 @@ Page({
     self.setData({
       params: options
     });
+    this.loadTripsData();
   },
 
   /**
@@ -76,7 +77,7 @@ Page({
         detail: success ? data : {}
       });
     });
-    this.loadTripsData();
+    // this.loadTripsData();
   },
 
   /**

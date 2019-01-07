@@ -10,8 +10,8 @@ Page({
     tabs: ['车找人', '人找车'],
     currentTab: 0,
     contentHeight: 0,
-    loading_passenger: true,
-    loading_driver: true,
+    loading_passenger: false,
+    loading_driver: false,
     driverTrips: {
       trips: [],
       has_next: false
@@ -47,10 +47,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    self.setData({
-      loading_passenger: true,
-      loading_driver: true,
-    });
     self.loadData();
   },
 
@@ -90,6 +86,7 @@ Page({
   },
 
   passengerGetMyList: () => {
+    if (self.data.loading_passenger) return;
     self.setData({ loading_passenger: true });
     service.passengerGetMyList((success, data) => {
       self.setData({ loading_passenger: false });
@@ -101,6 +98,7 @@ Page({
     });
   },
   driverGetMyList: () => {
+    if (self.data.loading_driver) return;
     self.setData({ loading_driver: true });
     service.driverGetMyList((success, data) => {
       self.setData({ loading_driver: false });
