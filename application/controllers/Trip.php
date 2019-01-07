@@ -76,9 +76,9 @@ class Trip extends Base
 
             $this->_formatTripWithExpireAndIsEveryday($retTrip);
             if ($userId == $retTrip['user_id']) {
-                $retTrip['is_share_owner'] = 1;
+                $retTrip['is_share_owner'] = Config::IS_SHARE_OWNER;
             } else {
-                $retTrip['is_share_owner'] = 0;
+                $retTrip['is_share_owner'] = Config::IS_NOT_SHARE_OWNER;
             }
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
@@ -107,7 +107,7 @@ class Trip extends Base
         } else {
             $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
-            if (count($retTrips) < 20) {
+            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
                 $hasNext = false;
             }
             $this->_returnSuccess(
@@ -136,7 +136,7 @@ class Trip extends Base
         } else {
             $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
-            if (count($retTrips) < 20) {
+            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
                 $hasNext = false;
             }
             $this->_returnSuccess(
@@ -307,7 +307,7 @@ class Trip extends Base
 
         $this->load->model('service/TripDriverService');
 
-        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
+        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['audit_status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
         DbTansactionHanlder::begin('default');
@@ -343,7 +343,7 @@ class Trip extends Base
 
         $this->load->model('service/TripPassengerService');
 
-        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['status'] == Config::USER_AUDIT_STATUS_FAIL) {
+        if ($user['status'] == Config::USER_STATUS_FROZEN || $user['audit_status'] == Config::USER_AUDIT_STATUS_FAIL) {
             throw new StatusException(Status::$message[Status::TRIP_HAS_NO_AUTH_TO_PUBLISH], Status::TRIP_HAS_NO_AUTH_TO_PUBLISH);
         }
         DbTansactionHanlder::begin('default');
@@ -530,7 +530,7 @@ class Trip extends Base
         } else {
             $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
-            if (count($retTrips) < 20) {
+            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
                 $hasNext = false;
             }
             $this->_returnSuccess(
@@ -573,7 +573,7 @@ class Trip extends Base
         } else {
             $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
-            if (count($retTrips) < 20) {
+            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
                 $hasNext = false;
             }
             $this->_returnSuccess(
@@ -661,15 +661,15 @@ class Trip extends Base
         $currentDate = date('Y-m-d');
 
         if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-            $trip['is_expired'] = true;
+            $trip['is_expired'] = Config::TRIP_IS_EXPIRED;
         } else {
-            $trip['is_expired'] = false;
+            $trip['is_expired'] = Config::TRIP_IS_NOT_EXPIRED;
         }
 
         if ($trip['begin_date'] == Config::EVERYDAY_DATE) {
-            $trip['is_everyday'] = 1;
+            $trip['is_everyday'] = Config::TRIP_HAPPENS_EVERYDAY;
         } else {
-            $trip['is_everyday'] = 0;
+            $trip['is_everyday'] = Config::TRIP_HAPPENS_ONCE;
         }
     }
 }

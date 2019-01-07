@@ -26,11 +26,11 @@ class UserDao extends CommonDao
         "car_type",
         "is_valid",
         "audit_status",
+        "show_agreement",
         "status",
         "is_del",
         "created_time",
         "modified_time",
-        "show_agreement",
     );
 
     protected $primaryKey = 'id';

@@ -74,7 +74,7 @@ class Search extends Base
         }else{
             $retTrips = array_slice($tripsFormatted, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
-            if (count($retTrips) < 20) {
+            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
                 $hasNext = false;
             }
             $this->_returnSuccess(
@@ -93,15 +93,15 @@ class Search extends Base
         $currentDate = date('Y-m-d');
 
         if (isset($trip['begin_date']) && $currentDate > $trip['begin_date']) {
-            $trip['is_expired'] = true;
+            $trip['is_expired'] = Config::TRIP_IS_EXPIRED;
         } else {
-            $trip['is_expired'] = false;
+            $trip['is_expired'] = Config::TRIP_IS_NOT_EXPIRED;
         }
 
         if ($trip['begin_date'] == Config::EVERYDAY_DATE) {
-            $trip['is_everyday'] = 1;
+            $trip['is_everyday'] = Config::TRIP_HAPPENS_EVERYDAY;
         } else {
-            $trip['is_everyday'] = 0;
+            $trip['is_everyday'] = Config::TRIP_HAPPENS_ONCE;
         }
     }
 }

@@ -44,10 +44,9 @@ class User extends Base
                 'share_page_info' => '行程已经成功绑定该群',
             ),
             'switch' => array(
-                '9999' => ($user['is_valid'] == Config::USER_REG_IS_INVALID),                    //正常进入页面功能or展示维护公告
+                '9999' => $user['is_valid'] == Config::USER_REG_IS_VALID ? 0 : 1,                    //正常进入页面功能or展示维护公告
                 '9999_context' => "维护中，预计12：00开放使用，非常抱歉。",                    //正常进入页面功能or展示维护公告
-                'search_tag' => 0,                //搜索页是否展现标签选择
-                'search_all_group' => 1,            //搜索页展示是否跨群选项or写死文案只能群内搜索
+                'search_all_group' => Config::SEARCH_ALL,            //搜索页展示是否跨群选项or写死文案只能群内搜索
                 'show_agreement' => $user['show_agreement'],        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否
                 'trip_publish_to_all_group' => 0,        //如果非空，值为发布选择群上面的提示文案，如果为空发布时候不弹出选择群
             ),

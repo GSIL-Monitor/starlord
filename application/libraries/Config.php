@@ -9,16 +9,16 @@ class Config
     const USER_STATUS_FROZEN = 1;
 
     //用户补全资料状态
-    const USER_AUDIT_STATUS_OK = 0;
-    const USER_AUDIT_STATUS_FAIL = 1;
+    const USER_AUDIT_STATUS_OK = 1;
+    const USER_AUDIT_STATUS_FAIL = 0;
 
     //用户查看安全协议
-    const USER_HAS_READ = 0;
-    const USER_HAS_NOT_READ = 1;
+    const USER_HAS_READ = 1;
+    const USER_HAS_NOT_READ = 0;
 
     //开始业务
-    const USER_REG_IS_VALID = 0;
-    const USER_REG_IS_INVALID = 1;
+    const USER_REG_IS_VALID = 1;
+    const USER_REG_IS_INVALID = 0;
 
     //IDGEN的appkey
     const ID_GEN_KEY_USER = 'user_';
@@ -54,5 +54,15 @@ class Config
     const SEARCH_ALL = 0;
     const SEARCH_ONLY_IN_MY_GROUP = 1;
 
+    //分享落地页的行程归属
+    const IS_SHARE_OWNER = 1;
+    const IS_NOT_SHARE_OWNER = 0;
 
+    //行程是否过期
+    const TRIP_IS_EXPIRED = 1;
+    const TRIP_IS_NOT_EXPIRED = 0;
+
+    //行程是否是每天的行程
+    const TRIP_HAPPENS_EVERYDAY = 1;
+    const TRIP_HAPPENS_ONCE = 0;
 }
