@@ -7,7 +7,7 @@
     <form catchsubmit="formSubmit">
       <view class='section-title'>基本信息（必填）</view>
       <view class='list'>
-        <template is="tripForm" data='{{ data: form_data, show_frequency: true }}' />
+        <template is="tripForm" data='{{ data: form_data, show_frequency: true, limit: limit }}' />
         <!---->
         <template is="phone" data="{{phone:profile.phone}}" />
       </view>
@@ -73,5 +73,5 @@
       </view>
     </form>
   </block>
-  <template is="loginBtn" data="{{is_login: is_login, auth_message:'该操作需要登录授权。'}}" />
+  <template is="loginBtn" data="{{is_login: is_login || !loading_profile, auth_message:'该操作需要登录授权。'}}" />
 </view>

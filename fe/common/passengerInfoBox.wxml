@@ -1,5 +1,7 @@
 <import src="./passengerPrice.wxml"/>
+<import src="./tripMap.wxml"/>
 <template name="passengerInfoBox">
+  <template is="tripMap" data="{{ detail: detail }}" />
   <view class='list list-trip-info'>
     <view class='list-item'>
       <view class='list-content'>

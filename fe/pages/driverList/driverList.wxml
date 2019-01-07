@@ -1,4 +1,3 @@
-<import src="/common/driverInfoBox.wxml"/>
 <import src="/common/driverPrice.wxml"/>
 <import src="/common/emptyPage.wxml"/>
 <view class='page'>
