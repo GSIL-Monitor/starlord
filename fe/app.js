@@ -3,10 +3,12 @@ const service = require('/utils/service');
 const config = require('/utils/config');
 App({
   onLaunch: function (r) {
-    service.userConfig(this);
   },
   onShow: function (r) {
     this.globalData.wx_config = r || {};
+    if (r.scene) {
+      service.userConfig(this);
+    }
   },
   appShare: () => {
     return {

@@ -115,7 +115,13 @@ const login = (loginCb) => {
         if (loginCb) loginCb(data.ticket);
       }
       if (res.code) {
-        request('common/login', { code: res.code }, callback);
+        let params = {
+          code: res.code
+        };
+        if (app.globalData && app.globalData.wx_config && app.globalData.wx_config.shareTicket) {
+          params.is_valid = 1;
+        }
+        request('common/login', params, callback);
       } else {
         wx.showToast({
           title: '登录失败，请重试',
@@ -346,6 +352,7 @@ const driverGetMyList = (callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -468,6 +475,7 @@ const passengerGetMyList = (callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }

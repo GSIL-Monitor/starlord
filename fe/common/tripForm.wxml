@@ -49,7 +49,7 @@
       <text class='label-text'>始发点</text>
     </view>
     <view class='list-content' hover-class='ontap'>
-      <view wx:if='{{!!data.start_location_name}}'>{{ data.start_location_name }}</view>
+      <view wx:if='{{!!data.start_location_name}}' class='location-address'>{{ data.start_location_name }}{{ data.start_location_name }}</view>
       <view wx:if='{{!data.start_location_name}}' class='placeholder'>选择始发点</view>
     </view>
     <image class='list-arrow' src='/images/arrow_right.png' />
@@ -60,7 +60,7 @@
       <text class='label-text'>终点</text>
     </view>
     <view class='list-content' hover-class='ontap'>
-      <view wx:if='{{!!data.end_location_name}}'>{{ data.end_location_name }}</view>
+      <view wx:if='{{!!data.end_location_name}}' class='location-address'>{{ data.end_location_name }}{{ data.start_location_name }}</view>
       <view wx:if='{{!data.end_location_name}}' class='placeholder'>选择终点</view>
     </view>
     <image class='list-arrow' src='/images/arrow_right.png' />

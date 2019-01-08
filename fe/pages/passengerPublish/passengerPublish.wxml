@@ -18,7 +18,7 @@
             <text class='label-text'>愿付</text>
           </view>
           <view class='list-content'>
-            <input class='text-input' bindinput="bindinput" data-name='price_everyone' value='{{ form_data.price_everyone }}' placeholder="输入金额" />
+            <input type="number" class='text-input' bindinput="bindinput" data-name='price_everyone' value='{{ form_data.price_everyone }}' placeholder="输入金额" />
           </view>
           <view class='list-extra'>元/人</view>
         </view>
@@ -28,7 +28,7 @@
             <text class='label-text'>人数</text>
           </view>
           <view class='list-content'>
-            <input class='text-input' bindinput="bindinput" data-name='people_num' value='{{ form_data.people_num }}' placeholder="输入乘车人数" />
+            <input type="digit" class='text-input' bindinput="bindinput" data-name='people_num' value='{{ form_data.people_num }}' placeholder="输入乘车人数" />
           </view>
           <view class='list-extra'>人</view>
         </view>
@@ -60,5 +60,7 @@
       </view>
     </form>
   </block>
-  <template is="loginBtn" data="{{is_login: is_login, auth_message:'该操作需要登录授权。'}}" />
+  <block wx:if="{{ !is_login && !loading_profile }}">
+    <template is="loginBtn" data="{{is_login: is_login, auth_message:'该操作需要登录授权。'}}" />
+  </block>
 </view>

@@ -10,7 +10,8 @@ Page({
     trip_id: null,
     user_id: null,
     detail: {},
-    loading_data: true
+    loading_data: true,
+    app_init: false
   },
 
   /**
@@ -40,7 +41,8 @@ Page({
    */
   onShow: function () {
     self.setData({
-      loading_data: true
+      loading_data: true,
+      app_init: app.globalData.app_init || false
     });
     wx.startPullDownRefresh();
   },
