@@ -66,44 +66,48 @@ class Test extends CI_Controller
     {
         $this->load->model('api/OssApi');
 
-        $source = '/home/chuanhui/starlord/application/imgs/ditu.png';
+        $source = '/home/chuanhui/starlord/application/imgs/bg_driver.png';//车找人底图
+        // $source = '/home/chuanhui/starlord/application/imgs/bg_passenger.png';//人找车底图
         $firstNew = "/home/chuanhui/starlord/res/testpng1.png";
         $secondNew = "/home/chuanhui/starlord/res/testpng2.png";
         $thirdNew = "/home/chuanhui/starlord/res/testpng3.png";
 
         $firstLine = array(
-            'wm_text' => '测试文字，随便写 121@#￥@：2342342-=-',
+            'wm_text' => '2019-12-23 20:12',//这是开始时间
             'wm_type' => 'text',
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
-            'wm_vrt_alignment' => 'bottom',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '20',
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '24',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'middle',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '-46',
+            'wm_hor_offset' => '50',
         );
 
         $secondLine = array(
-            'wm_text' => '测试文字，随便写 121@#￥@：2342342-=-',
+            'wm_text' => '这是开始的位置名称',//显示开始的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
-            'wm_vrt_alignment' => 'center',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '180',
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '20',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'middle',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '18',
+            'wm_hor_offset' => '50',
         );
 
         $thirdLine = array(
-            'wm_text' => '测试文字，随便写 121@#￥@：2342342-=-',
+            'wm_text' => '这是结束的位置名称',//显示结束的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
-            'wm_vrt_alignment' => 'top',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '340',
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '20',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'bottom',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '-16',
+            'wm_hor_offset' => '50',
         );
 
         $this->imgHandler($source, $firstNew, $firstLine, true);

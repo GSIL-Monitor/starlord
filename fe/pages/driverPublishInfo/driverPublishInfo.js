@@ -96,7 +96,7 @@ Page({
     return {
       title: share_title,
       path: `/pages/driverPublishShare/driverPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
-      imageUrl: '../../images/address.png'
+      imageUrl: 'http://starlord-trip-prod.oss-cn-beijing.aliyuncs.com/test/111.png?OSSAccessKeyId=LTAI7FqpQmEvcZi7&Expires=1546969084&Signature=r%2BPy%2FMqM1FJ4ZbitM2LlT%2BylmTU%3D'
     };
   },
 
