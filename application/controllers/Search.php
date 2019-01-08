@@ -59,19 +59,19 @@ class Search extends Base
         }
 
         $tripsFormatted = array();
-        foreach ($trips as $t){
+        foreach ($trips as $t) {
             $this->_formatTripWithExpireAndIsEveryday($t);
             $tripsFormatted[] = $t;
         }
 
-        if(empty($page)){
+        if (empty($page)) {
             $this->_returnSuccess(
                 array(
                     'has_next' => false,
                     'trips' => $tripsFormatted,
                 )
             );
-        }else{
+        } else {
             $retTrips = array_slice($tripsFormatted, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
             $hasNext = true;
             if (count($retTrips) < Config::TRIP_EACH_PAGE) {
@@ -79,13 +79,13 @@ class Search extends Base
             }
             $this->_returnSuccess(
                 array(
+                    'page' => $page,
                     'has_next' => $hasNext,
                     'trips' => $retTrips,
                 )
             );
         }
     }
-
 
 
     private function _formatTripWithExpireAndIsEveryday(&$trip)
@@ -103,5 +103,11 @@ class Search extends Base
         } else {
             $trip['is_everyday'] = Config::TRIP_HAPPENS_ONCE;
         }
+
+        $tmp = str_replace('(', '[', $trip['start_location_point']);
+        $trip['start_location_point'] = str_replace(')', ']', $tmp);
+
+        $tmp = str_replace('(', '[', $trip['end_location_point']);
+        $trip['end_location_point'] = str_replace(')', ']', $tmp);
     }
 }

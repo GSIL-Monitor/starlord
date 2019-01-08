@@ -74,7 +74,7 @@ class Trip extends Base
                 }
             }
 
-            $this->_formatTripWithExpireAndIsEveryday($retTrip);
+            $this->_formatOutputTrip($retTrip);
             if ($userId == $retTrip['user_id']) {
                 $retTrip['is_share_owner'] = Config::IS_SHARE_OWNER;
             } else {
@@ -112,6 +112,7 @@ class Trip extends Base
             }
             $this->_returnSuccess(
                 array(
+                    'page' => $page,
                     'has_next' => $hasNext,
                     'trips' => $retTrips,
                 )
@@ -141,6 +142,7 @@ class Trip extends Base
             }
             $this->_returnSuccess(
                 array(
+                    'page' => $page,
                     'has_next' => $hasNext,
                     'trips' => $retTrips,
                 )
@@ -157,7 +159,7 @@ class Trip extends Base
         $restTrips = array();
 
         foreach ($trips as $trip) {
-            $this->_formatTripWithExpireAndIsEveryday($trip);
+            $this->_formatOutputTrip($trip);
 
             if (empty($trip['top_time'])) {
                 $restTripsSortKeys[] = $trip['created_time'];
@@ -208,7 +210,7 @@ class Trip extends Base
         $tripId = $input['trip_id'];
 
         $trip = $this->_getDetailByTripId(Config::TRIP_TYPE_DRIVER, $userId, $tripId);
-        $this->_formatTripWithExpireAndIsEveryday($trip);
+        $this->_formatOutputTrip($trip);
         $this->_returnSuccess($trip);
     }
 
@@ -219,7 +221,7 @@ class Trip extends Base
         $tripId = $input['trip_id'];
 
         $trip = $this->_getDetailByTripId(Config::TRIP_TYPE_PASSENGER, $userId, $tripId);
-        $this->_formatTripWithExpireAndIsEveryday($trip);
+        $this->_formatOutputTrip($trip);
         $this->_returnSuccess($trip);
     }
 
@@ -318,7 +320,7 @@ class Trip extends Base
 
             $newTrip['trip_id'] = $newTrip['trip_id'] . "";
 
-            $this->_formatTripWithExpireAndIsEveryday($newTrip);
+            $this->_formatOutputTrip($newTrip);
 
             $this->_returnSuccess($newTrip);
         } catch (Exception $e) {
@@ -354,7 +356,7 @@ class Trip extends Base
 
             $newTrip['trip_id'] = $newTrip['trip_id'] . "";
 
-            $this->_formatTripWithExpireAndIsEveryday($newTrip);
+            $this->_formatOutputTrip($newTrip);
 
             $this->_returnSuccess($newTrip);
         } catch (Exception $e) {
@@ -498,6 +500,7 @@ class Trip extends Base
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //获取我的行程列表
+    //分页
     public function driverGetMyList()
     {
         $user = $this->_user;
@@ -514,7 +517,7 @@ class Trip extends Base
         $resTrips = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                $this->_formatTripWithExpireAndIsEveryday($newTrip);
+                $this->_formatOutputTrip($newTrip);
                 $resTrips[] = $trip;
             }
         }
@@ -535,6 +538,7 @@ class Trip extends Base
             }
             $this->_returnSuccess(
                 array(
+                    'page' => $page,
                     'has_next' => $hasNext,
                     'trips' => $retTrips,
                 )
@@ -542,6 +546,7 @@ class Trip extends Base
         }
     }
 
+    //分页
     public function passengerGetMyList()
     {
         $user = $this->_user;
@@ -557,7 +562,7 @@ class Trip extends Base
         $resTrips = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                $this->_formatTripWithExpireAndIsEveryday($trip);
+                $this->_formatOutputTrip($trip);
                 $resTrips[] = $trip;
             }
         }
@@ -578,6 +583,7 @@ class Trip extends Base
             }
             $this->_returnSuccess(
                 array(
+                    'page' => $page,
                     'has_next' => $hasNext,
                     'trips' => $retTrips,
                 )
@@ -656,7 +662,7 @@ class Trip extends Base
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private function _formatTripWithExpireAndIsEveryday(&$trip)
+    private function _formatOutputTrip(&$trip)
     {
         $currentDate = date('Y-m-d');
 
@@ -671,5 +677,11 @@ class Trip extends Base
         } else {
             $trip['is_everyday'] = Config::TRIP_HAPPENS_ONCE;
         }
+
+        $tmp = str_replace('(', '[', $trip['start_location_point']);
+        $trip['start_location_point'] = str_replace(')', ']', $tmp);
+
+        $tmp = str_replace('(', '[', $trip['end_location_point']);
+        $trip['end_location_point'] = str_replace(')', ']', $tmp);
     }
 }
