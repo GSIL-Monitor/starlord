@@ -362,6 +362,7 @@ const driverGetListByGroupId = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -375,6 +376,7 @@ const driverSearch = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -482,6 +484,7 @@ const passengerGetListByGroupId = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -495,6 +498,7 @@ const passengerSearch = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
