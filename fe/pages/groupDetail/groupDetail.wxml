@@ -37,6 +37,7 @@
     </block>
   </view>
   <view class='list' wx:if="{{ currentTab == 0 }}">
+    <template is="pageLoading" data="{{ hide_progress: true, loading:driver_loading }}" />
     <block wx:for-items="{{driverTrips.trips}}" wx:key="{{item.id}}">
       <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&hide_share=1" id="{{item.id}}" class="list-item">
         <view class='list-content'>
@@ -72,6 +73,7 @@
     <template is="emptyPage" data="{{ show: !driver_loading && driverTrips.trips.length == 0 }}" />
   </view>
   <view class='list' wx:if="{{ currentTab == 1 }}">
+    <template is="pageLoading" data="{{ hide_progress: true, loading:passenger_loading }}" />
     <block wx:for-items="{{passengerTrips.trips}}" wx:key="{{item.id}}">
       <navigator
         url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&hide_share=1"  id="{{item.id}}" class="list-item">

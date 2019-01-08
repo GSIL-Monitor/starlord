@@ -1,1 +1,9 @@
-/* pages/9999/9999.wxss */
+.page {
+  text-align: center;
+}
+.icon {
+  display: block;
+  margin: 60px auto 12px auto;
+  width: 100px;
+  height: 100px;
+}

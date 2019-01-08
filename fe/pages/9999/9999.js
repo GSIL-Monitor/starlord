@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    'switch': {}
   },
 
   /**
@@ -31,7 +31,7 @@ Page({
   onShow: function () {
     self = this;
     this.setData({
-      switch: app.globalData.user_config.switch
+      switch: app.globalData.user_config.switch || {}
     });
   },
 

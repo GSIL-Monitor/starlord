@@ -1,2 +1,4 @@
-<!--pages/9999/9999.wxml-->
-<text>pages/9999/9999.wxml</text>
+<view class="page">
+  <image class="icon" src="../../images/maintain.png"></image>
+  <text class='text'>{{ switch['9999_context'] }}</text>
+</view>

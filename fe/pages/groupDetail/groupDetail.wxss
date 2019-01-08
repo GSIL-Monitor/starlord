@@ -87,11 +87,10 @@
 
 .list {
   margin: 0 0 8px 0;
-  border-top: 1rpx solid #f0f0f0;
-  border-bottom: 1rpx solid #f0f0f0;
+  border: none;
 }
 .list-item {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .trip-date-icon {
   margin-top: 18rpx;

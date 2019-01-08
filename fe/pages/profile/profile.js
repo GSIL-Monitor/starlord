@@ -7,7 +7,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    is_login: false
+    loading_profile: true,
+    is_login: false,
+    profile: app.globalData.profile || {},
   },
 
   /**
@@ -31,6 +33,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    wx.startPullDownRefresh();
   },
 
   /**
@@ -51,7 +54,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.loadProfile();
   },
 
   /**
@@ -72,6 +75,27 @@ Page({
    * 微信授权获取个人信息
    */
   getUserInfo: (e) => {
-    service.userCompleteUser(e.detail, app, self);
+    self.setData({
+      loading_profile: true
+    });
+    service.userCompleteUser(e.detail, app, self, () => {
+      self.setData({
+        loading_profile: false
+      });
+    });
+  },
+
+  loadProfile: () => {
+    self.setData({
+      loading_profile: true
+    });
+    service.getProfile(app, (success, data) => {
+      wx.stopPullDownRefresh();
+      self.setData({
+        loading_profile: false,
+        profile: data || {},
+        is_login: app.globalData.is_login,
+      });
+    });
   },
 })
