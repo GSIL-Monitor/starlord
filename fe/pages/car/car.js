@@ -136,27 +136,52 @@ Page({
 
   formSubmit() {
     const { profile } = self.data;
-    self.setData({
-      loading_update: true
-    });
-    service.updateUserCar({
-      car_plate: profile.car_plate,
-      car_brand: profile.car_brand,
-      car_model: profile.car_model,
-      car_color: profile.car_color,
-      car_type: profile.car_type,
-    }, (success) => {
-      self.setData({
-        loading_update: false
+
+    if (!profile.car_plate) {
+      wx.showToast({
+        icon: 'none', title: '车牌不能为空',
       });
-      if (success) {
-        wx.showToast({
-          title: '车辆信息提交成功',
+    } else if (!profile.car_brand) {
+      wx.showToast({
+        icon: 'none', title: '品牌不能为空',
+      });
+    } else if (!profile.car_model) {
+      wx.showToast({
+        icon: 'none', title: '型号不能为空',
+      });
+    } else if (!profile.car_color) {
+      wx.showToast({
+        icon: 'none', title: '颜色不能为空',
+      });
+    } else if (!profile.car_type) {
+      wx.showToast({
+        icon: 'none', title: '类型不能为空',
+      });
+    } else {
+      const params = {
+        car_plate: profile.car_plate,
+        car_brand: profile.car_brand,
+        car_model: profile.car_model,
+        car_color: profile.car_color,
+        car_type: profile.car_type,
+      };
+      self.setData({
+        loading_update: true
+      });
+      console.error(params);
+      service.updateUserCar(params, (success) => {
+        self.setData({
+          loading_update: false
         });
-        if (self.data.back) {
-          wx.navigateBack();
+        if (success) {
+          wx.showToast({
+            title: '车辆信息提交成功',
+          });
+          if (self.data.back) {
+            wx.navigateBack();
+          }
         }
-      }
-    });
+      });
+    }
   },
 })

@@ -8,12 +8,20 @@
   margin: 0;
 }
 .list-item {
-  align-items: flex-start;
+  align-items: center;
 }
 .list-avatar {
-  height: 24px;
-  width: 24px;
+  height: 44px;
+  width: 44px;
+  background: #3cc51f;
+  color: #fff;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  align-items: center;
   margin-right: 12px;
+  margin-left: 4px;
+  border-radius: 2px;
 }
 .list-title {
   color: #333;

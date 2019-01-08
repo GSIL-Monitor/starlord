@@ -168,5 +168,11 @@ Page({
         }
       }
     })
-  }
+  },
+  makeCall: function (e) {
+    const { phone } = e.currentTarget.dataset;
+    wx.makePhoneCall({
+      phoneNumber: phone,
+    });
+  },
 })

@@ -78,10 +78,8 @@ Page({
     self.setData({
       loading_profile: true
     });
-    service.userCompleteUser(e.detail, app, self, () => {
-      self.setData({
-        loading_profile: false
-      });
+    service.userCompleteUser(e.detail, app, self, (success) => {
+      self.loadProfile();
     });
   },
 

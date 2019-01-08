@@ -119,6 +119,9 @@ textarea.text-input {
   border-left: 1px solid #999;
   margin: 0 8px;
 }
+.car-info-detail {
+  font-size: 14px;
+}
 
 /* trip item */
 .trip_map {
@@ -173,6 +176,7 @@ textarea.text-input {
 }
 .list-trip-btn {
   margin: 0;
+  border-radius: 3px;
 }
 .trip-tags-wrap {
   overflow: hidden;
@@ -334,4 +338,10 @@ textarea.text-input {
   display: block;
   color: #666;
   margin-top: 12px;
+}
+
+.location-address {
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin-left: 18px;
 }

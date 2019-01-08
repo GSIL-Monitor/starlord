@@ -6,7 +6,8 @@ Page({
   data: {
     notice_list: [],
     list: [],
-    loading: false
+    loading: false,
+    app_init: false
   },
   onLoad: function (r) {
     self = this;
@@ -15,10 +16,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const { user_config } = app.globalData;
+    const { user_config, app_init } = app.globalData;
     if (user_config && user_config.docoment) {
       this.setData({
-        notice_list: user_config.docoment.notice_list
+        notice_list: user_config.docoment.notice_list,
+        app_init: app_init || false
       });
     }
     this.onLoadData();

@@ -34,15 +34,12 @@
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/car_gay.png' />
-          <view class='trip-item-value' wx:if="{{detail.user_info && detail.user_info.car_plate}}">
-            {{ detail.user_info.car_plate }} |
-            {{ detail.user_info.car_brand }} |
-            {{ detail.user_info.car_model }} |
-            {{ detail.user_info.car_color }} |
-            {{ detail.user_info.car_type }}
-          </view>
-          <view class='trip-item-value' wx:if="{{!detail.user_info || !detail.user_info.car_plate}}">
-            暂无车辆信息
+          <view class='trip-item-value'>
+            <view>
+              车辆:
+              <text class='trip-ll'>{{ detail.user_info.car_plate }}{{ detail.user_info.car_brand }}{{ detail.user_info.car_model }}{{ detail.user_info.car_color }}{{ detail.user_info.car_type }}</text>
+              <text class='trip-ll' wx:if="{{!detail.user_info || !detail.user_info.car_plate}}">暂无车辆信息</text>
+            </view>
           </view>
         </view>
       </view>

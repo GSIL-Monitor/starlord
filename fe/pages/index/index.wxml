@@ -1,14 +1,16 @@
 <import src="../../common/message.wxml"/>
+<import src="/common/pageLoading.wxml"/>
 <view class='page'>
+  <block wx:if="{{ app_init }}">
     <block wx:if="{{ notice_list.length > 0 }}">
       <text class="title">系统公告</text>
       <template is="message" data="{{list: notice_list }}" />
     </block>
-    <text class="title">加入管理的拼车</text>
+    <text class="title">我的拼车群</text>
     <view class="list" wx:if="{{ list && list.length > 0 }}">
       <block wx:for-items="{{list}}" wx:key="{{item.id}}">
         <navigator url="/pages/groupDetail/groupDetail?group_id={{item.group_id}}"  id="{{item.id}}" class="list-item">
-          <image class="list-avatar" src="../../images/profile.png" />
+          <view class="list-avatar">群</view>
           <view class="list-content">
             <open-data class="list-title" type="groupName" open-gid="{{ item.wx_gid }}"></open-data>
             <view class="list-info">
@@ -37,4 +39,8 @@
         <button type='primary'>查看说明</button>
       </navigator>
     </view>
+  </block>
+  <block wx:if="{{ !app_init }}">
+    <template is="pageLoading" data="{{ loading: true }}" />
+  </block>
 </view>

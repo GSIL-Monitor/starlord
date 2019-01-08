@@ -4,12 +4,12 @@
       <text class='label-text'>车辆</text>
     </view>
     <view class='list-content'>
-      <view wx:if="{{info.car_plate}}">
-        {{ info.car_plate }}
-        {{ info.car_brand }}
-        {{ info.car_model }}
-        {{ info.car_color }}
-        {{ info.car_type }}
+      <view wx:if="{{info.car_plate || info.car_brand || info.car_model || info.car_color || info.car_type}}" class='car-info-detail'>
+        {{ info.car_plate || '' }}
+        {{ info.car_brand || '' }}
+        {{ info.car_model || '' }}
+        {{ info.car_color || '' }}
+        {{ info.car_type || '' }}
       </view>
       <view class='placeholder' wx:if="{{!info.car_plate}}">未设置车辆</view>
     </view>
