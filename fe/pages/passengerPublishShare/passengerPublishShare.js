@@ -82,17 +82,8 @@ Page({
     const callback = (success, data) => {
       wx.stopPullDownRefresh();
       self.setData({ loading_data: false });
-      if (success) {
-        let tags = [];
-        config.passenger_tags.map(tag => {
-          if (data[tag.value] == 1) {
-            tags.push(tag.label);
-          }
-        });
-        data.tags = tags;
-        if (data.user_info) {
-          data.user_info = JSON.parse(data.user_info);
-        }
+      if (success && data) {
+        data = service.parsePassengerTripDetail(data);
         self.setData({
           detail: data || {}
         });

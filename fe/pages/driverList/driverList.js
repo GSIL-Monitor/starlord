@@ -82,5 +82,11 @@ Page({
    */
   onShareAppMessage: function () {
     return app.appShare();
-  }
+  },
+  makeCall: function (e) {
+    const { phone } = e.currentTarget.dataset;
+    wx.makePhoneCall({
+      phoneNumber: phone,
+    });
+  },
 })

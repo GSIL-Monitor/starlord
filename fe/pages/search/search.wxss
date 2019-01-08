@@ -5,7 +5,7 @@
   text-align: right;
 }
 .submit-wrap {
-  margin: 24px;
+  margin: 12px 24px 24px 24px;
   box-sizing: border-box;
   text-align: center;
 }

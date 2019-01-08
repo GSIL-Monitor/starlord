@@ -24,6 +24,24 @@ const reLaunchCurrentPage = () => {
   }
 }
 
+/** 路线解压 */
+const parsePolyline = (data) => {
+  if (!data) return null;
+  data = JSON.parse(data);
+  let polyline = [];
+  const coors = (data && data.polyline) ? data.polyline : [];
+  //坐标解压（返回的点串坐标，通过前向差分进行压缩)
+  const kr = 1000000, coorLength = coors.length;
+  for (let i = 2; i < coorLength; i++) {
+    coors[i] = Number(coors[i - 2]) + Number(coors[i]) / kr;
+  }
+  //将解压后的坐标放入点串数组polyline中
+  for (var i = 0; i < coors.length; i += 2) {
+    polyline.push({ latitude: coors[i], longitude: coors[i + 1] });
+  }
+  return polyline;
+}
+
 /**
  * 通用request
  * uri: string | required | 不包含host如登录：common/login
@@ -248,6 +266,66 @@ const getTripDetailInSharePage = (data, callback) => {
 /**
  * 车找人发布、保存
  */
+const parseDriverTripDetail = (responseData) => {
+  let tags = [];
+  config.driver_tags.map(tag => {
+    if (responseData[tag.value] == 1) {
+      tags.push(tag.label);
+    }
+  });
+  responseData.tags = tags;
+  if (responseData.user_info) {
+    responseData.user_info = JSON.parse(responseData.user_info);
+  }
+
+  responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+  if (responseData.lbs_route_info) {
+    responseData.polyline = [{
+      points: parsePolyline(responseData.lbs_route_info),
+      width: 4,
+      color: '#3cc51f'
+    }];
+  }
+  responseData.markers = [];
+  responseData.include_points = [];
+  if (responseData.start_location_point) {
+    const start_location_point = JSON.parse(responseData.start_location_point);
+    if (start_location_point.length == 2) {
+      responseData.markers.push({
+        id: 'start',
+        longitude: start_location_point[1],
+        latitude: start_location_point[0],
+        iconPath: '/images/map_start.png',
+        width: 30,
+        height: 30,
+        anchor: { x: 0.5, y: 0.5 }
+      });
+      responseData.include_points.push({
+        longitude: start_location_point[1],
+        latitude: start_location_point[0],
+      });
+    }
+  }
+  if (responseData.end_location_point) {
+    const end_location_point = JSON.parse(responseData.end_location_point);
+    if (end_location_point.length == 2) {
+      responseData.markers.push({
+        id: 'end',
+        longitude: end_location_point[1],
+        latitude: end_location_point[0],
+        iconPath: '/images/map_end.png',
+        width: 30,
+        height: 30,
+        anchor: { x: 0.5, y: 0.5 }
+      });
+      responseData.include_points.push({
+        longitude: end_location_point[1],
+        latitude: end_location_point[0],
+      });
+    }
+  }
+  return responseData;
+}
 const driverPublish = (data, callback) => {
   request('trip/driverPublish', data, callback);
 }
@@ -257,22 +335,9 @@ const driverSave = (data, callback) => {
 const driverGetDetailByTripId = (data, callback) => {
   request('trip/driverGetDetailByTripId', data, (success, responseData) => {
     if (success && responseData) {
-      let tags = [];
-      config.driver_tags.map(tag => {
-        if (responseData[tag.value] == 1) {
-          tags.push(tag.label);
-        }
-      });
-      responseData.tags = tags;
-      if (responseData.user_info) {
-        responseData.user_info = JSON.parse(responseData.user_info);
-      }
-
-      responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
-      if (responseData.lbs_route_info) {
-        responseData.lbs_route_info = JSON.parse(responseData.lbs_route_info);
-      }
+      responseData = parseDriverTripDetail(responseData);
     }
+
     callback(success, responseData);
   });
 }
@@ -297,6 +362,7 @@ const driverGetListByGroupId = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -310,6 +376,7 @@ const driverSearch = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -322,6 +389,65 @@ const driverSearch = (data, callback) => {
 /**
  * 人找车发布、保存
  */
+const parsePassengerTripDetail = (responseData) => {
+  let tags = [];
+  config.passenger_tags.map(tag => {
+    if (responseData[tag.value] == 1) {
+      tags.push(tag.label);
+    }
+  });
+  responseData.tags = tags;
+  if (responseData.user_info) {
+    responseData.user_info = JSON.parse(responseData.user_info);
+  }
+  responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+  if (responseData.lbs_route_info) {
+    responseData.polyline = [{
+      points: parsePolyline(responseData.lbs_route_info),
+      width: 4,
+      color: '#3cc51f'
+    }];
+  }
+  responseData.markers = [];
+  responseData.include_points = [];
+  if (responseData.start_location_point) {
+    const start_location_point = JSON.parse(responseData.start_location_point);
+    if (start_location_point.length == 2) {
+      responseData.markers.push({
+        id: 'start',
+        longitude: start_location_point[1],
+        latitude: start_location_point[0],
+        iconPath: '/images/map_start.png',
+        width: 30,
+        height: 30,
+        anchor: { x: 0.5, y: 0.5 }
+      });
+      responseData.include_points.push({
+        longitude: start_location_point[1],
+        latitude: start_location_point[0],
+      });
+    }
+  }
+  if (responseData.end_location_point) {
+    const end_location_point = JSON.parse(responseData.end_location_point);
+    if (end_location_point.length == 2) {
+      responseData.markers.push({
+        id: 'end',
+        longitude: end_location_point[1],
+        latitude: end_location_point[0],
+        iconPath: '/images/map_end.png',
+        width: 30,
+        height: 30,
+        anchor: { x: 0.5, y: 0.5 }
+      });
+      responseData.include_points.push({
+        longitude: end_location_point[1],
+        latitude: end_location_point[0],
+      });
+    }
+  }
+  return responseData;
+}
 const passengerPublish = (data, callback) => {
   request('trip/passengerPublish', data, callback);
 }
@@ -331,27 +457,9 @@ const passengerSave = (data, callback) => {
 const passengerGetDetailByTripId = (data, callback) => {
   request('trip/passengerGetDetailByTripId', data, (success, responseData) => {
     if (success && responseData) {
-      let tags = [];
-      config.passenger_tags.map(tag => {
-        if (responseData[tag.value] == 1) {
-          tags.push(tag.label);
-        }
-      });
-      responseData.tags = tags;
-      if (responseData.user_info) {
-        responseData.user_info = JSON.parse(responseData.user_info);
-      }
-      responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
-      if (responseData.lbs_route_info) {
-        const lbs_route_info = JSON.parse(responseData.lbs_route_info);
-        console.error(lbs_route_info);
-        responseData.polyline = [{
-          points: lbs_route_info.polyline,
-          width: 8,
-          color: '#FF0000DD'
-        }];
-      }
+      responseData = parsePassengerTripDetail(responseData);
     }
+
     callback(success, responseData);
   });
 }
@@ -376,6 +484,7 @@ const passengerGetListByGroupId = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -389,6 +498,7 @@ const passengerSearch = (data, callback) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
+        item.user_info = item.user_info ? JSON.parse(item.user_info) : {};
         return item;
       });
     }
@@ -417,6 +527,7 @@ module.exports = {
   updateNotice,
   topOneTrip,
   unTopOneTrip,
+  parseDriverTripDetail,
   driverPublish,
   driverSave,
   driverGetDetailByTripId,
@@ -424,6 +535,7 @@ module.exports = {
   driverDeleteMy,
   driverGetListByGroupId,
   driverSearch,
+  parsePassengerTripDetail,
   passengerPublish,
   passengerSave,
   passengerGetDetailByTripId,
