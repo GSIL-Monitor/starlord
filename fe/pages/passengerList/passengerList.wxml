@@ -16,16 +16,34 @@
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_start.png' />
-            <text class='trip-item-value'>{{item.start_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.start_location_name }}</view>
+              <view class='trip-item-info'>{{ item.start_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_start.png' />
-            <text class='trip-item-value'>{{item.end_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.end_location_name }}</view>
+              <view class='trip-item-info'>{{ item.end_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/price.png' />
             <view class='trip-item-value'>
               <template is="passengerPrice" data="{{ detail: item }}" />
+            </view>
+          </view>
+          <view class='list-item list-item-user'>
+            <view class='list-trip-avatar'>
+              <image class='list-avatar-image' src='{{ item.user_info.avatar_url }}' wx:if="{{item.user_info && item.user_info.avatar_url}}" />
+              <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!item.user_info || !item.user_info.avatar_url}}" />
+            </view>
+            <view class='list-content' wx:if="{{ item.user_info && item.user_info.nick_name }}">
+              {{ item.user_info.nick_name }} | {{ item.user_info.phone }}
+            </view>
+            <view class='list-extra'>
+              <button plain size='mini' type='primary' class='list-trip-btn' catchtap='makeCall' data-phone='{{ item.user_info.phone }}' wx:if="{{ item.user_info && item.user_info.phone }}">拨号</button>
             </view>
           </view>
         </view>

@@ -68,5 +68,8 @@ Page({
    */
   onShareAppMessage: function () {
     return app.appShare();
+  },
+  retry: () => {
+    wx.startPullDownRefresh();
   }
 })

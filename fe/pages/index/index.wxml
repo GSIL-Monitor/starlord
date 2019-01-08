@@ -29,6 +29,9 @@
         </navigator>
       </block>
     </view>
+    <view class="empty" wx:if="{{ !list || list.length == 0 }}">
+      暂未加入群组。
+    </view>
     <view class='intro-wrap'>
       <navigator url='/pages/groupIntro/groupIntro'>
         <button type='primary'>查看说明</button>
