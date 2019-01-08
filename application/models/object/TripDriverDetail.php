@@ -34,6 +34,12 @@ class TripDriverDetail
         } else {
             $this->beginDate = $input["begin_date"];
         }
+
+        $tmp = str_replace('[','(',  $input['start_location_point']);
+        $input['start_location_point'] = str_replace(']', ')', $tmp);
+        $tmp = str_replace('[','(',  $input['end_location_point']);
+        $input['end_location_point'] = str_replace(']', ')', $tmp);
+
         $this->beginTime = $input["begin_time"];
         $this->startLocationName = $input["start_location_name"];
         $this->startLocationAddress = $input["start_location_address"];
