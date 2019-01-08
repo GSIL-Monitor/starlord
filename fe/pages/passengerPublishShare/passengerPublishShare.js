@@ -66,7 +66,8 @@ Page({
     const { trip_id, user_id } = self.data;
     const { wx_config } = app.globalData;
     const { shareTicket } = wx_config;
-    if (!trip_id || !user_id || !shareTicket) {
+    // if (!trip_id || !user_id || !shareTicket) {
+    if (!trip_id || !user_id) {
       wx.showToast({
         title: '页面参数不正确',
         icon: null
