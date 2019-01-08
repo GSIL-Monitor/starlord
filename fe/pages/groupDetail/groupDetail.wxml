@@ -54,11 +54,17 @@
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_start.png' />
-            <text class='trip-item-value'>{{item.start_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.start_location_name }}</view>
+              <view class='trip-item-info'>{{ item.start_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_end.png' />
-            <text class='trip-item-value'>{{item.end_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.end_location_name }}</view>
+              <view class='trip-item-info'>{{ item.end_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/price.png' />
@@ -96,11 +102,17 @@
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_start.png' />
-            <text class='trip-item-value'>{{item.start_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.start_location_name }}</view>
+              <view class='trip-item-info'>{{ item.start_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_start.png' />
-            <text class='trip-item-value'>{{item.end_location_name}}</text>
+            <view class='trip-item-value'>
+              <view class='trip-item-label'>{{ item.end_location_name }}</view>
+              <view class='trip-item-info'>{{ item.end_location_address }}</view>
+            </view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/price.png' />

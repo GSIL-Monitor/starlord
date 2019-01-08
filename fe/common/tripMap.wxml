@@ -2,9 +2,10 @@
 <template name="tripMap">
   <map
     class='trip_map'
-    polyline="{{detail.polyline}}"
-    longitude="108.327549" latitude="22.816443"
-    scale="16"
+    polyline="{{ detail.polyline }}"
+    subkey="SMBBZ-FP5CJ-V4OFT-FXMXR-QPEOJ-BOFIO"
+    markers="{{ detail.markers }}"
+    include-points="{{ detail.include_points }}"
     >
   </map>
 </template>
