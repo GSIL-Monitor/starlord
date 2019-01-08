@@ -150,6 +150,7 @@ textarea.text-input {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  color: #333;
 }
 .trip-item-label {
   color: #333;
@@ -173,6 +174,13 @@ textarea.text-input {
 .list-trip-btn {
   margin: 0;
 }
+.trip-tags-wrap {
+  overflow: hidden;
+}
+.trip-tags-label {
+  display: block;
+  float: left;
+}
 .trip-tags-wrap, .trip-group-wrap {
   flex: 1;
   margin-top: 6rpx;
@@ -190,6 +198,9 @@ textarea.text-input {
   margin: 2rpx;
   padding: 0 4rpx;
 }
+.trip-tag {
+  margin-top: 4px;
+}
 .trip-group-wrap {
   margin-top: -1rpx;
 }
@@ -204,8 +215,12 @@ textarea.text-input {
   margin: 0;
 }
 .trip-hl {
-  color: #444;
+  color: #333;
   padding-right: 6rpx;
+}
+.trip-ll {
+  color: #666;
+  padding-left: 6rpx;
 }
 .trip-date-icon {
   margin-top: 16rpx;

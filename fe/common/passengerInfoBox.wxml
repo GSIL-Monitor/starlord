@@ -39,21 +39,24 @@
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/tag.png' />
           <view class='trip-item-value'>
-            <text class='trip-hl'>标签:</text>
-            <view class='trip-tags-wrap' wx:if="{{detail.tags && detail.tags.length > 0}}">
+            <view class='trip-tags-wrap'>
+            <text class='trip-tags-label'>标签:</text>
               <block wx:for-items="{{detail.tags}}" wx:key="{{item}}">
-                <view class='trip-tag'>{{ item }}</view>
+                <text class='trip-tag'>{{ item }}</text>
               </block>
-            </view>
-            <view class='trip-tags-wrap' wx:if="{{!detail.tags || detail.tags.length == 0}}">
+              <block wx:if="{{detail.tags.length == 0}}">
+                <text class='trip-ll'>无标签信息</text>
+              </block>
             </view>
           </view>
         </view>
         <view class='trip-data-item'>
           <image class='trip-item-icon' src='/images/remark.png' />
           <view class='trip-item-value'>
-            <text class='trip-hl'>备注:</text>
-            <view style='flex:1;'>{{ detail.tips || '' }}</view>
+            <view>
+              备注:
+              <text class='trip-ll'>{{ detail.tips || '无备注信息' }}</text>
+            </view>
           </view>
         </view>
       </view>
