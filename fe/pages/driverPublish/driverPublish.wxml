@@ -73,5 +73,7 @@
       </view>
     </form>
   </block>
-  <template is="loginBtn" data="{{is_login: is_login || !loading_profile, auth_message:'该操作需要登录授权。'}}" />
+  <block wx:if="{{ !loading_profile }}">
+    <template is="loginBtn" data="{{is_login: is_login, auth_message:'该操作需要登录授权。'}}" />
+  </block>
 </view>
