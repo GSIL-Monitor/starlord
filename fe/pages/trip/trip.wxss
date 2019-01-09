@@ -2,7 +2,7 @@
   margin: 0;
 }
 .list-item {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 .trip-date-icon {
   /* margin-top: 18rpx; */
@@ -18,4 +18,9 @@
   color: #3cc51f;
   font-size: 14px;
   text-decoration: underline;
+}
+.list-item-user {
+  margin: 12px 0 0 0;
+  padding: 10px 0 0 0;
+  border-top: 1rpx solid #f0f0f0;
 }

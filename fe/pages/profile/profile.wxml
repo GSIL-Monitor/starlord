@@ -16,7 +16,7 @@
 <view class='page'>
   <!-- profile info -->
   <view class='list'>
-    <block wx:if="{{is_login}}">
+    <block wx:if="{{is_login && profile.nick_name}}">
       <view class='list-item profile'>
         <view class='list-avatar profile-avatar'>
           <open-data class="list-avatar-image" type="userAvatarUrl" lang="zh_CN"></open-data>

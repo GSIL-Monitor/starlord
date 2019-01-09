@@ -10,7 +10,8 @@ Page({
     trip_id: null,
     user_id: null,
     detail: {},
-    loading_data: true
+    loading_data: true,
+    app_init: false
   },
 
   /**
@@ -40,7 +41,8 @@ Page({
    */
   onShow: function () {
     self.setData({
-      loading_data: true
+      loading_data: true,
+      app_init: app.globalData.app_init || false
     });
     wx.startPullDownRefresh();
   },
@@ -66,7 +68,8 @@ Page({
     const { trip_id, user_id } = self.data;
     const { wx_config } = app.globalData;
     const { shareTicket } = wx_config;
-    if (!trip_id || !user_id || !shareTicket) {
+    // if (!trip_id || !user_id || !shareTicket) {
+    if (!trip_id || !user_id) {
       wx.showToast({
         title: '页面参数不正确',
         icon: null

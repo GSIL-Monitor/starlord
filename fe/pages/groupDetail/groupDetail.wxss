@@ -19,6 +19,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 12px;
+  border-radius: 2px;
 }
 .group-content {
   flex: 1;

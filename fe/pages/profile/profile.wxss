@@ -44,6 +44,7 @@
   padding-left: 8px !important;
   padding-right: 8px !important;
   margin: 0 0 0 8px !important;
+  border-radius: 2px;
 }
 .profile-refresh-icon {
   display: block;
