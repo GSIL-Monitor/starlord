@@ -44,7 +44,8 @@ class User extends Base
                 'share_page_info' => '行程已经成功绑定该群',
             ),
             'switch' => array(
-                '9999' => $user['is_valid'] == Config::USER_REG_IS_VALID ? 0 : 1,                    //正常进入页面功能or展示维护公告
+                //'9999' => $user['is_valid'] == Config::USER_REG_IS_VALID ? 0 : 1,                    //正常进入页面功能or展示维护公告
+                '9999' => 0,                    //正常进入页面功能or展示维护公告
                 '9999_context' => "维护中，预计12：00开放使用，非常抱歉。",                    //正常进入页面功能or展示维护公告
                 'search_all_group' => Config::SEARCH_ALL,            //搜索页展示是否跨群选项or写死文案只能群内搜索
                 'show_agreement' => $user['show_agreement'],        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否

@@ -21,65 +21,71 @@ class Trip extends Base
         $tripId = $input['trip_id'];
         $tripType = $input['trip_type'];
 
-
         $this->load->model('api/WxApi');
-        $encryptedData = $input['encryptedData'];
-        $iv = $input['iv'];
-        $sessionKey = $user['wx_session_key'];
-        $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
-        $wxGid = $groupInfo['openGId'];
+        $this->load->model('service/GroupService');
+        $this->load->model('service/GroupTripService');
+        $this->load->model('service/GroupService');
+        $this->load->model('service/GroupUserService');
 
         //先检查群是否存在，如果不存在则创建群，最终获取group_id
-        $this->load->model('service/GroupService');
-
         DbTansactionHanlder::begin('default');
         try {
-            $group = $this->GroupService->getByWxGid($wxGid);
-            if (empty($group)) {
-                //如果不存在群组，则创建member_num为0的新群组
-                $group = $this->GroupService->createNewGroup($wxGid);
-            }
-
-            $groupId = $group['group_id'];
-            $this->load->model('service/GroupUserService');
-            try {
-                //检查人是否存在
-                $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
-            } catch (Exception $e) {
-                //如果不存在
-                $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
-                if ($ret) {
-                    //用户是第一次加入群，需要把group的member_num加1
-                    $this->GroupService->increaseMember($groupId, $group);
-                }
-            }
+            $encryptedData = $input['encryptedData'];
+            $iv = $input['iv'];
+            $sessionKey = $user['wx_session_key'];
 
             $trip = $this->_getDetailByTripId($tripType, $tripUserId, $tripId);
             $retTrip = $trip;
-            $this->load->model('service/GroupTripService');
-            try {
-                //检查行程是否在群里
 
-                $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
-            } catch (Exception $e) {
-                //否则把行程加群
-                $this->load->model('service/GroupService');
-                $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
-                $this->GroupService->increaseTripInGroup(array($groupId));
+            if(!empty($encryptedData)){
+                //绑定群相关信息
+                $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
+                $wxGid = $groupInfo['openGId'];
+                $group = $this->GroupService->getByWxGid($wxGid);
+                if (empty($group)) {
+                    //如果不存在群组，则创建member_num为0的新群组
+                    $group = $this->GroupService->createNewGroup($wxGid);
+                }
+                $groupId = $group['group_id'];
 
-                if ($tripType == Config::TRIP_TYPE_DRIVER) {
-                    $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                //绑定人
+                try {
+                    //检查人是否存在
+                    $this->GroupUserService->ensureUserBelongToGroup($userId, $groupId);
+                } catch (Exception $e) {
+                    //如果不存在
+                    $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
+                    if ($ret) {
+                        //用户是第一次加入群，需要把group的member_num加1
+                        $this->GroupService->increaseMember($groupId, $group);
+                    }
+                }
+
+                //绑定行程
+                try {
+                    //检查行程是否在群里
+
+                    $this->GroupTripService->ensureGroupHasTrip($groupId, $tripId);
+                } catch (Exception $e) {
+                    //否则把行程加群
+                    $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
+                    $this->GroupService->increaseTripInGroup(array($groupId));
+
+                    if ($tripType == Config::TRIP_TYPE_DRIVER) {
+                        $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                    } else {
+                        $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                    }
+                }
+
+                if ($userId == $retTrip['user_id']) {
+                    $retTrip['is_share_owner'] = Config::IS_SHARE_OWNER;
                 } else {
-                    $this->TripPassengerService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);
+                    $retTrip['is_share_owner'] = Config::IS_NOT_SHARE_OWNER;
                 }
             }
 
             $this->_formatOutputTrip($retTrip);
-            if ($userId == $retTrip['user_id']) {
-                $retTrip['is_share_owner'] = Config::IS_SHARE_OWNER;
-            } else {
-                $retTrip['is_share_owner'] = Config::IS_NOT_SHARE_OWNER;
-            }
             DbTansactionHanlder::commit('default');
             $this->_returnSuccess($retTrip);
         } catch (Exception $e) {
