@@ -29,7 +29,7 @@
         </view>
         <view>
           <button size="mini" type='primary' class='profile-refresh-btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo" lang="zh_CN" loading='{{ loading_profile }}' disabled='{{ loading_profile }}'>
-              更新
+              刷新
             </button>
         </view>
       </view>
