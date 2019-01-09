@@ -71,6 +71,7 @@ class Test extends CI_Controller
         $firstNew = "/home/chuanhui/starlord/res/testpng1.png";
         $secondNew = "/home/chuanhui/starlord/res/testpng2.png";
         $thirdNew = "/home/chuanhui/starlord/res/testpng3.png";
+        $forthNew = "/home/chuanhui/starlord/res/testpng4.png";
 
         $firstLine = array(
             'wm_text' => '2019-12-23 20:12',//这是开始时间
@@ -110,15 +111,30 @@ class Test extends CI_Controller
             'wm_hor_offset' => '50',
         );
 
+        $forthLine = array(
+            'wm_text' => '这是结束的位置名称',//显示结束的位置名称，需要用php截断字符长度
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '20',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'bottom',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '-16',
+            'wm_hor_offset' => '50',
+        );
+
         $this->imgHandler($source, $firstNew, $firstLine, true);
         $this->imgHandler($firstNew, $secondNew, $secondLine, true);
         $this->imgHandler($secondNew, $thirdNew, $thirdLine, true);
+        $this->imgHandler($thirdNew, $forthNew, $forthLine, true);
 
-        $this->OssApi->uploadImg('test/111.png', $thirdNew);
+        $this->OssApi->uploadImg('test/111.png', $forthNew);
 
         unlink($firstNew);
         unlink($secondNew);
         unlink($thirdNew);
+        unlink($forthNew);
 
         $this->_returnSuccess($this->OssApi->getSignedUrlForGettingObject('test/111.png'));
     }
