@@ -6,7 +6,7 @@ App({
   },
   onShow: function (r) {
     this.globalData.wx_config = r || {};
-    if (r.scene) {
+    if (!this.globalData.app_init) {
       service.userConfig(this);
     }
   },
