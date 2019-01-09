@@ -4,7 +4,7 @@
   <block wx:if="{{ detail.trip_id }}">
     <template is="passengerInfoBox" data="{{ detail: detail }}" />
     <view class='submit-wrap' wx:if="{{ !hide_share }}">
-      <button type='primary' bindtap='shareTopGroup' open-type="share">转发到拼车群</button>
+      <button type='primary' bindtap='shareTopGroup' open-type="share">发布到拼车群</button>
       <view class='info'>如果发布的拼车群还未加入管理，在群内点击你发布的行程，将拼车群加入管理。</view>
     </view>
   </block>
