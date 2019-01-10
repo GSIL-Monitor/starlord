@@ -9,7 +9,7 @@
     <text class="title">我的拼车群</text>
     <view class="list" wx:if="{{ list && list.length > 0 }}">
       <block wx:for-items="{{list}}" wx:key="{{item.id}}">
-        <navigator url="/pages/groupDetail/groupDetail?group_id={{item.group_id}}"  id="{{item.id}}" class="list-item">
+        <navigator url="/pages/groupDetail/groupDetail?group_id={{item.group_id}}" id="{{item.id}}" class="list-item">
           <view class="list-avatar">群</view>
           <view class="list-content">
             <open-data class="list-title" type="groupName" open-gid="{{ item.wx_gid }}"></open-data>

@@ -222,6 +222,11 @@ const updateUserCar = (data, callback) => {
   request('user/updateUserCar', data, callback);
 }
 
+/** 同意用户协议 */
+const updateUserAgreement = (callback) => {
+  request('user/updateUserAgreement', {}, callback);
+}
+
 /** 获取发布模板 */
 const getTemplateList = (callback) => {
   request('trip/getTemplateList', null, callback);
@@ -295,6 +300,7 @@ const parseDriverTripDetail = (responseData) => {
   }
 
   responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+  responseData.group_info = responseData.group_info ? JSON.parse(responseData.group_info) : [];
   responseData.markers = [];
   responseData.include_points = [];
   if (responseData.lbs_route_info) {
@@ -416,6 +422,7 @@ const parsePassengerTripDetail = (responseData) => {
     responseData.user_info = JSON.parse(responseData.user_info);
   }
   responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+  responseData.group_info = responseData.group_info ? JSON.parse(responseData.group_info) : [];
   if (responseData.lbs_route_info) {
     const points = parsePolyline(responseData.lbs_route_info);
     responseData.include_points = points || [];
@@ -529,6 +536,7 @@ module.exports = {
   login,
   getProfile,
   updateUserCar,
+  updateUserAgreement,
   userConfig,
   userCompleteUser,
   updateUserPhone,

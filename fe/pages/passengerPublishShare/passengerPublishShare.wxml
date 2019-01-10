@@ -6,7 +6,10 @@
     <block wx:if="{{ detail.trip_id }}">
       <template is="passengerInfoBox" data="{{ detail: detail }}" />
       <view class='submit-wrap'>
-        <button type='primary' bindtap='nativeBack'>查看本群所有行程</button>
+        <view class='share-info' wx:if="{{ !!share_page_info }}">{{ share_page_info }}</view>
+      </view>
+      <view class='fixed-bottom'>
+        <button class='fixed-button' type='primary' bindtap='nativeBack'>查看本群所有行程</button>
       </view>
     </block>
     <template is="emptyPage" data="{{ show: (!loading_data && !detail.trip_id), homepage: true }}" />

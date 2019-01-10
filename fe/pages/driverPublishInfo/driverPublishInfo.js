@@ -9,6 +9,8 @@ Page({
   data: {
     trip_id: null,
     user_id: null,
+    from_search: 0,
+    search_my: 0,
     loading_data: true,
     detail: {},
     hide_share: false,
@@ -26,6 +28,8 @@ Page({
     this.setData({
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
+      from_search: options.from_search == 1 ? 1 : 0,
+      search_my: options.search_my == 1 ? 1 : 0,
       hide_share: !!(options.hide_share == 1)
     });
   },
