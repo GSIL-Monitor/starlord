@@ -77,12 +77,12 @@ class Test extends CI_Controller
             'wm_text' => '2019-12-23 20:12',//这是开始时间
             'wm_type' => 'text',
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '24',
+            'wm_font_size' => '26',
             'wm_font_color' => '333333',
-            'wm_vrt_alignment' => 'middle',
+            'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '-46',
-            'wm_hor_offset' => '50',
+            'wm_vrt_offset' => '103',
+            'wm_hor_offset' => '69',
         );
 
         $secondLine = array(
@@ -90,12 +90,12 @@ class Test extends CI_Controller
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '20',
+            'wm_font_size' => '22',
             'wm_font_color' => '333333',
-            'wm_vrt_alignment' => 'middle',
+            'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '18',
-            'wm_hor_offset' => '50',
+            'wm_vrt_offset' => '160',
+            'wm_hor_offset' => '69',
         );
 
         $thirdLine = array(
@@ -103,25 +103,25 @@ class Test extends CI_Controller
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '20',
+            'wm_font_size' => '22',
             'wm_font_color' => '333333',
-            'wm_vrt_alignment' => 'bottom',
+            'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '-16',
-            'wm_hor_offset' => '50',
+            'wm_vrt_offset' => '216',
+            'wm_hor_offset' => '69',
         );
 
         $forthLine = array(
-            'wm_text' => '这是结束的位置名称',//显示结束的位置名称，需要用php截断字符长度
+            'wm_text' => '价格100, 座位5',//显示结束的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '20',
+            'wm_font_size' => '22',
             'wm_font_color' => '333333',
-            'wm_vrt_alignment' => 'bottom',
+            'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '-16',
-            'wm_hor_offset' => '50',
+            'wm_vrt_offset' => '269',
+            'wm_hor_offset' => '69',
         );
 
         $this->imgHandler($source, $firstNew, $firstLine, true);

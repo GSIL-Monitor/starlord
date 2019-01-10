@@ -18,6 +18,7 @@
               <view class='trip-item-label'>{{ item.start_location_name }}</view>
               <view class='trip-item-info'>{{ item.start_location_address }}</view>
             </view>
+            <view class='trip-line'></view>
           </view>
           <view class='trip-data-item'>
             <image class='trip-item-icon' src='/images/location_end.png' />
