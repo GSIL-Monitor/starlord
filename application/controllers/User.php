@@ -42,6 +42,7 @@ class User extends Base
                 'user_tip' => '发布行程时自动显示的手机号',    //我的资料编辑页面保存按钮下的文案
                 'contact' => '客服微信：pinchequnguanjia',        //联系客服页的内容
                 'share_page_info' => '行程已经成功绑定该群',
+                'agreement' => '用户协议',
             ),
             'switch' => array(
                 //'9999' => $user['is_valid'] == Config::USER_REG_IS_VALID ? 0 : 1,                    //正常进入页面功能or展示维护公告
