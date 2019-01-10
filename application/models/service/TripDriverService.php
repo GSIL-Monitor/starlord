@@ -85,7 +85,8 @@ class TripDriverService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripDriverDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        $trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
+
+        $trip['share_img_url'] = $this->getDriverTripImageUrl($trip['trip_id'], $trip['begin_date'], $trip['begin_time'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['price_total']);
 
         //插入用户信息快照
         $trip['user_info'] = json_encode(
@@ -182,59 +183,105 @@ class TripDriverService extends CI_Model
         return $tripsWithType;
     }
 
-    private function getDriverTripImageUrl($tripId, $startLocationName, $endLocationName, $priceEveryone, $priceTotal)
+    private function getDriverTripImageUrl($tripId, $beginDate, $beginTime, $startLocationName, $endLocationName, $priceEveryone, $priceTotal)
     {
         $this->load->model('api/OssApi');
 
-        $source = '/home/chuanhui/starlord/application/imgs/testpng.png';
+        $source = '/home/chuanhui/starlord/application/imgs/bg_driver.png';//车找人底图
         $firstNew = "/home/chuanhui/starlord/res/" . $tripId . "1.png";
         $secondNew = "/home/chuanhui/starlord/res/" . $tripId . "2.png";
         $thirdNew = "/home/chuanhui/starlord/res/" . $tripId . "3.png";
+        $forthNew = "/home/chuanhui/starlord/res/" . $tripId . "4.png";
 
+        $v = null;
+        if ($beginDate == Config::EVERYDAY_DATE) {
+            $v = '每天 ' . $beginTime;
+        } else {
+            $v = $beginDate . ' ' . $beginTime;
+        }
         $firstLine = array(
-            'wm_text' => $startLocationName,
+            'wm_text' => $v,//这是开始时间
             'wm_type' => 'text',
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
-            'wm_vrt_alignment' => 'bottom',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '20',
-        );
-
-        $secondLine = array(
-            'wm_text' => $endLocationName,
-            'wm_type' => 'text',
-            'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
-            'wm_vrt_alignment' => 'center',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '180',
-        );
-
-        $thirdLine = array(
-            'wm_text' => $priceEveryone . "/人，包车" . $priceTotal,
-            'wm_type' => 'text',
-            'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/songti.ttf',
-            'wm_font_size' => '150',
-            'wm_font_color' => 'ADFF2F',
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '26',
+            'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
-            'wm_hor_alignment' => 'center',
-            'wm_padding' => '340',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '103',
+            'wm_hor_offset' => '69',
+        );
+
+        $v = null;
+        if (mb_strlen($startLocationName) > Config::SHARE_LOC_NAME_LEN) {
+            $v = mb_substr($startLocationName, 0, Config::SHARE_LOC_NAME_LEN);
+            $v .= '...';
+        } else {
+            $v = $startLocationName;
+        }
+        $secondLine = array(
+            'wm_text' => $v,//显示开始的位置名称，需要用php截断字符长度
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '22',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'top',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '160',
+            'wm_hor_offset' => '69',
+        );
+
+        $v = null;
+        if (mb_strlen($endLocationName) > Config::SHARE_LOC_NAME_LEN) {
+            $v = mb_substr($endLocationName, 0, Config::SHARE_LOC_NAME_LEN);
+            $v .= '...';
+        } else {
+            $v = $endLocationName;
+        }
+        $thirdLine = array(
+            'wm_text' => $v,//显示结束的位置名称，需要用php截断字符长度
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '22',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'top',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '216',
+            'wm_hor_offset' => '69',
+        );
+
+        if(empty($priceEveryone)){
+            $priceEveryone = '面议';
+        }
+        if(empty($priceTotal)){
+            $peopleNum = '面议';
+        }
+        $v = '价格：' . $priceEveryone . '元/每人  包车：' . $priceTotal . '元';
+        $forthLine = array(
+            'wm_text' => $v,//显示结束的位置名称，需要用php截断字符长度
+            'wm_type' => 'text',
+            'wm_x_transp' => 0,
+            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_size' => '22',
+            'wm_font_color' => '333333',
+            'wm_vrt_alignment' => 'top',
+            'wm_hor_alignment' => 'left',
+            'wm_vrt_offset' => '269',
+            'wm_hor_offset' => '69',
         );
 
         $this->imgHandler($source, $firstNew, $firstLine, true);
         $this->imgHandler($firstNew, $secondNew, $secondLine, true);
         $this->imgHandler($secondNew, $thirdNew, $thirdLine, true);
+        $this->imgHandler($thirdNew, $forthNew, $forthLine, true);
 
         $this->OssApi->uploadImg('test/' . $tripId . '.png', $thirdNew);
 
         unlink($firstNew);
         unlink($secondNew);
         unlink($thirdNew);
+        unlink($forthNew);
 
         return $this->OssApi->getSignedUrlForGettingObject('test/' . $tripId . '.png');
     }

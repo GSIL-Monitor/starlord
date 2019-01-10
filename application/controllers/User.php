@@ -49,7 +49,7 @@ class User extends Base
                 '9999' => 0,                    //正常进入页面功能or展示维护公告
                 '9999_context' => "维护中，预计12：00开放使用，非常抱歉。",                    //正常进入页面功能or展示维护公告
                 'search_all_group' => Config::SEARCH_ALL,            //搜索页展示是否跨群选项or写死文案只能群内搜索
-                'show_agreement' => $user['show_agreement'],        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否
+                'show_agreement' => 1,        //是否展示安全协议，当读完安全协议后，需要在服务端user表内和本地都置为否
                 'trip_publish_to_all_group' => 0,        //如果非空，值为发布选择群上面的提示文案，如果为空发布时候不弹出选择群
             ),
         );

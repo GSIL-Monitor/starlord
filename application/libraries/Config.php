@@ -13,8 +13,8 @@ class Config
     const USER_AUDIT_STATUS_FAIL = 0;
 
     //用户查看安全协议
-    const USER_HAS_READ = 1;
-    const USER_HAS_NOT_READ = 0;
+    const USER_HAS_READ = 0;
+    const USER_HAS_NOT_READ = 1;
 
     //开始业务
     const USER_REG_IS_VALID = 1;
@@ -65,4 +65,6 @@ class Config
     //行程是否是每天的行程
     const TRIP_HAPPENS_EVERYDAY = 1;
     const TRIP_HAPPENS_ONCE = 0;
+
+    const SHARE_LOC_NAME_LEN = 13;
 }
