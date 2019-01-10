@@ -259,12 +259,21 @@ Page({
         }
       }
 
-      self.setData({
-        loading_submit: true
-      });
       if (submitType == 'publish') {
+        if (profile && profile.show_agreement == 1) {
+          wx.navigateTo({
+            url: '/pages/agreement/agreement',
+          });
+          return;
+        }
+        self.setData({
+          loading_submit: true
+        });
         service.passengerPublish(params, callback);
       } else {
+        self.setData({
+          loading_submit: true
+        });
         service.passengerSave(params, callback);
       }
     }

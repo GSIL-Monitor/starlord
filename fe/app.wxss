@@ -196,12 +196,12 @@ textarea.text-input {
   display: block;
   float: left;
 }
-.trip-tags-wrap, .trip-group-wrap {
+.trip-tags-wrap {
   flex: 1;
   margin-top: 6rpx;
   overflow: hidden;
 }
-.trip-tag, .trip-group {
+.trip-tag {
   display: block;
   float: left;
   color: #fff;
@@ -217,18 +217,20 @@ textarea.text-input {
   margin-top: 4px;
 }
 .trip-group-wrap {
-  margin-top: -1rpx;
+  overflow: hidden;
+}
+.trip-group-label {
+  display: block;
+  float: left;
 }
 .trip-group {
-  border: none;
+  display: block;
+  float: left;
   color: #3cc51f;
-  line-height: 50rpx;
-  height: 50rpx;
-  padding: 0 8rpx;
-  background: none;
-  font-size: 30rpx;
-  margin: 0;
+  text-decoration: underline;
+  margin-left: 10px;
 }
+
 .trip-hl {
   color: #333;
   padding-right: 6rpx;

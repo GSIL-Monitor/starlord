@@ -1,5 +1,6 @@
 <import src="./driverPrice.wxml"/>
 <import src="./tripMap.wxml"/>
+<import src="./tripGroupInfo.wxml"/>
 <template name="driverInfoBox">
   <template is="tripMap" data="{{ detail: detail }}" />
   <view class='list list-trip-info'>
@@ -81,20 +82,7 @@
         </view>
       </view>
     </view>
-    <view class='list-item' wx:if="{{false}}">
-      <view class='list-content'>
-        <view class='trip-data-item'>
-          <image class='trip-item-icon' src='/images/users.png' />
-          <view class='trip-item-value'>
-            <text class='trip-hl'>来自拼车群:</text>
-            <view class='trip-group-wrap'>
-              <navigator class='trip-group' url='/pages/groupDetail/groupDetail'>拼车群1</navigator>
-              <navigator class='trip-group' url='/pages/groupDetail/groupDetail'>拼车群2</navigator>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
+    <template is="tripGroupInfo" data="{{ detail: detail, from_search: from_search, search_my: search_my }}" />
     <view class='list-item'>
       <view class='list-trip-avatar'>
         <image class='list-avatar-image' src='{{ detail.user_info.avatar_url }}' wx:if="{{detail.user_info && detail.user_info.avatar_url}}" />

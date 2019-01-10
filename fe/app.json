@@ -22,7 +22,8 @@
     "pages/groupNotice/groupNotice",
     "pages/groupOwnerTip/groupOwnerTip",
     "pages/groupDetail/groupDetail",
-    "pages/9999/9999"
+    "pages/9999/9999",
+    "pages/agreement/agreement"
   ],
   "window": {
     "backgroundTextStyle": "dark",
