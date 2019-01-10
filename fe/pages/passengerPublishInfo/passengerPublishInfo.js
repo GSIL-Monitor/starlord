@@ -93,12 +93,12 @@ Page({
   onShareAppMessage: function () {
     const { user_config } = app.globalData;
     const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
-    const { trip_id, user_id } = self.data;
+    const { trip_id, user_id, detail } = self.data;
 
     return {
       title: share_title,
       path: `/pages/passengerPublishShare/passengerPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
-      imageUrl: 'http://starlord-trip-prod.oss-cn-beijing.aliyuncs.com/test/111.png?OSSAccessKeyId=LTAI7FqpQmEvcZi7&Expires=1546968955&Signature=pfYSTRnyc6tapjc4%2BkGDt%2FJXyE8%3D'
+      imageUrl: (detail && detail.share_img_url) ? detail.share_img_url : null
     };
   },
 

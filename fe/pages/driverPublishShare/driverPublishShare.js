@@ -11,7 +11,8 @@ Page({
     user_id: null,
     detail: {},
     loading_data: true,
-    app_init: false
+    app_init: false,
+    share_page_info: null
   },
 
   /**
@@ -42,7 +43,8 @@ Page({
   onShow: function () {
     self.setData({
       loading_data: true,
-      app_init: app.globalData.app_init || false
+      app_init: app.globalData.app_init || false,
+      share_page_info: (app.globalData.user_config && app.globalData.user_config.docoment) ? app.globalData.user_config.docoment.share_page_info : null
     });
     wx.startPullDownRefresh();
   },
