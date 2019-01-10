@@ -102,7 +102,8 @@ Page({
 
   loadProfile: () => {
     self.setData({
-      loading_profile: true
+      loading_profile: true,
+      profile: app.globalData.profile || {},
     });
     service.getProfile(app, (success, data) => {
       self.setData({

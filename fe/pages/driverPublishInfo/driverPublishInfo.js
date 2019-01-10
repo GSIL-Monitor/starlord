@@ -112,5 +112,11 @@ Page({
   },
   shareTopGroup: function () {
     
-  }
+  },
+  onClipboard: (e) => {
+    const { content } = e.currentTarget.dataset;
+    wx.setClipboardData({
+      data: content,
+    })
+  },
 })
