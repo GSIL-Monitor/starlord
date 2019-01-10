@@ -5,7 +5,11 @@
     <template is="passengerInfoBox" data="{{ detail: detail, from_search: from_search, search_my: search_my }}" />
     <view class='submit-wrap' wx:if="{{ !hide_share }}">
       <button type='primary' bindtap='shareTopGroup' open-type="share">发布到拼车群</button>
-      <view class='info'>如果发布的拼车群还未加入管理，在群内点击你发布的行程，将拼车群加入管理。</view>
+      <view class='info'>{{ docoment.share_tip }}</view>
+      <block wx:if="{{ from_publish == 1 }}">
+        <navigator open-type="navigateBack"><button>发布完成</button></navigator>
+        <view class='info'>{{ docoment.publish_finish_tip }}</view>
+      </block>
     </view>
   </block>
   <template is="emptyPage" data="{{ show: (!loading_data && !detail.trip_id), homepage: true }}" />

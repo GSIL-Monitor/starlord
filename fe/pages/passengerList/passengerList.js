@@ -9,9 +9,11 @@ Page({
   data: {
     list: {
       trips: [],
-      has_next: false
+      has_next: false,
+      page: 0,
     },
     loading: false,
+    loading_more: false,
     params: {}
   },
 
@@ -65,7 +67,10 @@ Page({
       wx.stopPullDownRefresh();
       self.setData({
         loading: false,
-        list: success ? data : []
+        list: {
+          ...data,
+          page: 0,
+        }
       });
     });
   },
@@ -89,4 +94,27 @@ Page({
       phoneNumber: phone,
     });
   },
+
+  loadMore: () => {
+    const { loading_more, loading, list } = self.data;
+    const page = list.page + 1;
+    if (loading_more || loading) return;
+
+    self.setData({ loading_more: true });
+    service.passengerSearch({
+      ...self.data.params,
+      page
+    }, (success, data) => {
+      self.setData({ loading_more: false });
+      if (success) {
+        self.setData({
+          list: {
+            trips: list.trips.concat(data.trips),
+            has_next: data.has_next,
+            page: page
+          }
+        });
+      }
+    });
+  }
 })

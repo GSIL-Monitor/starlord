@@ -248,7 +248,7 @@ Page({
           });
           if (submitType == 'publish') {
             wx.redirectTo({
-              url: `/pages/driverPublishInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}&user_id=${tripInfo.user_id}&user_id=${tripInfo.user_id}`,
+              url: `/pages/driverPublishInfo/driverPublishInfo?trip_id=${tripInfo.trip_id}&user_id=${tripInfo.user_id}&from_publish=1`,
             });
           } else {
             wx.navigateBack({

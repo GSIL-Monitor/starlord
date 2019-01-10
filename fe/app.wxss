@@ -361,3 +361,16 @@ textarea.text-input {
   white-space:nowrap;
   margin-left: 18px;
 }
+
+.more-data-wrap {
+  padding: 12px 24px;
+  text-align: center;
+  line-break: 24px;
+}
+.more-btn {
+  display: inline-block;
+  color: #444;
+}
+.no-more-text, .more-loading-data {
+  color: #999;
+}

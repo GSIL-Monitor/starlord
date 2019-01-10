@@ -2,6 +2,7 @@
 <import src="/common/driverPrice.wxml"/>
 <import src="/common/pageLoading.wxml"/>
 <import src="/common/emptyPage.wxml"/>
+<import src="/common/more.wxml"/>
 <view class='page'>
   <view class='tab-navBar'>
     <block wx:for="{{tabs}}" wx:key="{{index}}">
@@ -62,6 +63,7 @@
               </navigator>
             </block>
           </view>
+          <template is="more" data="{{ loading: loading_driver || loading_more_driver, param: 'driver', data: driverTrips.trips, has_next: driverTrips.has_next }}" />
         </scroll-view>
       </swiper-item>
       <swiper-item class="tab-swiper-item">
@@ -117,6 +119,7 @@
               </navigator>
             </block>
           </view>
+          <template is="more" data="{{ loading: loading_passenger || loading_more_passenger, param: 'passenger', data: passengerTrips.trips, has_next: passengerTrips.has_next }}" />
         </scroll-view>
       </swiper-item>
     </swiper>

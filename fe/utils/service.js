@@ -361,8 +361,8 @@ const driverGetDetailByTripId = (data, callback) => {
     callback(success, responseData);
   });
 }
-const driverGetMyList = (callback) => {
-  request('trip/driverGetMyList', null, (success, data) => {
+const driverGetMyList = (params, callback) => {
+  request('trip/driverGetMyList', params, (success, data) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
@@ -483,8 +483,8 @@ const passengerGetDetailByTripId = (data, callback) => {
     callback(success, responseData);
   });
 }
-const passengerGetMyList = (callback) => {
-  request('trip/passengerGetMyList', null, (success, data) => {
+const passengerGetMyList = (params, callback) => {
+  request('trip/passengerGetMyList', params, (success, data) => {
     if (success && data && data.trips && data.trips.length > 0) {
       data.trips = data.trips.map(item => {
         item.begin_time = moment(`${item.begin_date} ${item.begin_time}`).format('LT');
