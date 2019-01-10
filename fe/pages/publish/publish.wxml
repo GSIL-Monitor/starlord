@@ -8,8 +8,8 @@
     <block wx:for-items="{{templates}}" wx:key="{{item.id}}">
       <view id="{{index}}" class="list-item" hover-class='ontap' data-tripid='{{item.trip_id}}' data-userid='{{item.user_id}}' data-page="{{ item.trip_type == 1 ? 'passengerPublish' : 'driverPublish' }}" bindtap='goPage'>
         <view class='data-item data-item-title'>
-          <image class='item-icon' src='/images/profile_HL.png' />
-          <text class='item-value item-value-hl'>{{ item.trip_type == 1 ? '人找车' : '车找人' }}</text>
+          <image class='item-icon' src='/images/{{ item.trip_type == 1 ? "Profile Hili.png" : "car_HL.png" }}' />
+          <text class='item-value item-value-hl {{ item.trip_type == 1 ? "item-value-passenger" : "item-value-driver" }}'>{{ item.trip_type == 1 ? '人找车' : '车找人' }}</text>
           <view class='item-btn' data-tripid='{{item.trip_id}}' data-tripType='{{item.trip_type}}' catchtap='onDeleteTemplate' hover-class='ontap'>删除</view>
         </view>
         <view class='data-item'>

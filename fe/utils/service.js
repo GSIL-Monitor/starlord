@@ -254,19 +254,29 @@ const unTopOneTrip = (data, callback) => {
 
 /** 获取分享群的信息 */
 const getTripDetailInSharePage = (data, callback) => {
+  const makeRequest = (params) => {
+    params = params || {};
+    request('trip/getTripDetailInSharePage', {
+      user_id: data.user_id,
+      trip_id: data.trip_id,
+      trip_type: data.trip_type,
+      ...params,
+    }, callback);
+  }
   const successCb = (r) => {
     if (r.errMsg == 'getShareInfo:ok') {
       const params = {
         iv: r.iv,
         encryptedData: r.encryptedData,
-        user_id: data.user_id,
-        trip_id: data.trip_id,
-        trip_type: data.trip_type,
       };
-      request('trip/getTripDetailInSharePage', params, callback);
+      makeRequest(params);
+    } else {
+      makeRequest();
     }
+    request('trip/getTripDetailInSharePage', params, callback);
   }
-  wx.getShareInfo({ shareTicket: data.shareTicket, success: successCb });
+
+  wx.getShareInfo({ shareTicket: data.shareTicket, success: successCb, fail: makeRequest });
 }
 
 /**
@@ -285,15 +295,17 @@ const parseDriverTripDetail = (responseData) => {
   }
 
   responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
+  responseData.markers = [];
+  responseData.include_points = [];
   if (responseData.lbs_route_info) {
+    const points = parsePolyline(responseData.lbs_route_info);
+    responseData.include_points = points || [];
     responseData.polyline = [{
-      points: parsePolyline(responseData.lbs_route_info),
+      points: points,
       width: 4,
       color: '#3cc51f'
     }];
   }
-  responseData.markers = [];
-  responseData.include_points = [];
   if (responseData.start_location_point) {
     const start_location_point = JSON.parse(responseData.start_location_point);
     if (start_location_point.length == 2) {
@@ -305,10 +317,6 @@ const parseDriverTripDetail = (responseData) => {
         width: 30,
         height: 30,
         anchor: { x: 0.5, y: 0.5 }
-      });
-      responseData.include_points.push({
-        longitude: start_location_point[1],
-        latitude: start_location_point[0],
       });
     }
   }
@@ -324,11 +332,11 @@ const parseDriverTripDetail = (responseData) => {
         height: 30,
         anchor: { x: 0.5, y: 0.5 }
       });
-      responseData.include_points.push({
-        longitude: end_location_point[1],
-        latitude: end_location_point[0],
-      });
     }
+  }
+
+  if (responseData.include_points.length == 0) {
+    responseData.include_points = responseData.markers;
   }
   return responseData;
 }
@@ -409,8 +417,10 @@ const parsePassengerTripDetail = (responseData) => {
   }
   responseData.begin_time = moment(`${responseData.begin_date} ${responseData.begin_time}`).format('LT');
   if (responseData.lbs_route_info) {
+    const points = parsePolyline(responseData.lbs_route_info);
+    responseData.include_points = points || [];
     responseData.polyline = [{
-      points: parsePolyline(responseData.lbs_route_info),
+      points: points,
       width: 4,
       color: '#3cc51f'
     }];
@@ -429,10 +439,6 @@ const parsePassengerTripDetail = (responseData) => {
         height: 30,
         anchor: { x: 0.5, y: 0.5 }
       });
-      responseData.include_points.push({
-        longitude: start_location_point[1],
-        latitude: start_location_point[0],
-      });
     }
   }
   if (responseData.end_location_point) {
@@ -447,11 +453,11 @@ const parsePassengerTripDetail = (responseData) => {
         height: 30,
         anchor: { x: 0.5, y: 0.5 }
       });
-      responseData.include_points.push({
-        longitude: end_location_point[1],
-        latitude: end_location_point[0],
-      });
     }
+  }
+
+  if (responseData.include_points.length == 0) {
+    responseData.include_points = responseData.markers;
   }
   return responseData;
 }
