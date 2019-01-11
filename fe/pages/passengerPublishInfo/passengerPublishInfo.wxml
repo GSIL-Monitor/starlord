@@ -7,7 +7,7 @@
       <button type='primary' bindtap='shareTopGroup' open-type="share">发布到拼车群</button>
       <view class='info'>{{ docoment.share_tip }}</view>
       <block wx:if="{{ from_publish == 1 }}">
-        <navigator open-type="navigateBack"><button>发布完成</button></navigator>
+        <navigator open-type="navigateBack"><button type='primary'>发布完成</button></navigator>
         <view class='info'>{{ docoment.publish_finish_tip }}</view>
       </block>
     </view>
