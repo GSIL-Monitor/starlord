@@ -2,6 +2,7 @@
 <import src="/common/passengerPrice.wxml"/>
 <import src="/common/driverPrice.wxml"/>
 <import src="/common/pageLoading.wxml"/>
+<import src="/common/more.wxml"/>
 <view class='page'>
   <view class="group-wrap">
     <view class="group-data">
@@ -90,6 +91,7 @@
 
     </block>
     <template is="emptyPage" data="{{ show: !driver_loading && driverTrips.trips.length == 0 }}" />
+    <template is="more" data="{{ loading: driver_loading || driver_more_loading, param: 'driver', data: driverTrips.trips, has_next: driverTrips.has_next }}" />
   </view>
   <view class='list' wx:if="{{ currentTab == 1 }}">
     <template is="pageLoading" data="{{ hide_progress: true, loading:passenger_loading }}" />
@@ -151,5 +153,6 @@
 
     </block>
     <template is="emptyPage" data="{{ show: !passenger_loading && passengerTrips.trips.length == 0 }}" />
+    <template is="more" data="{{ loading: passenger_loading || passenger_more_loading, param: 'passenger', data: passengerTrips.trips, has_next: passengerTrips.has_next }}" />
   </view>
 </view>
