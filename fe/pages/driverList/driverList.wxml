@@ -1,5 +1,6 @@
 <import src="/common/driverPrice.wxml"/>
 <import src="/common/emptyPage.wxml"/>
+<import src="/common/more.wxml"/>
 <view class='page'>
   <view class='list'>
     <block wx:for-items="{{list.trips}}" wx:key="{{item.id}}">
@@ -50,4 +51,5 @@
     </block>
   </view>
   <template is="emptyPage" data="{{ show: !loading && list.trips.length == 0 }}" />
+  <template is="more" data="{{ loading: loading || loading_more, data: list.trips, has_next: list.has_next }}" />
 </view>

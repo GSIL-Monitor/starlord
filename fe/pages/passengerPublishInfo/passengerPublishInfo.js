@@ -14,6 +14,7 @@ Page({
     loading_data: true,
     detail: {},
     hide_share: false,
+    docoment: app.globalData.user_config.docoment
   },
 
   /**
@@ -30,7 +31,9 @@ Page({
       user_id: options.user_id || null,
       from_search: options.from_search == 1 ? 1 : 0,
       search_my: options.search_my == 1 ? 1 : 0,
-      hide_share: !!(options.hide_share == 1)
+      from_publish: options.from_publish == 1 ? 1 : 0,
+      hide_share: !!(options.hide_share == 1),
+      docoment: app.globalData.user_config.docoment
     });
   },
 
@@ -114,5 +117,11 @@ Page({
   },
   shareTopGroup: function () {
 
-  }
+  },
+  onClipboard: (e) => {
+    const { content } = e.currentTarget.dataset;
+    wx.setClipboardData({
+      data: content,
+    })
+  },
 })

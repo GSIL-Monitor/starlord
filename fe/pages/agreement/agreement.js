@@ -75,6 +75,7 @@ Page({
     service.updateUserAgreement((success) => {
       self.setData({ loading: false });
       if (success) {
+        app.globalData.profile.show_agreement = 0;
         wx.navigateBack();
       }
     });

@@ -11,14 +11,18 @@ Page({
     currentTab: 0,
     contentHeight: 0,
     loading_passenger: false,
+    loading_more_passenger: false,
     loading_driver: false,
+    loading_more_driver: false,
     driverTrips: {
       trips: [],
-      has_next: false
+      has_next: false,
+      page: 0,
     },
     passengerTrips: {
       trips: [],
-      has_next: false
+      has_next: false,
+      page: 0,
     },
   },
 
@@ -34,6 +38,7 @@ Page({
         });
       }
     });
+    self.loadData();
   },
 
   /**
@@ -47,7 +52,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    self.loadData();
   },
 
   /**
@@ -86,13 +90,37 @@ Page({
   },
 
   passengerGetMyList: () => {
-    if (self.data.loading_passenger) return;
+    const { loading_passenger } = self.data;
+    if (loading_passenger) return;
+
     self.setData({ loading_passenger: true });
-    service.passengerGetMyList((success, data) => {
+    service.passengerGetMyList(null, (success, data) => {
       self.setData({ loading_passenger: false });
       if (success) {
         self.setData({
-          passengerTrips: data
+          passengerTrips: {
+            ...data,
+            page: 0,
+          }
+        });
+      }
+    });
+  },
+  passengerGetMoreMyList: () => {
+    const { loading_more_passenger, loading_passenger, passengerTrips } = self.data;
+    const page = passengerTrips.page + 1;
+    if (loading_more_passenger || loading_passenger) return;
+
+    self.setData({ loading_more_passenger: true });
+    service.passengerGetMyList({ page: page }, (success, data) => {
+      self.setData({ loading_more_passenger: false });
+      if (success) {
+        self.setData({
+          passengerTrips: {
+            trips: passengerTrips.trips.concat(data.trips),
+            has_next: data.has_next,
+            page: page,
+          }
         });
       }
     });
@@ -100,11 +128,34 @@ Page({
   driverGetMyList: () => {
     if (self.data.loading_driver) return;
     self.setData({ loading_driver: true });
-    service.driverGetMyList((success, data) => {
+    service.driverGetMyList(null, (success, data) => {
       self.setData({ loading_driver: false });
       if (success) {
         self.setData({
-          driverTrips: data
+          driverTrips: {
+            ...data,
+            page: 0,
+          }
+        });
+      }
+    });
+  },
+
+  driverGetMoreMyList: () => {
+    const { loading_more_driver, loading_driver, driverTrips } = self.data;
+    const page = driverTrips.page + 1;
+    if (loading_more_driver || loading_driver) return;
+
+    self.setData({ loading_more_driver: true });
+    service.driverGetMyList({ page: page }, (success, data) => {
+      self.setData({ loading_more_driver: false });
+      if (success) {
+        self.setData({
+          driverTrips: {
+            trips: driverTrips.trips.concat(data.trips),
+            has_next: data.has_next,
+            page: page
+          }
         });
       }
     });
@@ -174,5 +225,14 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone,
     });
+  },
+
+  loadMore: (e) => {
+    const { param } = e.currentTarget.dataset;
+    if (param == 'passenger') {
+      self.passengerGetMoreMyList();
+    } else if (param == 'driver') {
+      self.driverGetMoreMyList();
+    }
   },
 })

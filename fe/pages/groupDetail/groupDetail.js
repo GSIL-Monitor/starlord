@@ -14,14 +14,18 @@ Page({
     currentTab: 0,
     driverTrips: {
       trips: [],
-      has_next: false
+      has_next: false,
+      page: 0,
     },
     passengerTrips: {
       trips: [],
-      has_next: false
+      has_next: false,
+      page: 0,
     },
     driver_loading: false,
+    driver_more_loading: false,
     passenger_loading: false,
+    passenger_more_loading: false,
   },
 
   /**
@@ -110,7 +114,10 @@ Page({
       service.driverGetListByGroupId({ group_id }, (success, data) => {
         self.setData({
           driver_loading: false,
-          driverTrips: data
+          driverTrips: {
+            ...data,
+            page: 0,
+          }
         });
       });
     } else if (self.data.currentTab == 1) {
@@ -120,7 +127,10 @@ Page({
       service.passengerGetListByGroupId({ group_id }, (success, data) => {
         self.setData({
           passenger_loading: false,
-          passengerTrips: data
+          passengerTrips: {
+            ...data,
+            page: 0,
+          }
         });
       });
     }
@@ -199,5 +209,55 @@ Page({
     };
 
     func(params, callback);
+  },
+
+  loadMoreDriver: () => {
+    const { driver_loading, driver_more_loading, driverTrips, params } = self.data;
+    const { group_id } = params;
+    const page = driverTrips.page + 1;
+    if (driver_loading || driver_more_loading) return;
+
+    self.setData({ driver_more_loading: true });
+    service.driverGetListByGroupId({ group_id, page }, (success, data) => {
+      self.setData({ driver_more_loading: false });
+      if (success) {
+        self.setData({
+          driverTrips: {
+            trips: driverTrips.trips.concat(data.trips),
+            has_next: data.has_next,
+            page: page
+          }
+        });
+      }
+    });
+  },
+  loadMorePassenger: () => {
+    const { passenger_loading, passenger_more_loading, passengerTrips, params } = self.data;
+    const { group_id } = params;
+    const page = passengerTrips.page + 1;
+    if (passenger_loading || passenger_more_loading) return;
+
+    self.setData({ passenger_more_loading: true });
+    service.passengerGetListByGroupId({ group_id, page }, (success, data) => {
+      self.setData({ passenger_more_loading: false });
+      if (success) {
+        self.setData({
+          passengerTrips: {
+            trips: passengerTrips.trips.concat(data.trips),
+            has_next: data.has_next,
+            page: page
+          }
+        });
+      }
+    });
+  },
+
+  loadMore: (e) => {
+    const { param } = e.currentTarget.dataset;
+    if (param == 'passenger') {
+      self.loadMorePassenger();
+    } else if (param == 'driver') {
+      self.loadMoreDriver();
+    }
   },
 })
