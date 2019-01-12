@@ -17,7 +17,7 @@
           <template is="emptyPage" data="{{ show: !loading_driver && driverTrips.trips.length == 0 }}" />
           <view class='list'>
             <block wx:for-items="{{driverTrips.trips}}" wx:key="{{item.id}}">
-              <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}" id="{{item.id}}" class="list-item">
+              <navigator url="/pages/driverPublishInfo/driverPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&is_hide_user=true" id="{{item.id}}" class="list-item">
                 <view class='list-content'>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
@@ -52,7 +52,7 @@
               </navigator>
             </block>
           </view>
-          <template is="more" data="{{ loading: loading_driver || loading_more_driver, param: 'driver', data: driverTrips.trips, has_next: driverTrips.has_next }}" />
+          <template is="more" data="{{ loading: loading_driver || loading_more_driver, param: 'driver', data: driverTrips.trips, has_next: driverTrips.has_next, my_trips: true }}" />
         </scroll-view>
       </swiper-item>
       <swiper-item class="tab-swiper-item">
@@ -62,7 +62,7 @@
           <view class='list'>
             <block wx:for-items="{{passengerTrips.trips}}" wx:key="{{item.id}}">
               <navigator
-                url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}"  id="{{item.id}}" class="list-item">
+                url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&is_hide_user=true"  id="{{item.id}}" class="list-item">
                 <view class='list-content'>
                   <view class='trip-data-item'>
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
@@ -97,7 +97,7 @@
               </navigator>
             </block>
           </view>
-          <template is="more" data="{{ loading: loading_passenger || loading_more_passenger, param: 'passenger', data: passengerTrips.trips, has_next: passengerTrips.has_next }}" />
+          <template is="more" data="{{ loading: loading_passenger || loading_more_passenger, param: 'passenger', data: passengerTrips.trips, has_next: passengerTrips.has_next, my_trips: true }}" />
         </scroll-view>
       </swiper-item>
     </swiper>

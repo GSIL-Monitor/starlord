@@ -94,7 +94,8 @@ const request = (uri, data, callback, myOptions = {}) => {
     fail () {
       wx.showToast({
         title: '请求错误，请重试',
-        icon: 'none'
+        icon: 'none',
+        duration: 2500
       });
       callback(false);
     }
@@ -283,7 +284,8 @@ const getTripDetailInSharePage = (data, callback) => {
     } else {
       makeRequest();
     }
-    request('trip/getTripDetailInSharePage', params, callback);
+    // todo 这个请求应该是封装在makeRequest()了，请确认
+    // request('trip/getTripDetailInSharePage', params, callback);
   }
 
   wx.getShareInfo({ shareTicket: data.shareTicket, success: successCb, fail: makeRequest });

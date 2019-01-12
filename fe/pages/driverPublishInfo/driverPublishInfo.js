@@ -17,8 +17,8 @@ Page({
     hide_share: false,
     need_publish_guide: 0,
     docoment: app.globalData.user_config.docoment,
+    is_hide_user: false,
     isModalVisible: false,
-    isShared: false,
   },
 
   /**
@@ -37,6 +37,7 @@ Page({
       search_my: options.search_my == 1 ? 1 : 0,
       from_publish: options.from_publish ==1 ? 1 : 0,
       hide_share: !!(options.hide_share == 1),
+      is_hide_user: options.is_hide_user || false,
       profile: app.globalData.profile || {},
       need_publish_guide: app.globalData.profile ? app.globalData.profile.need_publish_guide : 0,
       docoment: app.globalData.user_config.docoment
@@ -129,7 +130,7 @@ Page({
     }
   },
   onIKnow: function() {
-    self.setData({isModalVisible: false, isShared: true});
+    self.setData({isModalVisible: false});
     service.updateUserPublishGuide((success) => {
       if (success) {
         self.loadProfile();

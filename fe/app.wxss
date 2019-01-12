@@ -23,6 +23,10 @@ input {
   width: 100%;
 }
 
+.center {
+  text-align: center!important;
+}
+
 /* common text style */
 .text-disable {
   color: #999;
