@@ -43,7 +43,7 @@ class User extends Base
                 ),                //拼车群tab上的公告
                 'group_page_info' => '列表和你的微信群一一对应',
                 'adopt' => '如果您是本群群主，请加客服（微信号：pinchequnguanjia）,成为该群管理员；<br />ps：群主同意的情况下，其他成员也可以担任管理员。<br />管理员福利：发布公告，置顶群内行程，微信群拉新~更多功能开发中',        //没有群主的群的认领文案
-                'faq' => '关于我们',                //没有拼车群的时候展现的使用说明，同时也是”我的“中”关于我们“的内容
+                'faq' => '关于我们 用户协议<br />xxxxxxx',                //没有拼车群的时候展现的使用说明，同时也是”我的“中”关于我们“的内容
                 'platform_info' => '目前共有' . $totalGroupNum . '个群使用【拼车群管家】管理，共有' . $totalTripNum . '个有效行程',    //搜索页上方的平台信息，说明现在平台有x个微信群，y个行程
                 'search_tip' => '可以搜索到所有通过【拼车群管家】发布到拼车群的行程',        //搜索页搜索按钮下面的提示信息
                 'group_owner_info' => '在拼车群内点击任一拼车群管家的分享行程，即可在我的拼车群列表中添加该群',        //群主信息
@@ -53,9 +53,9 @@ class User extends Base
                 'share_tip' => '发布之后，请在群内点击下自己发布的行程，将行程和群进行绑定',    //发布到拼车群按钮下的文案
                 'car_tip' => '发布行程时自动显示的车辆信息',        //我的车辆编辑页面保存按钮下的文案
                 'user_tip' => '发布行程时自动显示的手机号',    //我的资料编辑页面保存按钮下的文案
-                'contact' => '客服微信：pinchequnguanjia',        //联系客服页的内容
+                'contact' => '用户协议<br />xxxxxxx客服微信：pinchequnguanjia',        //联系客服页的内容
                 'share_page_info' => '行程已经成功绑定该群',
-                'agreement' => '用户协议',
+                'agreement' => '用户协议<br />xxxxxxx',
             ),
             'switch' => array(
                 //'9999' => $user['is_valid'] == Config::USER_REG_IS_VALID ? 0 : 1,                    //正常进入页面功能or展示维护公告
