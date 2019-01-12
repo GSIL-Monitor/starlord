@@ -23,7 +23,8 @@
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
                       <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
-                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="driver">取消行程</view>
+                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="driver" wx:if="{{item.is_expired == 0}}">取消行程</view>
+                      <view class='text-disable' wx:else>已过期</view>
                     </view>
                   </view>
                   <view class='trip-data-item'>
@@ -47,18 +48,6 @@
                       <template is="driverPrice" data="{{ detail: item }}" />
                     </view>
                   </view>
-                  <view class='list-item list-item-user'>
-                    <view class='list-trip-avatar'>
-                      <image class='list-avatar-image' src='{{ item.user_info.avatar_url }}' wx:if="{{item.user_info && item.user_info.avatar_url}}" />
-                      <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!item.user_info || !item.user_info.avatar_url}}" />
-                    </view>
-                    <view class='list-content' wx:if="{{ item.user_info && item.user_info.nick_name }}">
-                      {{ item.user_info.nick_name }} | {{ item.user_info.phone }}
-                    </view>
-                    <view class='list-extra'>
-                      <button plain size='mini' type='primary' class='list-trip-btn' catchtap='makeCall' data-phone='{{ item.user_info.phone }}' wx:if="{{ item.user_info && item.user_info.phone }}">拨号</button>
-                    </view>
-                  </view>
                 </view>
               </navigator>
             </block>
@@ -79,7 +68,8 @@
                     <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
                     <view class='trip-item-value trip-date'>
                       <view class='trip-date-value'>{{item.is_everyday == 1 ? '每天' : item.begin_date}} {{ item.begin_time }}</view>
-                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="passenger">取消行程</view>
+                      <view class='trip-list-btn' hover-class='ontap' catchtap='onCancelTrip' data-tripid="{{ item.trip_id }}" data-triptype="passenger" wx:if="{{item.is_expired == 0}}">取消行程</view>
+                      <view class='text-disable' wx:else>已过期</view>
                     </view>
                   </view>
                   <view class='trip-data-item'>
@@ -101,18 +91,6 @@
                     <image class='trip-item-icon' src='/images/price.png' />
                     <view class='trip-item-value'>
                       <template is="passengerPrice" data="{{ detail: item }}" />
-                    </view>
-                  </view>
-                  <view class='list-item list-item-user'>
-                    <view class='list-trip-avatar'>
-                      <image class='list-avatar-image' src='{{ item.user_info.avatar_url }}' wx:if="{{item.user_info && item.user_info.avatar_url}}" />
-                      <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!item.user_info || !item.user_info.avatar_url}}" />
-                    </view>
-                    <view class='list-content' wx:if="{{ item.user_info && item.user_info.nick_name }}">
-                      {{ item.user_info.nick_name }} | {{ item.user_info.phone }}
-                    </view>
-                    <view class='list-extra'>
-                      <button plain size='mini' type='primary' class='list-trip-btn' catchtap='makeCall' data-phone='{{ item.user_info.phone }}' wx:if="{{ item.user_info && item.user_info.phone }}">拨号</button>
                     </view>
                   </view>
                 </view>

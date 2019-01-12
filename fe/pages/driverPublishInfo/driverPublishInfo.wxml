@@ -3,7 +3,7 @@
 <view class='page'>
   <block wx:if="{{ detail.trip_id }}">
     <template is="driverInfoBox" data="{{ detail: detail, from_search: from_search, search_my: search_my }}" />
-    <view class='submit-wrap' wx:if="{{ !hide_share }}">
+    <view class='submit-wrap' wx:if="{{ !hide_share && detail.is_expired == 0 }}">
       <button type='primary' bindtap='shareTopGroup' open-type="share">发布到拼车群</button>
       <view class='info'>{{ docoment.share_tip }}</view>
       <block wx:if="{{ from_publish == 1 }}">
