@@ -1,5 +1,5 @@
 .publish-container{
-  padding-top: 445rpx;
+  padding-top: 380rpx;
   margin-bottom: 10px;
 }
 
@@ -75,7 +75,7 @@
   background: #fff;
   width: 100%;
   margin: 0;
-  padding: 24px 12px;
+  padding: 0 12px;
   box-sizing: border-box;
 }
 .btn-group {
@@ -83,6 +83,9 @@
   width: 100%;
   flex-direction: row;
   box-sizing: border-box;
+}
+.btn-group-tiny-padding .btn-create {
+  margin: 12px;
 }
 .btn-create {
   flex: 1;
@@ -92,6 +95,6 @@
   display: block;
   text-align: center;
   color: #888;
-  margin-top: 30px;
   font-size: 30rpx;
+  margin-bottom: 10px;
 }

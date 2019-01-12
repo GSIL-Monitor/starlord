@@ -371,7 +371,7 @@ textarea.text-input {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9;
+  z-index: 19;
   background: #fff;
   border-top: 1px solid #f0f0f0;
 }
@@ -412,16 +412,21 @@ textarea.text-input {
     background:#fff;
     border:1px solid #f0f0f0;
     border-radius: 4px;
-    height: 400px;
+    height: 460px;
 }
 
 .modal .modal-content {
-    padding: 12px;
+  height: 390px;
+  padding: 12px;
 }
 
-.modal .modal-content .model-desc{
+.modal .modal-content .model-desc {
   margin-top: 12px;
   color: #999;
+}
+
+.modal .modal-content .info {
+  margin-top: 10px;
 }
 
 .modal .modal-footer {

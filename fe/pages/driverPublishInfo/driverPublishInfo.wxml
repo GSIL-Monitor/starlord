@@ -17,4 +17,4 @@
   <template is="emptyPage" data="{{ show: (!loading_data && !detail.trip_id), homepage: true }}" />
 </view>
 
-<template is="guideModal" data="{{isModalVisible, description: document.first_publish_alert}}" />
+<template is="guideModal" data="{{isModalVisible: isModalVisible, description: docoment.first_publish_alert}}" />

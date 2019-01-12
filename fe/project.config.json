@@ -47,7 +47,7 @@
 					"id": -1,
 					"name": "车找人发布详情",
 					"pathName": "pages/driverPublishInfo/driverPublishInfo",
-					"query": "trip_id=15472804510000001&user_id=15472551590000001&from_publish=1",
+					"query": "trip_id=15472956080000001&user_id=15472551590000001&from_publish=1",
 					"scene": "1044",
 					"shareInfo": {
 						"groupName": "测试模拟群0",

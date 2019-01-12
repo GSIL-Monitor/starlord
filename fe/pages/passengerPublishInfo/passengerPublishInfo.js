@@ -127,7 +127,9 @@ Page({
   onIKnow: function() {
     self.setData({isModalVisible: false});
     service.updateUserPublishGuide((success) => {
-
+      if (success) {
+        self.loadProfile();
+      }
     })
   },
   onClipboard: (e) => {
@@ -136,4 +138,10 @@ Page({
       data: content,
     })
   },
+  loadProfile() {
+    service.getProfile(app, (success, data) => {
+      const profile = data || {};
+      self.setData({ need_publish_guide: profile.need_publish_guide });
+    });
+  }
 })
