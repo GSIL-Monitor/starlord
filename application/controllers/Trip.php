@@ -37,7 +37,7 @@ class Trip extends Base
             $trip = $this->_getDetailByTripId($tripType, $tripUserId, $tripId);
             $retTrip = $trip;
 
-            if(!empty($encryptedData)){
+            if (!empty($encryptedData)) {
                 //绑定群相关信息
                 $groupInfo = $this->WxApi->decryptGroupInfo($sessionKey, $encryptedData, $iv);
                 $wxGid = $groupInfo['openGId'];
@@ -104,26 +104,22 @@ class Trip extends Base
         $page = $input['page'];
 
         if (empty($page)) {
-            $this->_returnSuccess(
-                array(
-                    'has_next' => false,
-                    'trips' => $trips,
-                )
-            );
-        } else {
-            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
-            $hasNext = true;
-            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
-                $hasNext = false;
-            }
-            $this->_returnSuccess(
-                array(
-                    'page' => $page,
-                    'has_next' => $hasNext,
-                    'trips' => $retTrips,
-                )
-            );
+            $page = 0;
         }
+
+        $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+        $hasNext = true;
+        if (count($retTrips) < Config::TRIP_EACH_PAGE) {
+            $hasNext = false;
+        }
+        $this->_returnSuccess(
+            array(
+                'page' => $page,
+                'has_next' => $hasNext,
+                'trips' => $retTrips,
+            )
+        );
+
     }
 
     //分页
@@ -134,26 +130,22 @@ class Trip extends Base
         $page = $input['page'];
 
         if (empty($page)) {
-            $this->_returnSuccess(
-                array(
-                    'has_next' => false,
-                    'trips' => $trips,
-                )
-            );
-        } else {
-            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
-            $hasNext = true;
-            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
-                $hasNext = false;
-            }
-            $this->_returnSuccess(
-                array(
-                    'page' => $page,
-                    'has_next' => $hasNext,
-                    'trips' => $retTrips,
-                )
-            );
+            $page = 0;
         }
+
+        $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+        $hasNext = true;
+        if (count($retTrips) < Config::TRIP_EACH_PAGE) {
+            $hasNext = false;
+        }
+        $this->_returnSuccess(
+            array(
+                'page' => $page,
+                'has_next' => $hasNext,
+                'trips' => $retTrips,
+            )
+        );
+
     }
 
     private function _sortTripsInGroup($trips)
@@ -530,26 +522,22 @@ class Trip extends Base
 
         $trips = $this->_sortTripsByCreatedTime($resTrips);
         if (empty($page)) {
-            $this->_returnSuccess(
-                array(
-                    'has_next' => false,
-                    'trips' => $trips,
-                )
-            );
-        } else {
-            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
-            $hasNext = true;
-            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
-                $hasNext = false;
-            }
-            $this->_returnSuccess(
-                array(
-                    'page' => $page,
-                    'has_next' => $hasNext,
-                    'trips' => $retTrips,
-                )
-            );
+            $page = 0;
         }
+
+        $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+        $hasNext = true;
+        if (count($retTrips) < Config::TRIP_EACH_PAGE) {
+            $hasNext = false;
+        }
+        $this->_returnSuccess(
+            array(
+                'page' => $page,
+                'has_next' => $hasNext,
+                'trips' => $retTrips,
+            )
+        );
+
     }
 
     //分页
@@ -575,26 +563,22 @@ class Trip extends Base
 
         $trips = $this->_sortTripsByCreatedTime($resTrips);
         if (empty($page)) {
-            $this->_returnSuccess(
-                array(
-                    'has_next' => false,
-                    'trips' => $trips,
-                )
-            );
-        } else {
-            $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
-            $hasNext = true;
-            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
-                $hasNext = false;
-            }
-            $this->_returnSuccess(
-                array(
-                    'page' => $page,
-                    'has_next' => $hasNext,
-                    'trips' => $retTrips,
-                )
-            );
+            $page = 0;
         }
+
+        $retTrips = array_slice($trips, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+        $hasNext = true;
+        if (count($retTrips) < Config::TRIP_EACH_PAGE) {
+            $hasNext = false;
+        }
+        $this->_returnSuccess(
+            array(
+                'page' => $page,
+                'has_next' => $hasNext,
+                'trips' => $retTrips,
+            )
+        );
+
     }
 
     private function _sortTripsByCreatedTime($trips)

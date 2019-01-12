@@ -2,7 +2,7 @@
 
 class Config
 {
-    const TRIP_EACH_PAGE = 4;
+    const TRIP_EACH_PAGE = 3;
 
     //用户状态
     const USER_STATUS_OK = 0;

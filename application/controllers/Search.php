@@ -65,26 +65,21 @@ class Search extends Base
         }
 
         if (empty($page)) {
-            $this->_returnSuccess(
-                array(
-                    'has_next' => false,
-                    'trips' => $tripsFormatted,
-                )
-            );
-        } else {
-            $retTrips = array_slice($tripsFormatted, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
-            $hasNext = true;
-            if (count($retTrips) < Config::TRIP_EACH_PAGE) {
-                $hasNext = false;
-            }
-            $this->_returnSuccess(
-                array(
-                    'page' => $page,
-                    'has_next' => $hasNext,
-                    'trips' => $retTrips,
-                )
-            );
+            $page = 0;
         }
+
+        $retTrips = array_slice($tripsFormatted, $page * Config::TRIP_EACH_PAGE, Config::TRIP_EACH_PAGE);
+        $hasNext = true;
+        if (count($retTrips) < Config::TRIP_EACH_PAGE) {
+            $hasNext = false;
+        }
+        $this->_returnSuccess(
+            array(
+                'page' => $page,
+                'has_next' => $hasNext,
+                'trips' => $retTrips,
+            )
+        );
     }
 
 
