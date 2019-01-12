@@ -95,7 +95,7 @@ Page({
           detail: data || {}
         });
 
-        const isShareInfoNeedPopup = wx.getStorageSync(`share_info_has_showed_${trip_id}`);
+        const isShareInfoNeedPopup = wx.getStorageSync(`share_info_has_showed_${trip_id}_${data.group_id}`);
         if (data.is_share_owner == 1 && !isShareInfoNeedPopup) {
           wx.showModal({
             title: '提示',
@@ -104,7 +104,7 @@ Page({
             confirmText: '知道了',
             success(res) {
               if (res.confirm) {
-                wx.setStorageSync(`share_info_has_showed_${trip_id}`, true);
+                wx.setStorageSync(`share_info_has_showed_${trip_id}_${data.group_id}`, true);
               }
             }
           })
