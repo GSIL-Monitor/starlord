@@ -8,8 +8,17 @@ class SearchService extends CI_Model
 
     }
 
+    //缓存
     public function search($tripType, $beginDate, $beginTime, $targetStart, $targetEnd)
     {
+        $cacheKey = 'SearchService_search' . $tripType . $beginDate . $beginTime . $targetStart . $targetEnd;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $resTrips = $this->CacheRedis->getK($cacheKey);
+        if ($resTrips != false) {
+            return $resTrips;
+        }
+
         $startAndEndRoundTrips = null;
         if ($tripType == Config::TRIP_TYPE_DRIVER) {
             $this->load->model('dao/TripDriverDao');
@@ -18,7 +27,6 @@ class SearchService extends CI_Model
             $this->load->model('dao/TripPassengerDao');
             $startAndEndRoundTrips = $this->TripPassengerDao->search($beginDate, $beginTime, $targetStart, $targetEnd);
         }
-
 
 
         if (empty($startAndEndRoundTrips)) {
@@ -43,6 +51,11 @@ class SearchService extends CI_Model
         }
 
         array_multisort($sortKeys, SORT_DESC, SORT_NUMERIC, $resTrips);
+
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $resTrips);
+
         return $resTrips;
     }
 

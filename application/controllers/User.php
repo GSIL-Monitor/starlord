@@ -14,13 +14,24 @@ class User extends Base
 
     public function config()
     {
+        $user = $this->_user;
+
+        $cacheKey = 'User_config' . $user['user_id'];
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $config = $this->CacheRedis->getK($cacheKey);
+        if ($config != false) {
+            return $config;
+        }
+
         $this->load->model('service/TripDriverService');
         $this->load->model('service/TripPassengerService');
         $this->load->model('service/GroupService');
 
         $totalTripNum = $this->TripDriverService->getAllTripsCount() + $this->TripPassengerService->getAllTripsCount();
         $totalGroupNum = $this->GroupService->getAllGroupsCount();
-        $user = $this->_user;
+
+
         $config = array(
             'expire' => 3600,
             'cert' => '!@#QWE!@#Dvvdfsvf',
@@ -56,6 +67,9 @@ class User extends Base
             ),
         );
 
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $config);
+
         $this->_returnSuccess($config);
     }
 
@@ -77,6 +91,7 @@ class User extends Base
         $showUser["car_type"] = $user["car_type"];
         $showUser["audit_status"] = $user["audit_status"];
         $showUser["show_agreement"] = $user["show_agreement"];
+        $showUser["need_publish_guide"] = $user["need_publish_guide"];
 
         $this->_returnSuccess($showUser);
     }

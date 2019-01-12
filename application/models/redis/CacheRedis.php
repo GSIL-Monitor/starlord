@@ -13,7 +13,7 @@ class CacheRedis extends CommonRedis
     public function getK($sKey)
     {
         $sCacheKey = self::CACHE_PREFIX . $sKey;
-        return $this->get($sCacheKey);
+        return unserialize($this->get($sCacheKey));
     }
 
     public function delK($sKey)
@@ -25,7 +25,7 @@ class CacheRedis extends CommonRedis
     public function setKV($sKey, $sValue)
     {
         $sCacheKey = self::CACHE_PREFIX . $sKey;
-        return $this->setEx($sCacheKey, self::CACHE_EXPIRE_SECONDS, $sValue);
+        return $this->setEx($sCacheKey, self::CACHE_EXPIRE_SECONDS, serialize($sValue));
     }
 
 }

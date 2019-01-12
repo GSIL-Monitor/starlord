@@ -10,27 +10,63 @@ class UserService extends CI_Model
 
     }
 
+    //缓存
     public function getUserByOpenId($openId)
     {
+        $cacheKey = 'UserService_getUserByOpenId' . $openId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $user = $this->CacheRedis->getK($cacheKey);
+        if ($user != false) {
+            return $user;
+        }
+
         $this->load->model('dao/UserDao');
+        $user = $this->UserDao->getOneByOpenId($openId);
 
-        return $this->UserDao->getOneByOpenId($openId);
-    }
-
-    public function getUserByTicket($ticket)
-    {
-        $this->load->model('dao/UserDao');
-
-        $user = $this->UserDao->getOneByTicket($ticket);
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $user);
 
         return $user;
     }
 
+    //缓存
+    public function getUserByTicket($ticket)
+    {
+        $cacheKey = 'UserService_getUserByTicket' . $ticket;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $user = $this->CacheRedis->getK($cacheKey);
+        if ($user != false) {
+            return $user;
+        }
+
+        $this->load->model('dao/UserDao');
+        $user = $this->UserDao->getOneByTicket($ticket);
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $user);
+
+        return $user;
+    }
+
+    //缓存
     public function getUserByUserId($userId)
     {
+        $cacheKey = 'UserService_getUserByUserId' . $userId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $user = $this->CacheRedis->getK($cacheKey);
+        if ($user != false) {
+            return $user;
+        }
+
         $this->load->model('dao/UserDao');
 
         $user = $this->UserDao->getOneByUserId($userId);
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $user);
 
         return $user;
     }

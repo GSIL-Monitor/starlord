@@ -20,8 +20,17 @@ class GroupService extends CI_Model
         return $count['total'];
     }
 
+    //缓存
     public function getByWxGid($wxGid)
     {
+        $cacheKey = 'GroupService_getByWxGid' . $wxGid;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $group = $this->CacheRedis->getK($cacheKey);
+        if ($group != false) {
+            return $group;
+        }
+
         $this->load->model('dao/GroupDao');
         if ($wxGid == null) {
             throw new StatusException(Status::$message[Status::GROUP_NOT_EXIST], Status::GROUP_NOT_EXIST);
@@ -29,11 +38,23 @@ class GroupService extends CI_Model
 
         $group = $this->GroupDao->getOneByWxGid($wxGid);
 
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $group);
+
         return $group;
     }
 
+    //缓存
     public function getByGroupIds($groupIds)
     {
+        $cacheKey = 'GroupService_getByGroupIds' . serialize($groupIds);
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $groups = $this->CacheRedis->getK($cacheKey);
+        if ($groups != false) {
+            return $groups;
+        }
+
         $this->load->model('dao/GroupDao');
         if (!is_array($groupIds) || empty($groupIds)) {
             throw new StatusException(Status::$message[Status::GROUP_NOT_EXIST], Status::GROUP_NOT_EXIST);
@@ -43,6 +64,9 @@ class GroupService extends CI_Model
         if (empty($groups)) {
             throw new StatusException(Status::$message[Status::GROUP_NOT_EXIST], Status::GROUP_NOT_EXIST);
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $groups);
 
         return $groups;
     }

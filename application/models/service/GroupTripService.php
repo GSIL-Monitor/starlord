@@ -10,9 +10,18 @@ class GroupTripService extends CI_Model
 
     }
 
+    //缓存
     //确认群内有行程
     public function ensureGroupHasTrip($groupId, $tripId)
     {
+        $cacheKey = 'GroupTripService_ensureGroupHasTrip' . $groupId . $tripId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $ret = $this->CacheRedis->getK($cacheKey);
+        if ($ret != false) {
+            return;
+        }
+
         $this->load->model('dao/GroupTripDao');
 
         $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);
@@ -20,12 +29,24 @@ class GroupTripService extends CI_Model
             throw new StatusException(Status::$message[Status::GROUP_HAS_NO_TRIP], Status::GROUP_HAS_NO_TRIP);
         }
 
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, '1');
+
         return;
     }
 
+    //缓存
     //获取当前date之后的，status为正常的行程tripid
     public function getCurrentTripIdsByGroupIdAndTripType($groupId, $tripType)
     {
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . $tripType;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $ret = $this->CacheRedis->getK($cacheKey);
+        if ($ret != false) {
+            return $ret;
+        }
+
         $currentDate = date('Y-m-d');
         $this->load->model('dao/GroupTripDao');
 
@@ -42,6 +63,9 @@ class GroupTripService extends CI_Model
                 $ret[] = $trip;
             }
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $ret);
 
         return $ret;
     }

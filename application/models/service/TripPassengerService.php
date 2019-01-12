@@ -17,13 +17,26 @@ class TripPassengerService extends CI_Model
         return $count['total'];
     }
 
+    //缓存
     public function getTripByTripId($userId, $tripId)
     {
         $this->load->model('dao/TripPassengerDao');
+
+        $cacheKey = 'TripPassengerService_getTripByTripId' . $userId . $tripId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $trip = $this->CacheRedis->getK($cacheKey);
+        if ($trip != false) {
+            return $trip;
+        }
+
         $trip = $this->TripPassengerDao->getOneByTripId($userId, $tripId);
         if (empty($trip)) {
             throw new StatusException(Status::$message[Status::TRIP_NOT_EXIST], Status::TRIP_NOT_EXIST);
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $trip);
 
         return $trip;
     }
@@ -152,19 +165,43 @@ class TripPassengerService extends CI_Model
         return $ret;
     }
 
+    //缓存
     public function getMyTripList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
+
+        $cacheKey = 'TripPassengerService_getMyTripList' . $userId;
+        //读取缓存
+        $this->load->model('redis/CacheRedis');
+        $trips = $this->CacheRedis->getK($cacheKey);
+        if ($trips != false) {
+            return $trips;
+        }
+
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_NORMAL, Config::TRIP_STATUS_CANCEL));
         if (empty($trips)) {
             return array();
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $trips);
+
         return $trips;
     }
 
+    //缓存
     public function getMyTemplateList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
+
+        $cacheKey = 'TripPassengerService_getMyTemplateList' . $userId;
+        //读取缓存
+        $this->load->model('redis/CacheRedis');
+        $tripsWithType = $this->CacheRedis->getK($cacheKey);
+        if ($tripsWithType != false) {
+            return $tripsWithType;
+        }
+
         $trips = $this->TripPassengerDao->getListByUserIdAndStatusArr($userId, array(Config::TRIP_STATUS_DRAFT));
         $tripsWithType = array();
         if (!empty($trips)) {
@@ -178,6 +215,9 @@ class TripPassengerService extends CI_Model
                 $tripsWithType[] = $trip;
             }
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $trips);
 
         return $tripsWithType;
     }
@@ -250,10 +290,10 @@ class TripPassengerService extends CI_Model
             'wm_hor_offset' => '69',
         );
 
-        if(empty($priceEveryone)){
+        if (empty($priceEveryone)) {
             $priceEveryone = '面议';
         }
-        if(empty($peopleNum)){
+        if (empty($peopleNum)) {
             $peopleNum = '未说明';
         }
         $v = '愿付：' . $priceEveryone . '元/每人  人数：' . $peopleNum . '人';

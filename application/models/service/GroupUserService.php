@@ -10,8 +10,17 @@ class GroupUserService extends CI_Model
 
     }
 
+    //缓存
     public function ensureUserBelongToGroup($userId, $groupId)
     {
+        $cacheKey = 'GroupUserService_ensureUserBelongToGroup' . $userId . $groupId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $ret = $this->CacheRedis->getK($cacheKey);
+        if ($ret != false) {
+            return;
+        }
+
         $this->load->model('dao/GroupUserDao');
         if ($userId == null || $groupId == null) {
             throw new StatusException(Status::$message[Status::GROUP_EXCLUDE_USER], Status::GROUP_EXCLUDE_USER);
@@ -22,11 +31,23 @@ class GroupUserService extends CI_Model
             throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
         }
 
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, '1');
+
         return;
     }
 
+    //缓存
     public function getGroupsByUserId($userId)
     {
+        $cacheKey = 'GroupUserService_getGroupsByUserId' . $userId;
+        //缓存
+        $this->load->model('redis/CacheRedis');
+        $groups = $this->CacheRedis->getK($cacheKey);
+        if ($groups != false) {
+            return $groups;
+        }
+
         $this->load->model('dao/GroupUserDao');
         if ($userId == null) {
             throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
@@ -34,14 +55,18 @@ class GroupUserService extends CI_Model
 
         $ret = $this->GroupUserDao->getGroupsByUserId($userId);
         if (empty($ret)) {
-            return array();
+            $groups = array();
         } else {
             $groups = array();
             foreach ($ret as $v) {
                 $groups[] = array('group_id' => $v['group_id'], 'wx_gid' => $v['wx_gid']);
             }
-            return $groups;
         }
+
+        //设置缓存
+        $this->CacheRedis->setK($cacheKey, $groups);
+
+        return $groups;
     }
 
     public function add($userId, $groupId, $wxGid)
