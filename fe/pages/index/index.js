@@ -7,10 +7,14 @@ Page({
     notice_list: [],
     list: [],
     loading: false,
-    app_init: false
+    app_init: false,
+    docoment: app.globalData.user_config.docoment || {}
   },
   onLoad: function (r) {
     self = this;
+    self.setData({
+      docoment: app.globalData.user_config.docoment
+    });
   },
   /**
    * 生命周期函数--监听页面显示
