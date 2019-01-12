@@ -4,7 +4,7 @@
 <view class='page'>
   <block wx:if="{{ detail.trip_id }}">
     <template is="passengerInfoBox" data="{{ detail: detail, from_search: from_search, search_my: search_my, is_map_visible: from_publish != 1, is_hide_user: is_hide_user }}" />
-    <view class='submit-wrap' wx:if="{{ !hide_share && detail.is_expired == 0 }}">
+    <view class='submit-wrap' wx:if="{{ !hide_share && detail.is_expired == 0 && detail.is_everyday == 0}}">
       <button type='primary' open-type="share" wx:if="{{need_publish_guide == 0}}">发布到拼车群</button>
       <button type='primary' bindtap='showGuideModal' wx:else>发布到拼车群</button>
       <view class='info'>{{ docoment.share_tip }}</view>
