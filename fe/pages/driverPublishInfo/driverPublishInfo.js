@@ -18,6 +18,7 @@ Page({
     need_publish_guide: 0,
     docoment: app.globalData.user_config.docoment,
     isModalVisible: false,
+    isShared: false,
   },
 
   /**
@@ -36,6 +37,7 @@ Page({
       search_my: options.search_my == 1 ? 1 : 0,
       from_publish: options.from_publish ==1 ? 1 : 0,
       hide_share: !!(options.hide_share == 1),
+      profile: app.globalData.profile || {},
       need_publish_guide: app.globalData.profile ? app.globalData.profile.need_publish_guide : 0,
       docoment: app.globalData.user_config.docoment
     });
@@ -127,9 +129,11 @@ Page({
     }
   },
   onIKnow: function() {
-    self.setData({isModalVisible: false});
+    self.setData({isModalVisible: false, isShared: true});
     service.updateUserPublishGuide((success) => {
-
+      if (success) {
+        self.loadProfile();
+      }
     })
   },
   onClipboard: (e) => {
@@ -138,4 +142,11 @@ Page({
       data: content,
     })
   },
+
+  loadProfile() {
+    service.getProfile(app, (success, data) => {
+      const profile = data || {};
+      self.setData({ need_publish_guide: profile.need_publish_guide });
+    });
+  }
 })

@@ -4,7 +4,7 @@
   <view class='top-action-bar'>
     <view class='section-title'>创建行程或模板</view>
     <view class='btn-wrap'>
-      <view class='btn-group'>
+      <view class='btn-group btn-group-tiny-padding'>
         <button class='btn-create' type='primary' data-page='driverPublish' bindtap='goPage'>车找人</button>
         <button class='btn-create' type='primary' data-page='passengerPublish' bindtap='goPage'>人找车</button>
       </view>

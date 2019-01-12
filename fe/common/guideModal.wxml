@@ -11,10 +11,12 @@
           </swiper-item>
         </swiper>
 
-        <view class="model-desc">{{description}}</view>
+        <view class="info mt10">{{description}}</view>
       </view>
       <view class="modal-footer">
-        <button type="primary" class="btn-confirm" bindtap="onIKnow" open-type="share">我知道了</button>
+        <button type="primary" class="btn-confirm" bindtap="onIKnow" open-type="share">
+          我知道了，别再烦我
+        </button>
       </view>
     </view>
   </view>
