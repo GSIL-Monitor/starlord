@@ -11,12 +11,6 @@ class Test extends CI_Controller
 
     }
 
-    public function getAll()
-    {
-        $this->load->model('service/TestService');
-        $this->_returnSuccess($this->TestService->getAll());
-    }
-
 
     public function add()
     {
@@ -49,7 +43,7 @@ class Test extends CI_Controller
         $this->load->model('service/TestService');
         $input = $this->input->post();
 
-        $this->_returnSuccess($this->TestService->setkey($input['a']));
+        $this->_returnSuccess($this->TestService->set($input['a']));
 
     }
 
@@ -57,7 +51,31 @@ class Test extends CI_Controller
     {
         $this->load->model('service/TestService');
 
-        $this->_returnSuccess($this->TestService->getkey());
+        $this->_returnSuccess($this->TestService->get());
+
+    }
+
+    public function delkey()
+    {
+        $this->load->model('service/TestService');
+
+        $this->_returnSuccess($this->TestService->del());
+
+    }
+
+    public function lock()
+    {
+        $this->load->model('service/TestService');
+
+        $this->_returnSuccess($this->TestService->lock());
+
+    }
+
+    public function unlock()
+    {
+        $this->load->model('service/TestService');
+
+        $this->_returnSuccess($this->TestService->unlock());
 
     }
 

@@ -3,8 +3,8 @@
 class LockRedis extends CommonRedis
 {
     const LOCK_VALUE = 1;
-    const LOCK_EXPIRE_SECONDS = 60;
-    const LOCK_WAIT_COUNT = 10;
+    const LOCK_EXPIRE_SECONDS = 10;
+    const LOCK_WAIT_COUNT = 5;
     const LOCK_PREFIX = 'STARLORD_LOCK_';
 
     public function __construct(){

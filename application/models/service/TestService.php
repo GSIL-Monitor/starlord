@@ -8,12 +8,6 @@ class TestService extends CI_Model
 
     }
 
-    public function getAll()
-    {
-        $this->load->model('dao/TestDao');
-
-        return $this->TestDao->getAll();
-    }
 
     public function add($route, $start_loc, $end_loc)
     {
@@ -34,15 +28,33 @@ class TestService extends CI_Model
     }
 
 
-    public function setkey($v)
+    public function set($v)
     {
         $this->load->model('redis/CacheRedis');
-        $this->CacheRedis->setValue('aaa', $v);
+        $this->CacheRedis->setKV('aaa', $v);
     }
 
-    public function getkey()
+    public function get()
     {
         $this->load->model('redis/CacheRedis');
-        return $this->CacheRedis->getValue('aaa');
+        return $this->CacheRedis->getK('aaa');
+    }
+
+    public function del()
+    {
+        $this->load->model('redis/CacheRedis');
+        return $this->CacheRedis->delK('aaa');
+    }
+
+    public function lock()
+    {
+        $this->load->model('redis/LockRedis');
+        return $this->LockRedis->lock('aaa');
+    }
+
+    public function unlock()
+    {
+        $this->load->model('redis/LockRedis');
+        return $this->LockRedis->unLock('aaa');
     }
 }
