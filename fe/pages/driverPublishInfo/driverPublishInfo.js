@@ -15,7 +15,9 @@ Page({
     loading_data: true,
     detail: {},
     hide_share: false,
-    docoment: app.globalData.user_config.docoment
+    need_publish_guide: 0,
+    docoment: app.globalData.user_config.docoment,
+    isModalVisible: false,
   },
 
   /**
@@ -34,6 +36,7 @@ Page({
       search_my: options.search_my == 1 ? 1 : 0,
       from_publish: options.from_publish ==1 ? 1 : 0,
       hide_share: !!(options.hide_share == 1),
+      need_publish_guide: app.globalData.profile ? app.globalData.profile.need_publish_guide : 0,
       docoment: app.globalData.user_config.docoment
     });
   },
@@ -51,6 +54,8 @@ Page({
   onShow: function () {
     self.setData({loading_data: true});
     wx.startPullDownRefresh();
+
+    console.log('on show=>', app.globalData.profile)
   },
 
   /**
@@ -101,6 +106,7 @@ Page({
     const share_title = (user_config && user_config.docoment && user_config.docoment.share_description) ? user_config.docoment.share_description : null;
     const { trip_id, user_id, detail } = self.data;
 
+    console.log('on share app');
     return {
       title: share_title,
       path: `/pages/driverPublishShare/driverPublishShare?trip_id=${trip_id}&user_id=${user_id}`,
@@ -114,8 +120,17 @@ Page({
       phoneNumber: phone,
     });
   },
-  shareTopGroup: function () {
-    
+  showGuideModal: function () {
+    const { need_publish_guide } = self.data;
+    if (need_publish_guide == 1) {
+      self.setData({isModalVisible: true})
+    }
+  },
+  onIKnow: function() {
+    self.setData({isModalVisible: false});
+    service.updateUserPublishGuide((success) => {
+
+    })
   },
   onClipboard: (e) => {
     const { content } = e.currentTarget.dataset;

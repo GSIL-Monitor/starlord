@@ -1,7 +1,7 @@
 <import src="/common/loginBtn.wxml"/>
 <import src="/common/phone.wxml"/>
 <import src="/common/tripForm.wxml"/>
-<view class='page'>
+<view class='page page-with-bottom-action'>
   <block wx:if="{{is_login}}">
     <form catchsubmit="formSubmit">
       <view class='section-title'>基本信息（必填）</view>
@@ -54,9 +54,9 @@
         </view>
         <!---->
       </view>
-      <view class='submit-wrap'>
+      <view class='submit-wrap bottom-action-wrapper'>
         <button type='primary' class='submit-btn' formType="submit" data-type='save' loading='{{loading_submit}}' plain >保存到模板</button>
-        <button type='primary' class='submit-btn' formType="submit" data-type='publish' loading='{{loading_submit}}'>发布</button>
+        <button type='primary' class='submit-btn' formType="submit" data-type='publish' loading='{{loading_submit}}'>去发布</button>
       </view>
     </form>
   </block>

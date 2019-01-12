@@ -2,7 +2,7 @@
 <import src="./tripMap.wxml"/>
 <import src="./tripGroupInfo.wxml"/>
 <template name="driverInfoBox">
-  <template is="tripMap" data="{{ detail: detail }}" />
+  <template is="tripMap" data="{{ detail: detail }}" wx:if="{{ is_map_visible }}" />
   <view class='list list-trip-info'>
     <view class='list-item'>
       <view class='list-content'>
