@@ -23,6 +23,11 @@ input {
   width: 100%;
 }
 
+/* common text style */
+.text-disable {
+  color: #999;
+}
+
 /* page */
 .page {
   display: flex;

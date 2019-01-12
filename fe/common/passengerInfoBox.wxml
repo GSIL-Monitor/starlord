@@ -10,6 +10,7 @@
           <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
           <view class='trip-item-value trip-date'>
             <view class='trip-date-value'>{{detail.is_everyday == 1 ? '每天' : detail.begin_date}} {{ detail.begin_time }}</view>
+            <view class='text-disable' wx:if="{{detail.is_expired == 1}}">已过期</view>
             <text class='trip-info' wx:if="{{score && detail.score > -1}}">顺路度：{{ detail.score }}%</text>
           </view>
         </view>
@@ -64,17 +65,5 @@
       </view>
     </view>
     <template is="tripGroupInfo" data="{{ detail: detail, from_search: from_search, search_my: search_my }}" />
-    <view class='list-item'>
-      <view class='list-trip-avatar'>
-        <image class='list-avatar-image' src='{{ detail.user_info.avatar_url }}' wx:if="{{detail.user_info && detail.user_info.avatar_url}}" />
-        <image class='list-avatar-image' src='/images/profile.png' wx:if="{{!detail.user_info || !detail.user_info.avatar_url}}" />
-      </view>
-      <view class='list-content' wx:if="{{ detail.user_info && detail.user_info.nick_name }}">
-        {{ detail.user_info.nick_name }} | {{ detail.user_info.phone }}
-      </view>
-      <view class='list-extra'>
-        <button plain size='mini' type='primary' class='list-trip-btn' bindtap='makeCall' data-phone='{{ detail.user_info.phone }}' wx:if="{{ detail.user_info && detail.user_info.phone }}">拨号</button>
-      </view>
-    </view>
   </view>
 </template>

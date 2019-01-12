@@ -49,7 +49,7 @@
             <text class='label-text'>备注</text>
           </view>
           <view class='list-content'>
-            <textarea class='text-input' bindinput="bindinput" data-name='tips' value='{{ form_data.tips }}' auto-height placeholder="输入备注" />
+            <textarea class='text-input' bindinput="bindinput" data-name='tips' value='{{ form_data.tips }}' auto-height cursor-spacing="{{ 48 }}" placeholder="输入备注" />
           </view>
         </view>
         <!---->
