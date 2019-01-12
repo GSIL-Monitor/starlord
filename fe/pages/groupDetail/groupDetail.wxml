@@ -29,7 +29,7 @@
     <view class='group-notice'>
       <text class='notice-title'>群公告: </text>
       {{ detail.notice || '暂无群公告' }}
-      <view hover-class='ontap' class='group-btn btn-notice-edit' bindtap='onEditNotice' wx:if="{{ detail.is_owner == 1 }}">编辑</view>
+      <text hover-class='ontap' class='group-btn btn-notice-edit' bindtap='onEditNotice' wx:if="{{ detail.is_owner == 1 }}">编辑</text>
     </view>
   </view>
   <view class='tab-navBar'>

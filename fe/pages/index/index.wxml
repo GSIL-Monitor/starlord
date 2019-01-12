@@ -31,6 +31,9 @@
         </navigator>
       </block>
     </view>
+    <view class="intro-wrap center text-disable" wx:if="{{ list || list.length > 0 }}">
+      {{docoment.group_page_info}}
+    </view>
     <view class="empty" wx:if="{{ !list || list.length == 0 }}">
       暂未加入群组。
     </view>

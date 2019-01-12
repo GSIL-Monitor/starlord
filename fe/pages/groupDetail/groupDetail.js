@@ -181,6 +181,8 @@ Page({
     const params = { group_id, trip_id: tripid};
     const callback = (success, data) => {
       if (!success) return;
+      wx.startPullDownRefresh();
+      // todo 若不刷新页面，这里应该需要重新请求数据，而不是取
       const trips = (type == 'driver') ? self.data.driverTrips.trips : self.data.passengerTrips.trips;
       const newTrips = trips.map(item => {
         if (item.trip_id == tripid) {

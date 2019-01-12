@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"plugin": {
-			"current": 2,
+			"current": 3,
 			"list": [
 				{
 					"id": 0,
@@ -60,6 +60,18 @@
 					"name": "车找人发布详情",
 					"pathName": "pages/passengerPublishInfo/passengerPublishInfo",
 					"query": "trip_id=15472567540000001&user_id=15472551590000001&from_publish=1",
+					"scene": "1044",
+					"shareInfo": {
+						"groupName": "测试模拟群0",
+						"shareName": "yBvfuyHx9LGE_-yo6N0QPHgaESbc3OmDJPrEPTD45EA@cr4dev",
+						"shareKey": "4G72dML4DLxGJivpvim1WUdDgPYeteJjhX-brD4kvpy1TrjReGSb2nnSir2Q5DpvtPkx4mF_ddGOd7QE7MUywg~~"
+					}
+				},
+				{
+					"id": -1,
+					"name": "车找人发分享",
+					"pathName": "pages/driverPublishShare/driverPublishShare",
+					"query": "trip_id=15473011010000001&user_id=15472551590000001&from_publish=1",
 					"scene": "1044",
 					"shareInfo": {
 						"groupName": "测试模拟群0",
