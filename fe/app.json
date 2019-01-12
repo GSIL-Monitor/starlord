@@ -1,10 +1,10 @@
 {
   "debug": true,
   "pages": [
+    "pages/publish/publish",
     "pages/index/index",
     "pages/profile/profile",
     "pages/search/search",
-    "pages/publish/publish",
     "pages/about/about",
     "pages/service/service",
     "pages/car/car",

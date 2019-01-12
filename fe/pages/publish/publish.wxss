@@ -1,3 +1,8 @@
+.publish-container{
+  padding-top: 445rpx;
+  margin-bottom: 10px;
+}
+
 .section-title {
   color: #666;
   font-size: 30rpx;
@@ -59,6 +64,12 @@
 }
 .item-value-passenger {
   color: #d81e06;
+}
+.top-action-bar {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  background: #fff;
 }
 .btn-wrap {
   background: #fff;

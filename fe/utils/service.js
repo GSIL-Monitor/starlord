@@ -227,6 +227,11 @@ const updateUserAgreement = (callback) => {
   request('user/updateUserAgreement', {}, callback);
 }
 
+/** 更改用户发布引导信息 */
+const updateUserPublishGuide = (callback) => {
+  request('user/updateUserPublishGuide', {}, callback);
+}
+
 /** 获取发布模板 */
 const getTemplateList = (callback) => {
   request('trip/getTemplateList', null, callback);
@@ -537,6 +542,7 @@ module.exports = {
   getProfile,
   updateUserCar,
   updateUserAgreement,
+  updateUserPublishGuide,
   userConfig,
   userCompleteUser,
   updateUserPhone,
