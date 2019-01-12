@@ -12,7 +12,8 @@ Page({
     detail: {},
     loading_data: true,
     app_init: false,
-    share_page_info: null
+    share_page_info: null,
+    docoment: {}
   },
 
   /**
@@ -27,6 +28,7 @@ Page({
     this.setData({
       trip_id: options.trip_id || null,
       user_id: options.user_id || null,
+      docoment: app.globalData.user_config.docoment
     });
   },
 
@@ -92,6 +94,21 @@ Page({
         self.setData({
           detail: data || {}
         });
+
+        const isShareInfoNeedPopup = wx.getStorageSync(`share_info_has_showed_${trip_id}`);
+        if (data.is_share_owner == 1 && !isShareInfoNeedPopup) {
+          wx.showModal({
+            title: '提示',
+            content: self.data.docoment.share_page_info,
+            showCancel: false,
+            confirmText: '知道了',
+            success(res) {
+              if (res.confirm) {
+                wx.setStorageSync(`share_info_has_showed_${trip_id}`, true);
+              }
+            }
+          })
+        }
       }
     }
     service.getTripDetailInSharePage(params, callback);
