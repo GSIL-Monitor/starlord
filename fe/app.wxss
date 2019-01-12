@@ -361,6 +361,21 @@ textarea.text-input {
   margin-top: 12px;
 }
 
+/*有操作按钮组的页面*/
+.page-with-bottom-action{
+  padding-bottom: 86px;
+}
+
+.bottom-action-wrapper{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+}
+
 .location-address {
   text-overflow:ellipsis;
   white-space:nowrap;
@@ -378,4 +393,57 @@ textarea.text-input {
 }
 .no-more-text, .more-loading-data {
   color: #999;
+}
+
+/*modal*/
+.mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index:99;
+    background: rgba(0, 0, 0, .3);
+    padding: 20px;
+}
+
+.modal {
+    position: relative;
+    background:#fff;
+    border:1px solid #f0f0f0;
+    border-radius: 4px;
+    height: 400px;
+}
+
+.modal .modal-content {
+    padding: 12px;
+}
+
+.modal .modal-content .model-desc{
+  margin-top: 12px;
+  color: #999;
+}
+
+.modal .modal-footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #f0f0f0;
+}
+
+.modal .modal-footer .btn-confirm {
+    margin: 0;
+}
+
+.guide-wrapper {
+    height: 300px;
+}
+
+.guide-wrapper img {
+    width: 100%;
 }
