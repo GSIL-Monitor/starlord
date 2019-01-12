@@ -154,6 +154,17 @@ class User extends Base
 
     }
 
+    public function updateUserPublishGuide()
+    {
+        $user = $this->_user;
+        $this->load->model('service/UserService');
+
+        $user['need_publish_guide'] = Config::USER_IGNORE_PUBLISH_GUIDE;
+
+        $ret = $this->UserService->updateUser($user);
+        $this->_returnSuccess($ret);
+    }
+
     private function _checkPhone($phone)
     {
         $preg = '/^1\d{10}$/ims';

@@ -12,6 +12,10 @@ class Config
     const USER_AUDIT_STATUS_OK = 1;
     const USER_AUDIT_STATUS_FAIL = 0;
 
+    //用户是否需要展示补发引导图
+    const USER_NEED_PUBLISH_GUIDE = 1;
+    const USER_IGNORE_PUBLISH_GUIDE = 0;
+
     //用户查看安全协议
     const USER_HAS_READ = 0;
     const USER_HAS_NOT_READ = 1;

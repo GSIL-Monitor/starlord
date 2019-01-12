@@ -515,7 +515,7 @@ class Trip extends Base
         $resTrips = array();
         if (!empty($trips)) {
             foreach ($trips as $trip) {
-                $this->_formatOutputTrip($newTrip);
+                $this->_formatOutputTrip($trip);
                 $resTrips[] = $trip;
             }
         }

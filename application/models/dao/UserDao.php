@@ -26,6 +26,7 @@ class UserDao extends CommonDao
         "car_type",
         "is_valid",
         "audit_status",
+        "need_publish_guide",
         "show_agreement",
         "status",
         "is_del",

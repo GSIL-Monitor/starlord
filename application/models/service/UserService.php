@@ -47,6 +47,7 @@ class UserService extends CI_Model
         $user['ticket'] = $ticket;
         $user['is_valid'] = $isValid;
         $user['audit_status'] = Config::USER_AUDIT_STATUS_FAIL;
+        $user['need_publish_guide'] = Config::USER_NEED_PUBLISH_GUIDE;
         $user['status'] = Config::USER_STATUS_OK;
         $user['show_agreement'] = Config::USER_HAS_NOT_READ;
 
