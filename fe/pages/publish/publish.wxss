@@ -60,10 +60,10 @@
   font-weight: 400;
 }
 .item-value-driver {
-  color: #3cc51f;
+  color: #03c0fe;
 }
 .item-value-passenger {
-  color: #d81e06;
+  color: #f5753d;
 }
 .top-action-bar {
   position: fixed;

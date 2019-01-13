@@ -47,6 +47,7 @@ class Trip extends Base
                     $group = $this->GroupService->createNewGroup($wxGid);
                 }
                 $groupId = $group['group_id'];
+                $retTrip['group_id'] = $groupId;
 
                 //绑定人
                 try {

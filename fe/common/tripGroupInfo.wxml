@@ -13,7 +13,7 @@
             </block>
           </view>
           <view class='trip-group-wrap' wx:if="{{ search_my != 1 }}">
-              <view class='trip-group-label'>来自{{ detail.group_info.length }}个拼车群，联系微信号:</view>
+              <view class='trip-group-label'>来自{{ detail.group_info.length }}个拼车群，联系wx号:</view>
               <block wx:for="{{ detail.group_info }}" wx:key="{{ groupItem.group_id }}" wx:for-item="groupItem">
                 <text wx:if="{{ !!groupItem.owner_wx_id }}" class='trip-group' data-content='{{ groupItem.owner_wx_id }}' catchtap='onClipboard'>{{ groupItem.owner_wx_id }}</text>
               </block>

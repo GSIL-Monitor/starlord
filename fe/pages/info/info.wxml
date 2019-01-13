@@ -43,5 +43,5 @@
       <text class='form-info' wx:if="{{ docoment.user_tip }}">{{ docoment.user_tip }}</text>
     </view>
   </block>
-  <template is="loginBtn" data='{{is_login: is_login, auth_message: "点击登录获取微信头像、昵称等"}}' />
+  <template is="loginBtn" data='{{is_login: is_login, auth_message: "点击登录获取头像、昵称等"}}' />
 </view>
