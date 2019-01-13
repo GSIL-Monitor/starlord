@@ -2,7 +2,7 @@
   <view class="mask" wx:if="{{isModalVisible}}">
     <view class="modal">
       <view class="modal-content">
-        <swiper class="guide-wrapper" indicator-dots="true" autoplay="true" interval="5000" duration="500">
+        <swiper class="guide-wrapper" indicator-dots="true" autoplay="true" interval="2000" duration="500">
           <swiper-item>
             <image class="img" src="/images/guide_group_select.png" />
           </swiper-item>
