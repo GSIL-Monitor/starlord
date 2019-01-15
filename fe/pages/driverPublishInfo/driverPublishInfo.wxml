@@ -11,6 +11,7 @@
       <block wx:if="{{ from_publish == 1 }}">
         <navigator open-type="navigateBack"><button type='primary'>发布完成</button></navigator>
         <view class='info'>{{ docoment.publish_finish_tip }}</view>
+        <image class='image-pre-loader' src='{{ detail.share_img_url }}'></image>
       </block>
     </view>
   </block>
