@@ -17,7 +17,7 @@ class TripPassengerService extends CI_Model
         return $count['total'];
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getTripByTripId($userId, $tripId)
     {
         $this->load->model('dao/TripPassengerDao');
@@ -41,6 +41,7 @@ class TripPassengerService extends CI_Model
         return $trip;
     }
 
+    /*
     public function updateTrip($tripId, $userId, $tripPassengerDetail)
     {
         if ($tripId == null || userId == null) {
@@ -61,9 +62,15 @@ class TripPassengerService extends CI_Model
 
         return true;
     }
+    */
 
     public function saveTripTemplate($tripId, $userId, $tripPassengerDetail)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'TripPassengerService_getMyTemplateList' . $userId;
+        $this->CacheRedis->delK($cacheKey);
+
         $trip = array();
         $trip['trip_id'] = $tripId;
         $trip['user_id'] = $userId;
@@ -90,6 +97,11 @@ class TripPassengerService extends CI_Model
 
     public function createNewTrip($userId, $tripPassengerDetail, $user)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'TripPassengerService_getMyTripList' . $userId;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/TripPassengerDao');
         $this->load->model('redis/IdGenRedis');
 
@@ -98,7 +110,7 @@ class TripPassengerService extends CI_Model
         $trip['trip_id'] = $this->IdGenRedis->gen(Config::ID_GEN_KEY_TRIP);
         $trip = array_merge($trip, $tripPassengerDetail);
         $trip['status'] = Config::TRIP_STATUS_NORMAL;
-        $trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['begin_date'], $trip['begin_time'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['$people_num']);
+        $trip['share_img_url'] = $this->getPassengerTripImageUrl($trip['trip_id'], $trip['begin_date'], $trip['begin_time'], $trip['start_location_name'], $trip['end_location_name'], $trip['price_everyone'], $trip['people_num']);
 
         //插入用户信息快照
         $trip['user_info'] = json_encode(
@@ -134,6 +146,11 @@ class TripPassengerService extends CI_Model
 
     public function addGroupInfoToTrip($userId, $tripId, $trip, $group)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'TripPassengerService_getTripByTripId' . $userId . $tripId;
+        $this->CacheRedis->delK($cacheKey);
+
         unset($group['id']);
         unset($group['status']);
         unset($group['is_del']);
@@ -159,13 +176,18 @@ class TripPassengerService extends CI_Model
 
     public function deleteTrip($userId, $tripId)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'TripPassengerService_getMyTripList' . $userId;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/TripPassengerDao');
         $ret = $this->TripPassengerDao->deleteOne($userId, $tripId);
 
         return $ret;
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getMyTripList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
@@ -189,7 +211,7 @@ class TripPassengerService extends CI_Model
         return $trips;
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getMyTemplateList($userId)
     {
         $this->load->model('dao/TripPassengerDao');
@@ -246,8 +268,8 @@ class TripPassengerService extends CI_Model
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '103',
-            'wm_hor_offset' => '69',
+            'wm_vrt_offset' => '124',
+            'wm_hor_offset' => '72',
         );
 
         $v = null;
@@ -262,12 +284,12 @@ class TripPassengerService extends CI_Model
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '22',
+            'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '160',
-            'wm_hor_offset' => '69',
+            'wm_vrt_offset' => '190',
+            'wm_hor_offset' => '72',
         );
 
         $v = null;
@@ -282,32 +304,34 @@ class TripPassengerService extends CI_Model
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '22',
+            'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '216',
-            'wm_hor_offset' => '69',
+            'wm_vrt_offset' => '258',
+            'wm_hor_offset' => '72',
         );
 
         if (empty($priceEveryone)) {
             $priceEveryone = '面议';
+        } else {
+            $priceEveryone .= '元/人';
         }
         if (empty($peopleNum)) {
             $peopleNum = '未说明';
         }
-        $v = '愿付：' . $priceEveryone . '元/每人  人数：' . $peopleNum . '人';
+        $v = '愿付：' . $priceEveryone . ', 人数：' . $peopleNum;
         $forthLine = array(
             'wm_text' => $v,//显示结束的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
             'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
-            'wm_font_size' => '22',
+            'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
             'wm_hor_alignment' => 'left',
-            'wm_vrt_offset' => '269',
-            'wm_hor_offset' => '69',
+            'wm_vrt_offset' => '320',
+            'wm_hor_offset' => '72',
         );
 
         $this->imgHandler($source, $firstNew, $firstLine, true);
@@ -315,14 +339,14 @@ class TripPassengerService extends CI_Model
         $this->imgHandler($secondNew, $thirdNew, $thirdLine, true);
         $this->imgHandler($thirdNew, $forthNew, $forthLine, true);
 
-        $this->OssApi->uploadImg('test/' . $tripId . '.png', $thirdNew);
+        $this->OssApi->uploadImg('prod/' . $tripId . '.png', $forthNew);
 
         unlink($firstNew);
         unlink($secondNew);
         unlink($thirdNew);
         unlink($forthNew);
 
-        return $this->OssApi->getSignedUrlForGettingObject('test/' . $tripId . '.png');
+        return $this->OssApi->getSignedUrlForGettingObject($tripId);
     }
 
     public function imgHandler($source, $new, $config, $output2File)

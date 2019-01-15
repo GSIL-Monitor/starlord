@@ -56,9 +56,9 @@ class CommonRedis extends CI_Model
 
         $oRedis = $this->getConn();
 
-        if (!method_exists($oRedis, $sMethodName)) {
+        /*if (!method_exists($oRedis, $sMethodName)) {
             throw new StatusException(Status::$message[Status::REDIS_HAS_NO_METHOD], Status::REDIS_HAS_NO_METHOD, $sMethodName);
-        }
+        }*/
         try {
             $aResult = call_user_func_array(array($oRedis, $sMethodName), $aArgumentList);
 

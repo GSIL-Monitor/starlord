@@ -20,6 +20,7 @@ class User extends Base
         //缓存
         $this->load->model('redis/CacheRedis');
         $config = $this->CacheRedis->getK($cacheKey);
+
         if ($config != false) {
             return $config;
         }

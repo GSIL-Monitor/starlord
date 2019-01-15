@@ -10,7 +10,7 @@ class GroupTripService extends CI_Model
 
     }
 
-    //缓存
+    //缓存，需要踢出
     //确认群内有行程
     public function ensureGroupHasTrip($groupId, $tripId)
     {
@@ -35,7 +35,7 @@ class GroupTripService extends CI_Model
         return;
     }
 
-    //缓存
+    //缓存，需要踢出
     //获取当前date之后的，status为正常的行程tripid
     public function getCurrentTripIdsByGroupIdAndTripType($groupId, $tripType)
     {
@@ -71,8 +71,15 @@ class GroupTripService extends CI_Model
     }
 
 
-    public function publishTripToGroup($tripId, $groupId, $trip, $trip_type)
+    public function publishTripToGroup($tripId, $groupId, $trip, $tripType)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'GroupTripService_ensureGroupHasTrip' . $groupId . $tripId;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . $tripType;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/GroupTripDao');
 
         $groupTrips = array();
@@ -81,7 +88,7 @@ class GroupTripService extends CI_Model
         $groupTrip['group_id'] = $groupId;
         $groupTrip['top_time'] = null;
         $groupTrip['trip_begin_date'] = $trip['begin_date'];
-        $groupTrip['trip_type'] = $trip_type;
+        $groupTrip['trip_type'] = $tripType;
         $groupTrip['status'] = Config::GROUP_TRIP_STATUS_DEFAULT;
         $groupTrip['extend_json_info'] = json_encode($trip);
         $groupTrips[] = $groupTrip;
@@ -98,8 +105,16 @@ class GroupTripService extends CI_Model
 
     public function topOneTrip($groupId, $tripId)
     {
-        $currentTime = date("Y-M-d H:i:s", time());
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'GroupTripService_ensureGroupHasTrip' . $groupId . $tripId;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . Config::TRIP_TYPE_DRIVER;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . Config::TRIP_TYPE_DRIVER;
+        $this->CacheRedis->delK($cacheKey);
 
+        $currentTime = date("Y-M-d H:i:s", time());
         $this->load->model('dao/GroupTripDao');
 
         $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);
@@ -113,6 +128,15 @@ class GroupTripService extends CI_Model
 
     public function unTopOneTrip($groupId, $tripId)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'GroupTripService_ensureGroupHasTrip' . $groupId . $tripId;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . Config::TRIP_TYPE_DRIVER;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupTripService_getCurrentTripIdsByGroupIdAndTripType' . $groupId . Config::TRIP_TYPE_DRIVER;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/GroupTripDao');
 
         $groupTrip = $this->GroupTripDao->getOneByGroupIdAndTripId($groupId, $tripId);

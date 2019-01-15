@@ -34,19 +34,9 @@ class OssApi extends CI_Model
         }
     }
 
-    public function getSignedUrlForGettingObject($object)
+    public function getSignedUrlForGettingObject($tripId)
     {
-        $timeout = 3600;
-        $ossClient = $this->_getOssClient(self::END_POINT_EXTERNAL);
-
-        $signedUrl = null;
-        try {
-            $signedUrl = $ossClient->signUrl(self::BUCKET, $object, $timeout);
-        } catch (OSS\Core\OssException $e) {
-            throw new StatusException(Status::$message[Status::OSS_CONNECT_FAIL], Status::OSS_CONNECT_FAIL, $e->getMessage());
-        }
-
-        return $signedUrl;
+        return 'http://img.pinche.mobi/prod/' . $tripId . '.png';
     }
 
 }

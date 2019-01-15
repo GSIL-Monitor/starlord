@@ -45,7 +45,7 @@ class Common extends CI_Controller
             }
 
             //老用户更新ticket
-            $this->UserService->updateSessionKeyAndTicketByUser($user['user_id'], $sessionKey, $ticket);
+            $this->UserService->updateSessionKeyAndTicketByUser($user, $sessionKey, $ticket);
         } else {
             //新用户
             $this->UserService->createNewUser($sessionKey, $openId, $ticket, $isValid);

@@ -10,7 +10,7 @@ class UserService extends CI_Model
 
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getUserByOpenId($openId)
     {
         $cacheKey = 'UserService_getUserByOpenId' . $openId;
@@ -30,7 +30,7 @@ class UserService extends CI_Model
         return $user;
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getUserByTicket($ticket)
     {
         $cacheKey = 'UserService_getUserByTicket' . $ticket;
@@ -50,7 +50,7 @@ class UserService extends CI_Model
         return $user;
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getUserByUserId($userId)
     {
         $cacheKey = 'UserService_getUserByUserId' . $userId;
@@ -90,19 +90,36 @@ class UserService extends CI_Model
         return $this->UserDao->insertOne($user);
     }
 
-    public function updateSessionKeyAndTicketByUser($userId, $sessionKey, $ticket)
+    public function updateSessionKeyAndTicketByUser($oldUser, $sessionKey, $ticket)
     {
-        $this->load->model('dao/UserDao');
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'UserService_getUserByOpenId' . $oldUser['wx_open_id'];
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'UserService_getUserByTicket' . $oldUser['ticket'];
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'UserService_getUserByUserId' . $oldUser['user_id'];
+        $this->CacheRedis->delK($cacheKey);
 
+        $this->load->model('dao/UserDao');
         $user = array();
         $user['wx_session_key'] = $sessionKey;
         $user['ticket'] = $ticket;
 
-        return $this->UserDao->updateOneByUserId($userId, $user);
+        return $this->UserDao->updateOneByUserId($oldUser['user_id'], $user);
     }
 
     public function updateUser($user)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'UserService_getUserByOpenId' . $user['wx_open_id'];
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'UserService_getUserByTicket' . $user['ticket'];
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'UserService_getUserByUserId' . $user['user_id'];
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/UserDao');
         if (empty($user) || empty($user['user_id'])) {
             throw new StatusException(Status::$message[Status::USER_NOT_EXIST], Status::USER_NOT_EXIST);

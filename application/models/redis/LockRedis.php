@@ -3,15 +3,15 @@
 class LockRedis extends CommonRedis
 {
     const LOCK_VALUE = 1;
-    const LOCK_EXPIRE_SECONDS = 10;
-    const LOCK_WAIT_COUNT = 5;
+    const LOCK_EXPIRE_SECONDS = 100;
+    const LOCK_WAIT_COUNT = 99;
     const LOCK_PREFIX = 'STARLORD_LOCK_';
 
     public function __construct(){
         parent::__construct();
     }
 
-    public function lock($sKey){
+    public function lockK($sKey){
         $sLockKey = self::LOCK_PREFIX . $sKey;
         $iLockWaitCount = self::LOCK_WAIT_COUNT;
         while(!$this->_lock($sLockKey)){
@@ -23,7 +23,7 @@ class LockRedis extends CommonRedis
         }
     }
 
-    public function unLock($sKey){
+    public function unLockK($sKey){
         $sLockKey = self::LOCK_PREFIX . $sKey;
         return $this->delete($sLockKey);
     }

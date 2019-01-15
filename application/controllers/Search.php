@@ -61,6 +61,23 @@ class Search extends Base
         $tripsFormatted = array();
         foreach ($trips as $t) {
             $this->_formatTripWithExpireAndIsEveryday($t);
+            //针对搜索所有的情况下，如果行程相关的群信息没有群主，则将整个groupinfo注释掉
+            $needCleanGroupInfo = true;
+            if ($onlyInMyGroup == Config::SEARCH_ALL) {
+                if (isset($t['group_info']) && !empty($t['group_info'])) {
+                    $group_infos = json_decode($t['group_info'], true);
+                    if (is_array($group_infos) && !empty($group_infos)) {
+                        foreach ($group_infos as $group_info) {
+                            if (!empty($group_info['owner_user_id'])) {
+                                $needCleanGroupInfo = false;
+                            }
+                        }
+                    }
+                }
+            }
+            if ($needCleanGroupInfo) {
+                $t['group_info'] = null;
+            }
             $tripsFormatted[] = $t;
         }
 
@@ -73,6 +90,8 @@ class Search extends Base
         if (count($retTrips) < Config::TRIP_EACH_PAGE) {
             $hasNext = false;
         }
+
+
         $this->_returnSuccess(
             array(
                 'page' => $page,

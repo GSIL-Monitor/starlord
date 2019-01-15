@@ -2,7 +2,7 @@
 
 class CacheRedis extends CommonRedis
 {
-    const CACHE_EXPIRE_SECONDS = 60;
+    const CACHE_EXPIRE_SECONDS = 6000;
     const CACHE_PREFIX = 'STARLORD_CACHE_';
 
     public function __construct()

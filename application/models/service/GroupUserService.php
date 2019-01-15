@@ -10,7 +10,7 @@ class GroupUserService extends CI_Model
 
     }
 
-    //缓存
+    //缓存，需要踢出
     public function ensureUserBelongToGroup($userId, $groupId)
     {
         $cacheKey = 'GroupUserService_ensureUserBelongToGroup' . $userId . $groupId;
@@ -37,7 +37,7 @@ class GroupUserService extends CI_Model
         return;
     }
 
-    //缓存
+    //缓存，需要踢出
     public function getGroupsByUserId($userId)
     {
         $cacheKey = 'GroupUserService_getGroupsByUserId' . $userId;
@@ -71,6 +71,13 @@ class GroupUserService extends CI_Model
 
     public function add($userId, $groupId, $wxGid)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'GroupUserService_ensureUserBelongToGroup' . $userId . $groupId;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupUserService_getGroupsByUserId' . $userId;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/GroupUserDao');
         if ($userId == null || $groupId == null) {
             throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
@@ -87,6 +94,13 @@ class GroupUserService extends CI_Model
 
     public function delete($userId, $groupId)
     {
+        //踢出缓存
+        $this->load->model('redis/CacheRedis');
+        $cacheKey = 'GroupUserService_ensureUserBelongToGroup' . $userId . $groupId;
+        $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'GroupUserService_getGroupsByUserId' . $userId;
+        $this->CacheRedis->delK($cacheKey);
+
         $this->load->model('dao/GroupUserDao');
         if ($userId == null || $groupId == null) {
             throw new StatusException(Status::$message[Status::GROUP_USER_INVALID], Status::GROUP_USER_INVALID);
