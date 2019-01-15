@@ -5,7 +5,7 @@
   <view class='list'>
     <block wx:for-items="{{list.trips}}" wx:key="{{item.id}}">
       <navigator
-        url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&from_search=1&search_my={{ params.only_in_my_group }}"  id="{{item.id}}" class="list-item">
+        url="/pages/passengerPublishInfo/passengerPublishInfo?trip_id={{item.trip_id}}&user_id={{item.user_id}}&from_search=1&hide_share=1&search_my={{ params.only_in_my_group }}"  id="{{item.id}}" class="list-item">
         <view class='list-content'>
           <view class='trip-data-item'>
             <image class='trip-item-icon trip-date-icon' src='/images/clock.png' />
