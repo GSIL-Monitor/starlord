@@ -460,3 +460,10 @@ textarea.text-input {
 .guide-wrapper img {
     width: 100%;
 }
+
+.image-pre-loader {
+  position: fixed;
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+}
