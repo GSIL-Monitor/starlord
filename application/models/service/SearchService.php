@@ -40,11 +40,11 @@ class SearchService extends CI_Model
             $ratio = $trip['sum_distance'] / $trip['total_distance'];
             $score = (0.5 - $ratio) / 0.5 * 100;
             if ($score < 0) {
-                $score = 0;
+                continue;
             }
             unset($trip['sum_distance']);
             unset($trip['total_distance']);
-            $trip['score'] = $score;
+            $trip['score'] = intval($score);
 
             $sortKeys[] = $score;
             $resTrips[] = $trip;

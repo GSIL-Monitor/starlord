@@ -209,13 +209,13 @@ class TripDao extends CommonDao
         }
 
         $sqlStart = "select * , start_location_point <-> end_location_point total_distance, (start_location_point <-> point ?) + (end_location_point <-> point ?) sum_distance from " . $this->table . " where (begin_date = ? or begin_date = ?) and begin_time >= ? and begin_time <= ? and is_del = ? and status = ? order by  start_location_point <-> point ? limit ?";
-        $queryStart = $this->db->query($sqlStart, array($targetStart, $targetEnd, Config::TRIP_STATUS_NORMAL, Config::RECORD_EXISTS, $beginDate, Config::EVERYDAY_DATE, $startTime, $endTime, $targetStart, 100));
+        $queryStart = $this->db->query($sqlStart, array($targetStart, $targetEnd, $beginDate, Config::EVERYDAY_DATE, $startTime, $endTime, Config::RECORD_EXISTS, Config::TRIP_STATUS_NORMAL, $targetStart, 100));
         if (!$queryStart) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
         }
 
         $sqlEnd = "select * , start_location_point <-> end_location_point total_distance, (start_location_point <-> point ?) + (end_location_point <-> point ?) sum_distance from " . $this->table . " where (begin_date = ? or begin_date = ?) and begin_time >= ? and begin_time <= ? and is_del = ? and status = ? order by  end_location_point <-> point ? limit ?";
-        $queryEnd = $this->db->query($sqlEnd, array($targetStart, $targetEnd, Config::TRIP_STATUS_NORMAL, Config::RECORD_EXISTS, $beginDate, Config::EVERYDAY_DATE, $startTime, $endTime, $targetEnd, 100));
+        $queryEnd = $this->db->query($sqlEnd, array($targetStart, $targetEnd, $beginDate, Config::EVERYDAY_DATE, $startTime, $endTime, Config::RECORD_EXISTS, Config::TRIP_STATUS_NORMAL, $targetEnd, 100));
         if (!$queryEnd) {
             throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
         }

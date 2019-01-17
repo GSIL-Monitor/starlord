@@ -72,7 +72,7 @@ class GroupTripDao extends CommonDao
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
 
-        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is not null limit 500";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is not null limit 1000";
 
         $query = $this->db->query($sql, array($groupId, $date, $tripType, Config::RECORD_EXISTS));
 
@@ -88,7 +88,7 @@ class GroupTripDao extends CommonDao
         $this->table = $this->_getShardedTable(0);
         $this->db = $this->getConn($this->dbConfName);
 
-        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is null limit 500";
+        $sql = "select * from " . $this->table . " where group_id = ? and trip_begin_date >= ? and trip_type = ? and is_del = ? and  top_time is null limit 1000";
 
         $query = $this->db->query($sql, array($groupId, $date, $tripType, Config::RECORD_EXISTS));
 

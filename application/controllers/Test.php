@@ -223,7 +223,7 @@ class Test extends CI_Controller
         $input['begin_date'] = '2085-11-23';
         $input['begin_time'] = '14:45:00';
 
-        for ($i = 1; $i <= 10000; $i++) {
+        for ($i = 1; $i <= 100000; $i++) {
             $f1 = 39.034068857643;
             $f2 = 39.2318581994503;
             $a = (rand(0, 10000)) / 10000;
@@ -268,8 +268,8 @@ class Test extends CI_Controller
             $this->load->model('service/GroupService');
             $this->load->model('service/UserService');
 
-            $userId = '6485807247623455747';
-            $groupId = '6487139302223381507';
+            $userId = '15473006340000001';
+            $groupId = '15473009950000001';
             $user = $this->UserService->getUserByUserId($userId);
 
             DbTansactionHanlder::begin('default');
