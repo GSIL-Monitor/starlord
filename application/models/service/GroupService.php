@@ -10,7 +10,6 @@ class GroupService extends CI_Model
 
     }
 
-
     public function getAllGroupsCount()
     {
         $this->load->model('dao/GroupDao');
@@ -18,6 +17,15 @@ class GroupService extends CI_Model
         $count = $this->GroupDao->getCountOfAll();
 
         return $count['total'];
+    }
+
+    public function getAllGroupIds()
+    {
+        $this->load->model('dao/GroupDao');
+
+        $ret = $this->GroupDao->getAllGroupIds();
+
+        return $ret;
     }
 
     //缓存
@@ -101,6 +109,21 @@ class GroupService extends CI_Model
         }
         $group = $groups[0];
         $group['notice'] = $notice;
+
+        return $this->GroupDao->updateByGroupId($group['group_id'], $group);
+    }
+
+    public function updateUserAndTripCount($groupId, $memberNum, $tripNum)
+    {
+        $this->load->model('dao/GroupDao');
+
+        $groups = $this->GroupDao->getListByGroupIds(array($groupId));
+        if (empty($groups)) {
+            throw new StatusException(Status::$message[Status::GROUP_NOT_EXIST], Status::GROUP_NOT_EXIST);
+        }
+        $group = $groups[0];
+        $group['member_num'] = $memberNum;
+        $group['trip_num'] = $tripNum;
 
         return $this->GroupDao->updateByGroupId($group['group_id'], $group);
     }

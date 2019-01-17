@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Cron extends Base
+class Cron extends CI_Controller
 {
 
     public function __construct()
@@ -15,23 +15,18 @@ class Cron extends Base
 
     public function updateAllGroupsWithMemberAndTripNum()
     {
-        $input = $this->input->post();
-        $user = $this->_user;
-        $userId = $user['user_id'];
-
-        $groupId = $input['group_id'];
         $this->load->model('service/GroupService');
-        $groups = $this->GroupService->getByGroupIds(array($groupId));
+        $this->load->model('service/GroupUserService');
+        $this->load->model('service/GroupTripService');
 
-        $group = $groups[0];
-
-        if ($group['owner_user_id'] == $userId) {
-            $group['is_owner'] = 1;
-        } else {
-            $group['is_owner'] = 0;
+        $ret = $this->GroupService->getAllGroupIds();
+        foreach ($ret as $v) {
+            $groupId = $v['group_id'];
+            $tripNum = $this->GroupTripService->getCountByGroupId($groupId);
+            $memberNum = $this->GroupUserService->getCountByGroupId($groupId);
+            $this->GroupService->updateUserAndTripCount($groupId, $memberNum, $tripNum);
+            //log
         }
-
-        $this->_returnSuccess($group);
     }
 
 }

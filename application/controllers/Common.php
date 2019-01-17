@@ -55,6 +55,5 @@ class Common extends CI_Controller
         $ret['ticket'] = $ticket;
         echo json_encode(array('errno' => 0, 'errmsg' => '', 'data' => $ret));
         exit;
-
     }
 }

@@ -48,6 +48,21 @@ class GroupDao extends CommonDao
         }
     }
 
+    public function getAllGroupIds()
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+        $sql = "select group_id  from " . $this->table . " where  is_del = ?";
+
+        $query = $this->db->query($sql, array(Config::RECORD_EXISTS));
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        }
+
+        return $query->result_array();
+    }
+
     public function getCountOfAll()
     {
         $this->table = $this->_getShardedTable(0);

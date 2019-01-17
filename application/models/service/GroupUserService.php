@@ -10,6 +10,13 @@ class GroupUserService extends CI_Model
 
     }
 
+    public function getCountByGroupId($groupId)
+    {
+        $this->load->model('dao/GroupUserDao');
+        $ret = $this->GroupUserDao->getCountByGroupId($groupId);
+        return $ret['total'];
+    }
+
     //缓存，需要踢出
     public function ensureUserBelongToGroup($userId, $groupId)
     {

@@ -10,6 +10,15 @@ class GroupTripService extends CI_Model
 
     }
 
+    public function getCountByGroupId($groupId)
+    {
+        $currentDate = date('Y-m-d');
+
+        $this->load->model('dao/GroupTripDao');
+        $ret = $this->GroupTripDao->getCountByGroupId($groupId, $currentDate);
+        return $ret['total'];
+    }
+
     //缓存，需要踢出
     //确认群内有行程
     public function ensureGroupHasTrip($groupId, $tripId)
