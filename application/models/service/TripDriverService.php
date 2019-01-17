@@ -240,7 +240,7 @@ class TripDriverService extends CI_Model
         }
 
         //设置缓存
-        $this->CacheRedis->setK($cacheKey, $trips);
+        $this->CacheRedis->setK($cacheKey, $tripsWithType);
 
         return $tripsWithType;
     }

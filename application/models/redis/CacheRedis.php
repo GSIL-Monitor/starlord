@@ -27,7 +27,7 @@ class CacheRedis extends CommonRedis
         return $this->delete($sCacheKey);
     }
 
-    public function setKV($sKey, $sValue)
+    public function setK($sKey, $sValue)
     {
         $sCacheKey = self::CACHE_PREFIX . $sKey;
         return $this->setEx($sCacheKey, self::CACHE_EXPIRE_SECONDS, serialize($sValue));

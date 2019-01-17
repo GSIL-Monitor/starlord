@@ -160,6 +160,29 @@ class Trip extends Base
         foreach ($trips as $trip) {
             $this->_formatOutputTrip($trip);
 
+            unset($trip['group_info']);
+            unset($trip['route']);
+            unset($trip['driver_no_smoke']);
+            unset($trip['driver_last_mile']);
+            unset($trip['driver_goods']);
+            unset($trip['driver_need_drive']);
+            unset($trip['driver_chat']);
+            unset($trip['driver_highway']);
+            unset($trip['driver_pet']);
+            unset($trip['driver_cooler']);
+            unset($trip['tips']);
+            unset($trip['share_img_url']);
+            unset($trip['lbs_route_info']);
+            unset($trip['people_num']);
+            unset($trip['passenger_no_smoke']);
+            unset($trip['passenger_last_mile']);
+            unset($trip['passenger_goods']);
+            unset($trip['passenger_can_drive']);
+            unset($trip['passenger_chat']);
+            unset($trip['passenger_luggage']);
+            unset($trip['passenger_pet']);
+            unset($trip['passenger_no_carsickness']);
+
             if (empty($trip['top_time'])) {
                 $restTripsSortKeys[] = $trip['created_time'];
                 $restTrips[] = $trip;
@@ -592,11 +615,35 @@ class Trip extends Base
         $sortKeys = array();
 
         foreach ($trips as $trip) {
+
+            unset($trip['group_info']);
+            unset($trip['route']);
+            unset($trip['driver_no_smoke']);
+            unset($trip['driver_last_mile']);
+            unset($trip['driver_goods']);
+            unset($trip['driver_need_drive']);
+            unset($trip['driver_chat']);
+            unset($trip['driver_highway']);
+            unset($trip['driver_pet']);
+            unset($trip['driver_cooler']);
+            unset($trip['tips']);
+            unset($trip['share_img_url']);
+            unset($trip['lbs_route_info']);
+            unset($trip['people_num']);
+            unset($trip['passenger_no_smoke']);
+            unset($trip['passenger_last_mile']);
+            unset($trip['passenger_goods']);
+            unset($trip['passenger_can_drive']);
+            unset($trip['passenger_chat']);
+            unset($trip['passenger_luggage']);
+            unset($trip['passenger_pet']);
+            unset($trip['passenger_no_carsickness']);
+            $sortTrips[] = $trip;
             $sortKeys[] = $trip['created_time'];
         }
 
-        array_multisort($sortKeys, SORT_DESC, SORT_REGULAR, $trips);
-        return $trips;
+        array_multisort($sortKeys, SORT_DESC, SORT_REGULAR, $sortTrips);
+        return $sortTrips;
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
