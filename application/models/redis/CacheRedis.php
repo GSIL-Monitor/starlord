@@ -4,6 +4,7 @@ class CacheRedis extends CommonRedis
 {
     const CACHE_EXPIRE_SECONDS = 6000;
     const CACHE_PREFIX = 'STARLORD_CACHE_';
+    const OPEN_CACHE = true;
 
     public function __construct()
     {
@@ -13,7 +14,11 @@ class CacheRedis extends CommonRedis
     public function getK($sKey)
     {
         $sCacheKey = self::CACHE_PREFIX . $sKey;
-        return unserialize($this->get($sCacheKey));
+        if (self::OPEN_CACHE) {
+            return unserialize($this->get($sCacheKey));
+        } else {
+            return null;
+        }
     }
 
     public function delK($sKey)
