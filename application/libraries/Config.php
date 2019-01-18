@@ -2,6 +2,8 @@
 
 class Config
 {
+    const BIZ_ACCESS_LOG_PATH = '/home/chuanhui/starlord/log/biz_access.log';
+    const BIZ_ERROR_LOG_PATH = '/home/chuanhui/starlord/log/biz_error.log';
     const TRIP_EACH_PAGE = 20;
 
     //用户状态
