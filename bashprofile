@@ -1,0 +1,11 @@
+export PATH="/usr/local/bin:$PATH"
+alias dev='ssh root@10.179.23.44'
+alias aliyun='ssh root@47.94.194.232'
+alias prod='ssh  lichuanhui@relay.sys.xiaojukeji.com -p 35000'
+alias xiaoju='ssh xiaoju@10.95.178.173'
+alias deployali='ssh root@47.94.194.232 rm -rf /home/chuanhui/starlord/application/* ;ssh root@47.94.194.232 rm -rf /home/chuanhui/starlord/index.php ;scp -r /Users/didi/workspace/starlord/application/* root@47.94.194.232:/home/chuanhui/starlord/application ; scp /Users/didi/workspace/starlord/index.php root@47.94.194.232:/home/chuanhui/starlord/ ; ssh root@47.94.194.232 chmod -R 755 /home/chuanhui/starlord/application/'
+alias deployprod='rm -rf /tmp/starlord /tmp/starlord.tar ; cp -r /Users/didi/workspace/starlord /tmp/ ; cd /tmp ; tar -cvf /tmp/starlord.tar ./starlord ; scp /tmp/starlord.tar root@47.94.194.232:/tmp ; ssh root@47.94.194.232 "scp /tmp/starlord.tar root@172.17.3.157:/tmp ; scp /tmp/starlord.tar root@172.17.3.156:/tmp; rm -rf /tmp/starlord.tar"'
+alias deployxiaoju='ssh xiaoju@10.95.178.173 rm -rf /home/xiaoju/webroot/gulfstream/application/ironman_ch/* ;scp -r /Users/didi/workspace/ironman/* xiaoju@10.95.178.173:/home/xiaoju/webroot/gulfstream/application/ironman_ch/ ; ssh xiaoju@10.95.178.173 chmod -R 777 /home/xiaoju/webroot/gulfstream/application/ironman_ch/'
+export GOROOT=/usr/local/opt/go/libexec
+export GOPATH=$HOME/.go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin

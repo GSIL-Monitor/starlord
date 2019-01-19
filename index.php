@@ -98,7 +98,7 @@ switch (ENVIRONMENT)
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
  */
-	$system_path = '/home/chuanhui/starlord/system';
+	$system_path = '/home/starlord/system';
 
 /*
  *---------------------------------------------------------------
@@ -115,7 +115,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = '/home/chuanhui/starlord/application';
+	$application_folder = '/home/starlord/application';
 
 /*
  *---------------------------------------------------------------
