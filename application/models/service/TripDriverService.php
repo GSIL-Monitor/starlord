@@ -70,6 +70,9 @@ class TripDriverService extends CI_Model
         $this->load->model('redis/CacheRedis');
         $cacheKey = 'TripDriverService_getMyTemplateList' . $userId;
         $this->CacheRedis->delK($cacheKey);
+        $cacheKey = 'TripDriverService_getTripByTripId' . $userId . $tripId;
+        $this->CacheRedis->delK($cacheKey);
+
 
         $trip = array();
         $trip['trip_id'] = $tripId;

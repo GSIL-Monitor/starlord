@@ -168,6 +168,7 @@ class GroupService extends CI_Model
     public function increaseTripInGroup($groupIds)
     {
         $this->load->model('redis/LockRedis');
+        $this->load->model('dao/GroupDao');
 
         $groups = $this->getByGroupIds($groupIds);
         $updateGroups = array();
@@ -192,6 +193,7 @@ class GroupService extends CI_Model
     public function decreaseTripInGroups($groupIds)
     {
         $this->load->model('redis/LockRedis');
+        $this->load->model('dao/GroupDao');
 
         $groups = $this->getByGroupIds($groupIds);
         $updateGroups = array();
