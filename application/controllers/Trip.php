@@ -58,7 +58,7 @@ class Trip extends Base
                     $ret = $this->GroupUserService->add($userId, $groupId, $wxGid);
                     if ($ret) {
                         //用户是第一次加入群，需要把group的member_num加1
-                        $this->GroupService->increaseMember($groupId, $group);
+                        $this->GroupService->increaseMember($groupId);
                     }
                 }
 
@@ -70,7 +70,7 @@ class Trip extends Base
                 } catch (Exception $e) {
                     //否则把行程加群
                     $this->GroupTripService->publishTripToGroup($tripId, $groupId, $trip, $tripType);
-                    $this->GroupService->increaseTripInGroup(array($groupId));
+                    $this->GroupService->increaseTripInGroup($groupId);
 
                     if ($tripType == Config::TRIP_TYPE_DRIVER) {
                         $this->TripDriverService->addGroupInfoToTrip($tripUserId, $tripId, $trip, $group);

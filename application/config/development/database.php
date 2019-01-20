@@ -75,11 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
     //'dsn'	=> 'pgsql:host=localhost;port=5432;dbname=postgres',
-    'hostname' => 'localhost',
-    'port' => '5432',
-    'username' => 'starlord',
-    'password' => '123456',
-    'database' => 'starlord_dev',
+    'hostname' => 'rm-2ze1w2hyp1k40g9rl.pg.rds.aliyuncs.com',
+    'port' => '3433',
+    'username' => 'starlord_prod',
+    'password' => 'qwer!@#$1234mnbv',
+    'database' => 'starlord_prod',
     'dbdriver' => 'postgre',
     'dbprefix' => '',
     'pconnect' => FALSE,

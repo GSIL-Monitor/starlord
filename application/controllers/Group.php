@@ -148,7 +148,7 @@ class Group extends Base
             $ret = $this->GroupUserService->delete($userId, $groupId);
             if ($ret) {
                 //需要把group的member_num减少1
-                $this->GroupService->decreaseMember($group['group_id'], $group);
+                $this->GroupService->decreaseMember($group['group_id']);
             }
 
             DbTansactionHanlder::commit('default');

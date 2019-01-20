@@ -248,11 +248,11 @@ class TripPassengerService extends CI_Model
     {
         $this->load->model('api/OssApi');
 
-        $source = '/home/chuanhui/starlord/application/imgs/bg_passenger.png';//人找车底图
-        $firstNew = "/home/chuanhui/starlord/res/" . $tripId . "1.png";
-        $secondNew = "/home/chuanhui/starlord/res/" . $tripId . "2.png";
-        $thirdNew = "/home/chuanhui/starlord/res/" . $tripId . "3.png";
-        $forthNew = "/home/chuanhui/starlord/res/" . $tripId . "4.png";
+        $source = '/home/starlord/application/imgs/bg_passenger.png';//人找车底图
+        $firstNew = "/home/res/" . $tripId . "1.png";
+        $secondNew = "/home/res/" . $tripId . "2.png";
+        $thirdNew = "/home/res/" . $tripId . "3.png";
+        $forthNew = "/home/res/" . $tripId . "4.png";
 
         $v = null;
         if ($beginDate == Config::EVERYDAY_DATE) {
@@ -263,7 +263,7 @@ class TripPassengerService extends CI_Model
         $firstLine = array(
             'wm_text' => $v,//这是开始时间
             'wm_type' => 'text',
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_path' => '/home/starlord/application/ttf/simhei.ttf',
             'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
@@ -283,7 +283,7 @@ class TripPassengerService extends CI_Model
             'wm_text' => $v,//显示开始的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_path' => '/home/starlord/application/ttf/simhei.ttf',
             'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
@@ -303,7 +303,7 @@ class TripPassengerService extends CI_Model
             'wm_text' => $v,//显示结束的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_path' => '/home/starlord/application/ttf/simhei.ttf',
             'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',
@@ -325,7 +325,7 @@ class TripPassengerService extends CI_Model
             'wm_text' => $v,//显示结束的位置名称，需要用php截断字符长度
             'wm_type' => 'text',
             'wm_x_transp' => 0,
-            'wm_font_path' => '/home/chuanhui/starlord/application/ttf/simhei.ttf',
+            'wm_font_path' => '/home/starlord/application/ttf/simhei.ttf',
             'wm_font_size' => '26',
             'wm_font_color' => '333333',
             'wm_vrt_alignment' => 'top',

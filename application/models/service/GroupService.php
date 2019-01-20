@@ -128,13 +128,15 @@ class GroupService extends CI_Model
         return $this->GroupDao->updateByGroupId($group['group_id'], $group);
     }
 
-    public function increaseMember($groupId, $group)
+    public function increaseMember($groupId)
     {
         $this->load->model('redis/LockRedis');
         $this->LockRedis->lockK($groupId);
 
         try {
             $this->load->model('dao/GroupDao');
+            $group = $this->GroupDao->getOneBGroupId($groupId);
+
             $group['member_num'] = $group['member_num'] + 1;
             $ret = $this->GroupDao->updateByGroupId($groupId, $group);
             $this->LockRedis->unlockK($groupId);
@@ -145,13 +147,15 @@ class GroupService extends CI_Model
         }
     }
 
-    public function decreaseMember($groupId, $group)
+    public function decreaseMember($groupId)
     {
         $this->load->model('redis/LockRedis');
         $this->LockRedis->lockK($groupId);
 
         try {
             $this->load->model('dao/GroupDao');
+            $group = $this->GroupDao->getOneBGroupId($groupId);
+
             $group['member_num'] = $group['member_num'] - 1;
             if ($group['member_num'] < 0) {
                 $group['member_num'] = 0;
@@ -165,26 +169,23 @@ class GroupService extends CI_Model
         }
     }
 
-    public function increaseTripInGroup($groupIds)
+    public function increaseTripInGroup($groupId)
     {
         $this->load->model('redis/LockRedis');
         $this->load->model('dao/GroupDao');
 
-        $groups = $this->getByGroupIds($groupIds);
-        $updateGroups = array();
-        foreach ($groups as $group) {
-            $groupId = $group['group_id'];
+        $group = $this->GroupDao->getOneBGroupId($groupId);
 
-            $this->LockRedis->lockK($groupId);
-            try {
-                $group['trip_num'] = $group['trip_num'] + 1;
-                $updateGroups[] = $group;
-                $this->GroupDao->updateByGroupId($groupId, $group);
-                $this->LockRedis->unlockK($groupId);
-            } catch (Exception $e) {
-                $this->LockRedis->unlockK($groupId);
-                throw $e;
-            }
+        $groupId = $group['group_id'];
+
+        $this->LockRedis->lockK($groupId);
+        try {
+            $group['trip_num'] = $group['trip_num'] + 1;
+            $this->GroupDao->updateByGroupId($groupId, $group);
+            $this->LockRedis->unlockK($groupId);
+        } catch (Exception $e) {
+            $this->LockRedis->unlockK($groupId);
+            throw $e;
         }
 
         return;
@@ -195,26 +196,25 @@ class GroupService extends CI_Model
         $this->load->model('redis/LockRedis');
         $this->load->model('dao/GroupDao');
 
-        $groups = $this->getByGroupIds($groupIds);
-        $updateGroups = array();
-        foreach ($groups as $group) {
-            $groupId = $group['group_id'];
+        if (!empty($groupIds) && is_array($groupIds)) {
+            foreach ($groupIds as $groupId) {
+                $group = $this->GroupDao->getOneBGroupId($groupId);
+                $groupId = $group['group_id'];
 
-            $this->LockRedis->lockK($groupId);
-            try {
-                $group['trip_num'] = $group['trip_num'] - 1;
-                if ($group['trip_num'] < 0) {
-                    $group['trip_num'] = 0;
+                $this->LockRedis->lockK($groupId);
+                try {
+                    $group['trip_num'] = $group['trip_num'] - 1;
+                    if ($group['trip_num'] < 0) {
+                        $group['trip_num'] = 0;
+                    }
+                    $this->GroupDao->updateByGroupId($groupId, $group);
+                    $this->LockRedis->unlockK($groupId);
+                } catch (Exception $e) {
+                    $this->LockRedis->unlockK($groupId);
+                    throw $e;
                 }
-                $updateGroups[] = $group;
-                $this->GroupDao->updateByGroupId($groupId, $group);
-                $this->LockRedis->unlockK($groupId);
-            } catch (Exception $e) {
-                $this->LockRedis->unlockK($groupId);
-                throw $e;
             }
         }
         return;
     }
-
 }

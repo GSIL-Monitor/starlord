@@ -16,7 +16,7 @@ class OssApi extends CI_Model
             try {
                 self::$ossClient[$endPoint] = new OSS\OssClient(self::ACCESS_KEY, self::ACCESS_SECRET, $endPoint, false);
             } catch (OSS\Core\OssException $e) {
-                throw new StatusException(Status::$message[Status::OSS_CONNECT_FAIL], Status::OSS_CONNECT_FAIL, $e->getMessage());
+                throw new StatusException(Status::$message[Status::OSS_CONNECT_FAIL], Status::OSS_CONNECT_FAIL, json_encode($e));
             }
         }
 
@@ -30,7 +30,7 @@ class OssApi extends CI_Model
             $ossClient = $this->_getOssClient(self::END_POINT_INTERNAL);
             $ossClient->uploadFile(self::BUCKET, $object, $filePath);
         } catch (OSS\Core\OssException $e) {
-            throw new StatusException(Status::$message[Status::OSS_CONNECT_FAIL], Status::OSS_CONNECT_FAIL, $e->getMessage());
+            throw new StatusException(Status::$message[Status::OSS_CONNECT_FAIL], Status::OSS_CONNECT_FAIL, json_encode($e));
         }
     }
 

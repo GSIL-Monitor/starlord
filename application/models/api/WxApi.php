@@ -21,7 +21,7 @@ class WxApi extends CI_Model
         $session = json_decode($ret, true);
 
         if (isset($session['errcode']) && $session['errcode'] != 0) {
-            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, $session['errmsg']);
+            throw new StatusException(Status::$message[Status::WX_FETCH_SESSION_FAIL], Status::WX_FETCH_SESSION_FAIL, json_encode($session));
         } else {
             return array(
                 'open_id' => $session['openid'],
@@ -82,7 +82,7 @@ class WxApi extends CI_Model
         $from = ltrim($tmp, '(');
         $tmp = rtrim($to, ')');
         $to = ltrim($tmp, '(');
-        $str = '/ws/direction/v1/driving/?' . 'from='.$from.'&key='.self::LBS_KEY. '&output=json&policy=LEAST_TIME&to='.$to.self::LBS_SEC;
+        $str = '/ws/direction/v1/driving/?' . 'from=' . $from . '&key=' . self::LBS_KEY . '&output=json&policy=LEAST_TIME&to=' . $to . self::LBS_SEC;
         $sig = md5($str);
         $data = array(
             'from' => $from,
@@ -97,7 +97,7 @@ class WxApi extends CI_Model
         $session = json_decode($ret, true);
 
         if (isset($session['status']) && $session['status'] != 0) {
-            throw new StatusException(Status::$message[Status::WX_FETCH_LBS_ROUTE_FAIL], Status::WX_FETCH_LBS_ROUTE_FAIL, $session['message']);
+            throw new StatusException(Status::$message[Status::WX_FETCH_LBS_ROUTE_FAIL], Status::WX_FETCH_LBS_ROUTE_FAIL, json_encode($session));
         } else {
             $routes = $session['result']['routes'];
             if (empty($routes) || !is_array($routes)) {

@@ -133,6 +133,25 @@ class GroupDao extends CommonDao
         }
     }
 
+    public function getOneBGroupId($groupId)
+    {
+        $this->table = $this->_getShardedTable(0);
+        $this->db = $this->getConn($this->dbConfName);
+        $sql = "select * from " . $this->table . " where group_id = ? and is_del = ?";
+
+        $query = $this->db->query($sql, array($groupId, Config::RECORD_EXISTS));
+
+        if (!$query) {
+            throw new StatusException(Status::$message[Status::DAO_FETCH_FAIL], Status::DAO_FETCH_FAIL, var_export($this->db, true));
+        } else if ($query->num_rows() == 0) {
+            return array();
+        } else if ($query->num_rows() == 1) {
+            return $query->row_array();
+        } else if ($query->num_rows() > 1) {
+            throw new StatusException(Status::$message[Status::DAO_MORE_THAN_ONE_RECORD], Status::DAO_MORE_THAN_ONE_RECORD, var_export($this->db, true));
+        }
+    }
+
     public function getListByGroupIds($groupIds)
     {
         $this->table = $this->_getShardedTable(0);
